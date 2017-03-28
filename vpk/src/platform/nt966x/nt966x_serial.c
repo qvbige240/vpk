@@ -463,7 +463,7 @@ static const session_ops nt966x_serial_ops =
 	nt966x_serial_opt_set,
 };
 
-const sessionsys_ops* get_nt966x_serial_ops(void);
+const session_ops* get_nt966x_serial_ops(void)
 {
-	return &nt966x_serial_ops;
+	return (const session_ops*)&nt966x_serial_ops;
 }

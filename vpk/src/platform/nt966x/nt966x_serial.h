@@ -12,7 +12,7 @@
 
 TIMA_BEGIN_DELS
 
-const sessionsys_ops* get_nt966x_serial_ops(void);
+const session_ops* get_nt966x_serial_ops(void);
 
 TIMA_END_DELS
 

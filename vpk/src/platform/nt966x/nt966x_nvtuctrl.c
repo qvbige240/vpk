@@ -8,6 +8,7 @@
 
 #include "nvtuctrl.h"
 
+#include "vpk_nvtuctrl.h"
 #include "vpk_logging.h"
 #include "nt966x_nvtuctrl.h"
 
@@ -105,7 +106,7 @@ static int nt966x_nvtuctrl_opt_set(vpk_session_t *session)
 	return 0;
 }
 
-/* The serial operations */
+/* The nvtuctrl operations */
 static const session_ops nt966x_nvtuctrl_ops =
 {
 	nt966x_nvtuctrl_load,
@@ -116,7 +117,8 @@ static const session_ops nt966x_nvtuctrl_ops =
 	nt966x_nvtuctrl_opt_set,
 };
 
-const sessionsys_ops* get_nt966x_nvtuctrl_ops(void);
+const session_ops* get_nt966x_nvtuctrl_ops(void)
 {
-	return &nt966x_nvtuctrl_ops;
+	return (const session_ops*)&nt966x_nvtuctrl_ops;
 }
+

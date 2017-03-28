@@ -18,7 +18,7 @@ typedef struct system_kset
 {
 	vpk_system_t*			(*init)(void);
 	const logger_ops*		(*get_logger_ops)(void);
-	//const sessionsys_ops*	(*get_sessionsys_ops)(void);
+	const sessionsys_ops*	(*get_sessionsys_ops)(void);
 }system_kset;
 
 struct vpk_system_t

@@ -7,11 +7,12 @@
 #ifndef NT966X_NVTUCTRL_H
 #define NT966X_NVTUCTRL_H
 
+#include "vpk_nvtuctrl.h"
 #include "vpk_session.h"
 
 TIMA_BEGIN_DELS
 
-const sessionsys_ops* get_nt966x_nvtuctrl_ops(void);
+const session_ops* get_nt966x_nvtuctrl_ops(void);
 
 TIMA_END_DELS
 

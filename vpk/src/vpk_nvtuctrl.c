@@ -7,8 +7,8 @@
 
 #include "vpk_logging.h"
 
-#include "vpk_serial.h"
 #include "vpk_cdevice.h"
+#include "vpk_nvtuctrl.h"
 
 static cdevice_register_t container = {0};
 

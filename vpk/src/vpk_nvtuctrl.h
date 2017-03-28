@@ -9,20 +9,14 @@
 
 #include "vpk_typedef.h"
 #include "vpk_session.h"
-//#include "vpk_serialc.h"
+#include "vpk_nvtuctrlc.h"
 
 TIMA_BEGIN_DELS
 
-// #define extends_serial()		\
-// 	extends_session();			\
-// 	uint32_t baud_speed;		\
-// 	uint32_t data_bits;			\
-// 	uint8_t  parity_bit;		\
-// 	uint32_t stop_bit
 #define extends_nvtuctrl()		\
 	extends_session();			\
-	void*	 data_buff;				\
-	uint32_t total_size;
+	void*	 data_buff;         \
+	uint32_t total_size
 
 struct vpk_nvtuctrl_t
 {

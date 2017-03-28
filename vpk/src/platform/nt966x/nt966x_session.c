@@ -4,6 +4,7 @@
  * 2017-03-26 qing.zou created
  *
  */
+#include "nt966x_session.h"
 #include "nt966x_serial.h"
 #include "nt966x_nvtuctrl.h"
 
