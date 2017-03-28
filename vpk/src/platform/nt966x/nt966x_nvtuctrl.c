@@ -8,7 +8,6 @@
 
 #include "nvtuctrl.h"
 
-#include "vpk_nvtuctrl.h"
 #include "vpk_logging.h"
 #include "nt966x_nvtuctrl.h"
 
