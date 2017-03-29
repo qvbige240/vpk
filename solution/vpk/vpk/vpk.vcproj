@@ -171,11 +171,19 @@
 						Name="inc"
 						>
 						<File
+							RelativePath="..\..\..\vpk\inc\vpk.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\vpk\inc\vpk_libc.h"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\vpk\inc\vpk_logging.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\inc\vpk_nvtuctrlc.h"
 							>
 						</File>
 						<File
@@ -307,6 +315,14 @@
 							</Filter>
 						</Filter>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="main"
+					>
+					<File
+						RelativePath="..\..\..\main\sample_00.c"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
@@ -1599,15 +1615,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\sys\inotify.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\inotify.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\bits\inotify.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\sys\inotify.h"
 					>
 				</File>
 				<File
@@ -1651,15 +1667,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\asm\ioctls.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\bits\ioctls.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\asm-generic\ioctls.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\asm\ioctls.h"
 					>
 				</File>
 				<File
@@ -1751,15 +1767,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\bits\ipc.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\ipc.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\sys\ipc.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\bits\ipc.h"
 					>
 				</File>
 				<File
@@ -2111,15 +2127,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\linux\mqueue.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\mqueue.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\bits\mqueue.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\linux\mqueue.h"
 					>
 				</File>
 				<File
@@ -2415,19 +2431,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\linux_include\asm\param.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\sys\param.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\param.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\asm-generic\param.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\asm\param.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\sys\param.h"
 					>
 				</File>
 				<File
@@ -2711,14 +2727,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\linux_include\asm-generic\resource.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\bits\resource.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\linux_include\sys\resource.h"
 					>
 				</File>
@@ -2728,6 +2736,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\asm\resource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\asm-generic\resource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\bits\resource.h"
 					>
 				</File>
 				<File
@@ -2971,15 +2987,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\bits\siginfo.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\asm-generic\siginfo.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\asm\siginfo.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\bits\siginfo.h"
 					>
 				</File>
 				<File
@@ -3007,15 +3023,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\bits\signalfd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\signalfd.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\sys\signalfd.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\bits\signalfd.h"
 					>
 				</File>
 				<File
@@ -3115,14 +3131,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\linux_include\asm-generic\stat.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\sys\stat.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\linux_include\bits\stat.h"
 					>
 				</File>
@@ -3132,6 +3140,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\asm\stat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\asm-generic\stat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\sys\stat.h"
 					>
 				</File>
 				<File
@@ -3219,15 +3235,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\asm-generic\swab.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\swab.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\asm\swab.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\asm-generic\swab.h"
 					>
 				</File>
 				<File
@@ -3247,15 +3263,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\sys\syscall.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\nfsd\syscall.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\syscall.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\sys\syscall.h"
 					>
 				</File>
 				<File
@@ -3387,14 +3403,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\linux_include\linux\termios.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\asm\termios.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\linux_include\asm-generic\termios.h"
 					>
 				</File>
@@ -3411,6 +3419,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\linux\termios.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\asm\termios.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\arpa\tftp.h"
 					>
 				</File>
@@ -3423,19 +3439,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\linux_include\linux\time.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\time.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\linux_include\bits\time.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\sys\time.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\linux\time.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\linux_include\time.h"
 					>
 				</File>
 				<File
@@ -3579,15 +3595,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\ucontext.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\asm-generic\ucontext.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\sys\ucontext.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\ucontext.h"
 					>
 				</File>
 				<File
@@ -3607,15 +3623,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\sys\uio.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\uio.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\bits\uio.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\sys\uio.h"
 					>
 				</File>
 				<File
@@ -3687,15 +3703,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\linux_include\sys\utsname.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\linux_include\bits\utsname.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\linux_include\linux\utsname.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\linux_include\sys\utsname.h"
 					>
 				</File>
 				<File

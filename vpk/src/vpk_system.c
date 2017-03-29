@@ -8,13 +8,22 @@
 #include "vpk_system.h"
 
 #define _NT966X_
-#if defined(_NT966X_)
+
+#if defined(_HI35XX_)
 //extern system_kset hi35xx_system_kset;
+#endif
+
+#if defined(_NT966X_)
+extern system_kset nt966x_system_kset;
 #endif
 
 const system_kset* const systems[] = 
 {
 #if defined(_NT966X_)
+	&nt966x_system_kset,
+#endif
+
+#if defined(_HI35XX_)
 //	&hi35xx_system_kset,
 #endif
 	NULL,
@@ -26,6 +35,7 @@ void init_subsystem(int argc, char* argv[])
 {
 	vpk_logger_init();
 	//vpk_sessionsys_init();
+	vpk_sessionsys_init();
 }
 
 int vpk_system_init(int argc, char* argv[])
