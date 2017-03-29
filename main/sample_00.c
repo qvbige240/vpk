@@ -6,6 +6,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <pthread.h>
 
 #include "vpk.h"
@@ -27,9 +28,10 @@ int main(int argc, char *argv[])
 {
 	int ret = 0;
 	void* thread_result;
-	pthread_t pth_pppd, pth_test3, pth_test2;
+	pthread_t pth_test3, pth_test2;
 
 	vpk_system_init(argc, argv);
+    vpk_logging_level_set("DEBUG");
 
 	ret = pthread_create(&pth_test3, NULL, vpk_test3, (void*)NULL);
 	if (ret != 0)
@@ -50,7 +52,7 @@ int test_nvtuctrl(const char* name)
 {
 	int ret = -1;
 	char recv_buf[256] = {0};
-	char cmd[NVTUCTRL_CMD_SIZE] = {0};
+	char cmd[256] = {0};
 	vpk_nvtuctrl_t* nvtuctrl = NULL;
 	return_val_if_fail(name != NULL, -1);
 
