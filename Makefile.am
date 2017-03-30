@@ -1,2 +1,3 @@
 AUTOMAKE_OPTIONS=foreign
+#SUBDIRS=main
 SUBDIRS=vpk main
