@@ -60,6 +60,7 @@ cscope.*
 #automake
 config*
 !configure.in
+!configure.ac
 aclocal.m4
 depcomp
 install-sh
