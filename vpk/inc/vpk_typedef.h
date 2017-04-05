@@ -20,8 +20,15 @@
 #define TIMA_END_DELS
 #endif
 
-#define return_if_fail(p) if(!(p)) {printf("%s:%d Error: "#p" failed.\n", __FILE__, __LINE__); return;}
-#define return_val_if_fail(p, ret) if(!(p)) {printf("%s:%d Error: "#p" failed.\n", __FILE__, __LINE__); return (ret);}
+#define MAX_ACTION_RECEIVE_SIZE		256
+
+#define ZERO_LEN_ARRAY	1
+#define return_if_fail(p) if(!(p)) \
+	{printf("%s:%d Error: "#p" failed.\n", \
+		__FILE__, __LINE__); return;}
+#define return_val_if_fail(p, ret) if(!(p)) \
+	{printf("%s:%d Error: "#p" failed.\n", \
+		__FILE__, __LINE__); return (ret);}
 #define DECL_PRIV(thiz, priv) PrivInfo* priv = thiz != NULL ? (PrivInfo*)thiz->priv : NULL
 
 #ifndef INLINE

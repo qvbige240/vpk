@@ -4,6 +4,7 @@
  * 2017-03-26 qing.zou created
  *
  */
+#include <stdarg.h>
 #include "vpk_util.h"
 
 int vpk_hex_to_int(char c)
@@ -47,6 +48,18 @@ int vpk_strcntstr(const char *s1, const char *s2)
 	}
 
 	return cnt;
+}
+
+void vpk_snprintf(char *buf, unsigned int *pos, int len, const char *format, ...)
+{
+	va_list va;
+	va_start(va, format);
+	*pos += vsnprintf(&buf[*pos], len - *pos, format, va);
+	va_end(va);
+	if (*pos >= len ) {
+		buf[len] = 0;
+		*pos = len;
+	}
 }
 
 #if 0

@@ -15,7 +15,11 @@ static vpk_logger_t* nt966x_logger_init(void)
 	if (thiz)
 	{
 		thiz->lops = &nt966x_logger_ops;
-		thiz->level = 2;					/* level: "WARN" */
+#if defined(DEBUG)
+		thiz->level = 4;
+#else
+		thiz->level = 2;                                        /* level: "WARN" */
+#endif
 	}
 
 	return thiz;
