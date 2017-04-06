@@ -1,12 +1,15 @@
 AUTOMAKE_OPTIONS=foreign
 noinst_LIBRARIES=libvpk.a
 libvpk_a_SOURCES=\
+inc/vpk_action.h \
 inc/vpk_libc.h \
 inc/vpk_logging.h \
 inc/vpk_nvtuctrlc.h \
 inc/vpk_serialc.h \
 inc/vpk_typedef.h \
 inc/vpk_util.h \
+src/vpk_actions.c \
+src/vpk_actions.h \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
 src/vpk_libc.c \
@@ -33,5 +36,7 @@ src/platform/nt966x/nt966x_session.c \
 src/platform/nt966x/nt966x_session.h \
 src/platform/nt966x/nt966x_system.c \
 src/platform/nt966x/nt966x_system.h
-
-
+#noinst_LIBRARIES=libvpk.a
+#libvpk_a_SOURCES=
+#lib_LTLIBRARIES=libvpk.la
+#libvpk_la_SOURCES=

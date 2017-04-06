@@ -9,12 +9,17 @@ AM_INIT_AUTOMAKE([subdir-objects])
 
 # Checks for programs.
 AC_PROG_CC
-AC_PROG_RANLIB
+#AC_PROG_RANLIB
+AC_PROG_LN_S
+AC_PROG_MAKE_SET
+AC_PROG_LIBTOOL
 
 # Checks for libraries.
+# FIXME: Replace `main' with a function in `-lvpk':
+AC_CHECK_LIB([vpk], [main])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h inttypes.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h])
 project_dir=/media/zouqing/9d0165e6-5910-46c0-9389-cb9a7e7b899b/zouqing/work/project/vpk
 AC_SUBST(project_dir)
 

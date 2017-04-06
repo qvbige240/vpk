@@ -66,7 +66,7 @@ VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint3
 		thiz->recvbuf	= recvbuf;
 		thiz->recvsize	= recvsize;
 		if (param != NULL)
-			sprintf(priv->action, " %s", param);
+			sprintf(priv->action, " %s", (char*)param);
 
 		LOG_D("[%s]action or instructions created: \'%s\'", priv->name, priv->action);
 
@@ -132,7 +132,7 @@ int vpk_action_param_set(VpkAction* thiz, VpkNvtuType type, void *param)
 
 	if (param != NULL) 
 	{
-		sprintf(priv->action, " %s", param);
+		sprintf(priv->action, " %s", (char*)param);
 	}
 
 	LOG_D("action[%s]: \'%s\' set successful!", priv->name, priv->action);
