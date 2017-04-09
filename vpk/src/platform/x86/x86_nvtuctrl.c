@@ -53,7 +53,7 @@ static int x86_nvtuctrl_open(vpk_session_t *session, void *data)
 	return_val_if_fail(thiz != NULL, -1);
 
 	//thiz->fd = NvtUctrl_Open();
-	thiz->fd = -1;
+	thiz->fd = 1;
 	if (thiz->fd < 0)
 	{
 		LOG_E("nvtuctrl \'%s\' communication open failed!", thiz->name);
@@ -76,9 +76,43 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 	return_val_if_fail(thiz != NULL && thiz->fd >= 0 && thiz->data_buff != NULL, -1);
 	timout = timout;
 	
+	// fill the receive buffer with test data
 	if (buf && nbytes > 0 && thiz->total_size > 0)
 	{
 		//ret = NvtUctrl_CmdSnd(thiz->fd, buf, thiz->data_buff, thiz->total_size);
+		char *p = NULL;
+		//GPS
+		p = strstr(buf, "-gpsinfo");
+		if (p != NULL) 
+		{
+			char *str = "{\"Latitude\":0.100001,\"Longitude\":0.200002,\"Speed\":0.300003,\"Angle\":0.400004}";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
+		// SNAP
+		p = strstr(buf, "-snapshot");
+		if (p != NULL)
+		{
+			char *str = "resources/test_2017_0409_171946_RE.JPG";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
+		// VIDEO
+		p = strstr(buf, "-movierec");
+		if (p != NULL)
+		{
+			char *str = "resources/test_2017.mp4";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
+		p = strstr(buf, "-movielen");
+		if (p != NULL)
+		{
+			char *str = "movie len:8288";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}			
+		
 	}
 
 	return ret;
