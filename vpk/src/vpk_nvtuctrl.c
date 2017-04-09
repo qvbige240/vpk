@@ -34,7 +34,8 @@ static vpk_nvtuctrl_t* vpk_nvtuctrl_load(void *ctx)
 		nvtuctrl->data_buff = NULL;
 		nvtuctrl->total_size = 0;
 		memset(nvtuctrl->name, 0, _countof(nvtuctrl->name));
-		strlcpy(nvtuctrl->name, ctx, _countof(nvtuctrl->name));
+		//strlcpy(nvtuctrl->name, ctx, _countof(nvtuctrl->name));
+        memcpy(nvtuctrl->name, ctx, sizeof(nvtuctrl->name));
 		LOG_D("nvtuctrl->name: %s, type: %s", nvtuctrl->name, ctx);
 	}
 

@@ -23,7 +23,8 @@ int vpk_register_cdevice(cdevice_register_t* thiz, const char* standard, const v
 
 	item = &thiz->items[thiz->count++];
 	//strncpy(item->standard, standard, strlen(standard));
-	strlcpy(item->standard, standard, _countof(item->standard));
+	//strlcpy(item->standard, standard, _countof(item->standard));
+	strncpy(item->standard, standard, sizeof(item->standard));
 	item->ops = ops;
 
 	return 0;
