@@ -1,7 +1,35 @@
 AUTOMAKE_OPTIONS=foreign
 noinst_LIBRARIES=libvpk.a
+platform_nt966x_sources = \
+src/platform/nt966x/nt966x_log.c \
+src/platform/nt966x/nt966x_log.h \
+src/platform/nt966x/nt966x_nvtuctrl.c \
+src/platform/nt966x/nt966x_nvtuctrl.h \
+src/platform/nt966x/nt966x_serial.c \
+src/platform/nt966x/nt966x_serial.h \
+src/platform/nt966x/nt966x_session.c \
+src/platform/nt966x/nt966x_session.h \
+src/platform/nt966x/nt966x_system.c \
+src/platform/nt966x/nt966x_system.h
+platform_x86_sources = \
+src/platform/x86/x86_log.c \
+src/platform/x86/x86_log.h \
+src/platform/x86/x86_nvtuctrl.c \
+src/platform/x86/x86_nvtuctrl.h \
+src/platform/x86/x86_serial.c \
+src/platform/x86/x86_serial.h \
+src/platform/x86/x86_session.c \
+src/platform/x86/x86_session.h \
+src/platform/x86/x86_system.c \
+src/platform/x86/x86_system.h
+if X8666
+platform_sources = $(platform_x86_sources)
+else
+platform_sources = $(platform_nt966x_sources)
+endif
 libvpk_a_SOURCES=\
 inc/vpk_action.h \
+inc/vpk.h \
 inc/vpk_libc.h \
 inc/vpk_logging.h \
 inc/vpk_nvtuctrlc.h \
@@ -26,16 +54,7 @@ src/vpk_session.h \
 src/vpk_system.c \
 src/vpk_system.h \
 src/vpk_util.c \
-src/platform/nt966x/nt966x_log.c \
-src/platform/nt966x/nt966x_log.h \
-src/platform/nt966x/nt966x_nvtuctrl.c \
-src/platform/nt966x/nt966x_nvtuctrl.h \
-src/platform/nt966x/nt966x_serial.c \
-src/platform/nt966x/nt966x_serial.h \
-src/platform/nt966x/nt966x_session.c \
-src/platform/nt966x/nt966x_session.h \
-src/platform/nt966x/nt966x_system.c \
-src/platform/nt966x/nt966x_system.h
+$(platform_sources)
 #noinst_LIBRARIES=libvpk.a
 #libvpk_a_SOURCES=
 #lib_LTLIBRARIES=libvpk.la

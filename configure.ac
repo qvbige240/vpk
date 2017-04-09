@@ -24,28 +24,30 @@ project_dir=/media/zouqing/9d0165e6-5910-46c0-9389-cb9a7e7b899b/zouqing/work/pro
 AC_SUBST(project_dir)
 
 if test x$enable_x86 = xyes; then
+    PLATFORMS="_X86_"
     GBASE_INCLUDE="/usr/include"
     GBASE_LIB="/usr/lib"
     echo "use gcc to compile"
     #AM_CFLAGS="-Wall -Wextra -Wdeclaration-after-statement"
-	GOLBAL_CFLAGS="-DDEBUG -I${GBASE_INCLUDE}"
-	GOLBAL_CPPFLAGS="-DDEBUG -I${GBASE_INCLUDE}"
+	GOLBAL_CFLAGS="-DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
+	GOLBAL_CPPFLAGS="-DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
 	GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
 	AC_SUBST(GOLBAL_CFLAGS)
 	
 	JANSSON_LIB='$(project_dir)/nvt/lib/x86/libjansson.a'
 	AC_SUBST(JANSSON_LIB)
 	
-	DYNAMIC_LIBS=-lpthread -lm -lc
+	DYNAMIC_LIBS=-lpthread
 	AC_SUBST(DYNAMIC_LIBS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/nvt/include/x86 -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS)'
 	AC_SUBST(EXTRA_LDFLAGS)
 else
+    PLATFORMS="_NT966X_"
 	GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/mipsel-24kec-linux-uclibc/sysroot/usr/include"
 	GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/mipsel-24kec-linux-uclibc/sysroot/lib"
-	GOLBAL_CFLAGS="-DDEBUG -I${GBASE_INCLUDE}"
-	GOLBAL_CPPFLAGS="-DDEBUG -I${GBASE_INCLUDE}"
+	GOLBAL_CFLAGS="-DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
+	GOLBAL_CPPFLAGS="-DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
 	GOLBAL_LDFLAGS="-L${GBASE_LIB}"
 	AC_SUBST(GOLBAL_CFLAGS)
 	
@@ -57,6 +59,11 @@ else
 	AC_SUBST(EXTRA_LDFLAGS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/nvt/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 fi
+echo "platform: $PLATFORMS"
+echo "platform11111: ${PLATFORMS}"
+echo 'platform222222: $(PLATFORMS)'
+AM_CONDITIONAL(X8666, test "${PLATFORMS}" = "_X86_")
+AM_CONDITIONAL(NT966X, test "${PLATFORMS}" = "_NT966X_")
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T

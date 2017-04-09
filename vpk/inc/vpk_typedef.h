@@ -20,6 +20,7 @@
 #define TIMA_END_DELS
 #endif
 
+#define MAX_PATH_SIZE				256
 #define MAX_ACTION_RECEIVE_SIZE		256
 
 #define ZERO_LEN_ARRAY	1
