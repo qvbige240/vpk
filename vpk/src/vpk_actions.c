@@ -28,8 +28,10 @@ typedef struct _ActionInfo
 
 static ActionInfo action_tables[] =
 {
-	{VPK_NVTU_GPSINFO,	"GPS",	"ucustom -gpsinfo "},
-	{VPK_NVTU_SNAPSHOT,	"SNAP",	"ucustom -snapshot "},
+	{VPK_NVTU_GPSINFO,	"GPS",		"ucustom -gpsinfo "},
+	{VPK_NVTU_SNAPSHOT,	"SNAP",		"ucustom -snapshot "},
+	{VPK_NVTU_MOVIEREC,	"VIDEO",	"ucustom -movierec "},
+	{VPK_NVTU_MOVIELEN,	"VIDEO",	"ucustom -movielen "},
 
 	//	{VPK_NVTU_ACCINFO, "ACC", "ucustom -gpsinfo",},		//
 	//{VPK_NVTU_MAX,	"SNAP",	"ucustom -snapshot ",	NULL},

@@ -29,6 +29,7 @@ platform_sources = $(platform_nt966x_sources)
 endif
 libvpk_a_SOURCES=\
 inc/vpk_action.h \
+inc/vpk_filesys.h \
 inc/vpk.h \
 inc/vpk_libc.h \
 inc/vpk_logging.h \
@@ -40,6 +41,8 @@ src/vpk_actions.c \
 src/vpk_actions.h \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
+src/vpk_ifilesys.c \
+src/vpk_ifilesys.h \
 src/vpk_libc.c \
 src/vpk_logger.c \
 src/vpk_logger.h \

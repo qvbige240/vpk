@@ -38,6 +38,10 @@
 //#define INLINE
 #endif
 
+//typedef int bool;
+#define false	0
+#define true	1
+
 #ifndef _countof
 #define _countof(a)  (sizeof(a)/sizeof(a[0]))
 #endif

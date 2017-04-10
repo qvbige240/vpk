@@ -111,7 +111,12 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 			char *str = "movie len:8288";
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
-		}			
+		}
+		else
+		{
+			char *str = "unkonwn command!!!";
+			memcpy(thiz->data_buff, str, strlen(str));
+		}
 		
 	}
 

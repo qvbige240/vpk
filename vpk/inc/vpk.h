@@ -13,6 +13,7 @@
 #include "vpk_serialc.h"
 #include "vpk_nvtuctrlc.h"
 #include "vpk_action.h"
+#include "vpk_filesys.h"
 //#include "vpk_queues.h"
 
 TIMA_BEGIN_DELS
