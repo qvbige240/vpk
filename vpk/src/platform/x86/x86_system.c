@@ -7,6 +7,7 @@
 #include "x86_system.h"
 #include "x86_log.h"
 #include "x86_session.h"
+#include "x86_eventq.h"
 
 static vpk_system_t x86_system = {0};
 
@@ -34,4 +35,5 @@ system_kset x86_system_kset =
 	x86_system_init,
 	get_x86_logger_ops,
 	get_x86_sessionsys_ops,
+	get_x86_eventq_ops,
 };

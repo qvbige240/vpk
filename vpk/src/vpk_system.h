@@ -9,6 +9,7 @@
 
 #include "vpk_logger.h"
 #include "vpk_session.h"
+#include "vpk_ieventq.h"
 
 TIMA_BEGIN_DELS
 
@@ -19,6 +20,7 @@ typedef struct system_kset
 	vpk_system_t*			(*init)(void);
 	const logger_ops*		(*get_logger_ops)(void);
 	const sessionsys_ops*	(*get_sessionsys_ops)(void);
+	const eventq_ops*		(*get_eventq_ops)(void);
 }system_kset;
 
 struct vpk_system_t

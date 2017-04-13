@@ -33,7 +33,7 @@ static vpk_serial_t* vpk_serial_load(const char* tty)	//..whether the tty is bei
 		serial->s_ops = s_ops;
 		memset(serial->name, 0, _countof(serial->name));
 		//strlcpy(serial->name, tty, _countof(serial->name));
-        memcpy(serial->name, tty, sizeof(serial->name));
+		memcpy(serial->name, tty, sizeof(serial->name));
 		LOG_D("serial->name: %s, tty: %s", serial->name, tty);
 	}
 

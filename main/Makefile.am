@@ -11,5 +11,6 @@ $(project_dir)/vpk/libvpk.a
 LIBS=$(DYNAMIC_LIBS)
 test_LDFLAGS=$(EXTRA_LDFLAGS)
 test_SOURCES =\
-sample_jasson.c
+sample_mq.c
+#sample_jasson.c
 #sample_00.c

@@ -41,6 +41,7 @@ void init_subsystem(int argc, char* argv[])
 {
 	vpk_logger_init();
 	vpk_sessionsys_init();
+	vpk_eventq_init();
 }
 
 int vpk_system_init(int argc, char* argv[])

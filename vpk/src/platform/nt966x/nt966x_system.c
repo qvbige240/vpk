@@ -7,6 +7,7 @@
 #include "nt966x_system.h"
 #include "nt966x_log.h"
 #include "nt966x_session.h"
+#include "nt966x_eventq.h"
 
 static vpk_system_t nt966x_system = {0};
 
@@ -34,4 +35,5 @@ system_kset nt966x_system_kset =
 	nt966x_system_init,
 	get_nt966x_logger_ops,
 	get_nt966x_sessionsys_ops,
+	get_nt966x_eventq_ops,
 };

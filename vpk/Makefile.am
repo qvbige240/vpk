@@ -1,6 +1,8 @@
 AUTOMAKE_OPTIONS=foreign
 noinst_LIBRARIES=libvpk.a
 platform_nt966x_sources = \
+src/platform/nt966x/nt966x_eventq.c \
+src/platform/nt966x/nt966x_eventq.h \
 src/platform/nt966x/nt966x_log.c \
 src/platform/nt966x/nt966x_log.h \
 src/platform/nt966x/nt966x_nvtuctrl.c \
@@ -12,6 +14,8 @@ src/platform/nt966x/nt966x_session.h \
 src/platform/nt966x/nt966x_system.c \
 src/platform/nt966x/nt966x_system.h
 platform_x86_sources = \
+src/platform/x86/x86_eventq.c \
+src/platform/x86/x86_eventq.h \
 src/platform/x86/x86_log.c \
 src/platform/x86/x86_log.h \
 src/platform/x86/x86_nvtuctrl.c \
@@ -29,6 +33,8 @@ platform_sources = $(platform_nt966x_sources)
 endif
 libvpk_a_SOURCES=\
 inc/vpk_action.h \
+inc/vpk_constants.h \
+inc/vpk_event.h \
 inc/vpk_filesys.h \
 inc/vpk.h \
 inc/vpk_libc.h \
@@ -41,6 +47,8 @@ src/vpk_actions.c \
 src/vpk_actions.h \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
+src/vpk_ieventq.c \
+src/vpk_ieventq.h \
 src/vpk_ifilesys.c \
 src/vpk_ifilesys.h \
 src/vpk_libc.c \
