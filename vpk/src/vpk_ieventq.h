@@ -16,7 +16,7 @@ TIMA_BEGIN_DELS
 
 typedef struct eventq_ops_s
 {
-	vpk_eventq_t*	(*init)(void *ctx);
+	vpk_eventq_t*	(*init)(const char* name, const char* mode);
 	int				(*empty)(const vpk_eventq_t* queue);
 	int				(*recv)(vpk_eventq_t *queue, vpk_event_t* e);
 	int				(*post)(vpk_eventq_t *queue, vpk_event_t* e);

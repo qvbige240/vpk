@@ -50,9 +50,10 @@ int test_event_post(const char* name)
 	vpk_eventq_t* eventq = NULL;
 	return_val_if_fail(name != NULL, -1);
 
-	eventq = vpk_eventq_open();
+	eventq = vpk_eventq_open("/test", "w");
 	return_val_if_fail(eventq != NULL, -1);
 
+	LOG_D("send queue start");
 	alert1.type = vpk.events.ALERT;
 	alert1.alert.keycode = vpk.keys.EVENT_NO_TF_CARD;
 
@@ -82,9 +83,10 @@ int test_event_recv(const char* name)
 	vpk_eventq_t* eventq = NULL;
 	return_val_if_fail(name != NULL, -1);
 
-	eventq = vpk_eventq_open();
+	eventq = vpk_eventq_open("/test", "a+");
 	return_val_if_fail(eventq != NULL, -1);
 
+	LOG_D("recv queue start");
 	while (1)
 	{
 		memset(&alert, 0x00, sizeof(vpk_event_t));
@@ -113,7 +115,7 @@ void *vpk_test3(void* arg)
 
 void *vpk_test2(void* arg)
 {
-	//sleep(6);
+	sleep(1);
 	LOG_D("start test2 thread!");
 	while(1)
 	{

@@ -31,10 +31,52 @@ typedef union vpk_event_t
 struct vpk_eventq_t;
 typedef struct vpk_eventq_t vpk_eventq_t;
 
-VPKAPI vpk_eventq_t* vpk_eventq_open(void);
+/**
+ * Create and open a event queue object.
+ *
+ * @param name		The event queue name which was just "/" followed by some characters..
+ * @param mode		r/w/a+
+ *
+ * @return The event queue object.
+ */
+VPKAPI vpk_eventq_t* vpk_eventq_open(const char* name, const char* mode);
+
+/**
+ * Receive event(alert, and so on) from event queue.
+ *
+ * @param queue		The event queue object.
+ * @param e			an event
+ *
+ * @return The receive message len, -1 failed.
+ */
 VPKAPI int vpk_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e);
+
+/**
+ * Post an event(alert, and so on) to event queue.
+ *
+ * @param queue		The event queue object.
+ * @param e			an event
+ *
+ * @return 0 success, -1 failed.
+ */
 VPKAPI int vpk_eventq_post(vpk_eventq_t *queue, vpk_event_t* e);
+
+/**
+ * Close event queue.
+ *
+ * @param queue		The event queue object.
+ *
+ * @return 0 success.
+ */
 VPKAPI int vpk_eventq_close(vpk_eventq_t *queue);
+
+/**
+ * Destroy event queue.
+ *
+ * @param queue		The event queue object.
+ *
+ * @return 0 success.
+ */
 VPKAPI int vpk_eventq_destroy(vpk_eventq_t *queue);
 
 

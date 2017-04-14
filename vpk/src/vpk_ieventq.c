@@ -25,12 +25,12 @@ int vpk_eventq_init(void)
 	return 0;
 }
 
-vpk_eventq_t* vpk_eventq_open(void)
+vpk_eventq_t* vpk_eventq_open(const char* name, const char* mode)
 {
 	vpk_eventq_t* eventq = NULL;
 	if (eops)
 	{
-		eventq = eops->init(NULL);
+		eventq = eops->init(name, mode);
 		return_val_if_fail(eventq != NULL, NULL);
 
 		eventq->e_ops = eops;

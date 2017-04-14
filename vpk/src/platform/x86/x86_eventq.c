@@ -51,14 +51,36 @@ static int x86_eventq_destruct(void *queue)
 	return 0;
 }
 
-static vpk_eventq_t* x86_eventq_init(void *ctx)
+static vpk_eventq_t* x86_eventq_init(const char* name, const char* mode)
 {
+	int rw, oflags, create = 0;
 	vpk_eventq_t* thiz = NULL;
 	struct mq_attr attr;
 	attr.mq_flags	= O_NONBLOCK;
 	attr.mq_maxmsg	= CUSTOM_EVT_MQ_MSG_NUM_MAX;
 	attr.mq_msgsize = CUSTOM_EVT_MQ_MSG_LEN_MAX;
 	attr.mq_curmsgs = 0;
+
+	rw = (mode[1] == '+') || (mode[1] && (mode[2] == '+'));
+
+	switch (*mode)
+	{
+	case 'a':
+		oflags = O_CREAT  | (rw ? O_RDWR : O_WRONLY);
+		create = 1;
+		break;
+	case 'r':
+		oflags = rw ? O_RDWR : O_RDONLY;
+		break;
+	case 'w':
+		//oflags = O_CREAT | O_TRUNC | (rw ? O_RDWR : O_WRONLY);
+		//oflags = O_EXCL | (rw ? O_RDWR : O_WRONLY);
+		oflags = rw ? O_RDWR : O_WRONLY;
+		break;
+	default:
+		return (NULL);
+	}
+
 	thiz = (vpk_eventq_t*)TIMA_MALLOC(sizeof(vpk_eventq_t));
 	if (thiz)
 	{
@@ -66,7 +88,10 @@ static vpk_eventq_t* x86_eventq_init(void *ctx)
 		thiz->destruct	= x86_eventq_destruct;
 		thiz->fd		= -1;
 		memcpy(thiz->name, CUSTOM_NOTIFY_EVENT_QUEUE_NAME, sizeof(thiz->name));
-		thiz->fd = mq_open(CUSTOM_NOTIFY_EVENT_QUEUE_NAME, O_CREAT | O_RDWR, 0666, &attr);
+		if (create)
+			thiz->fd = mq_open(CUSTOM_NOTIFY_EVENT_QUEUE_NAME, oflags, 0777, &attr);
+		else
+			thiz->fd = mq_open(CUSTOM_NOTIFY_EVENT_QUEUE_NAME, oflags);
 		if (thiz->fd < 0)
 		{
 			LOG_E("mq_open error(name = %s), fd: %d", thiz->name, thiz->fd);
