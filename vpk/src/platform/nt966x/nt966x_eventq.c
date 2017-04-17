@@ -26,12 +26,28 @@
 
 const vpk_constants_t vpk = {
 	{
-		NT966X_EVENT_ALERT,
+		VPK_EVENT_ABNORMAL,
+		VPK_EVENT_ALERT,
 	},
 	{
-		NT966X_KEY_EVENT_NO_TF_CARD,
-		NT966X_KEY_EVENT_TF_CARD_WRITE_PROTECT,
-		NT966X_KEY_EVENT_TF_CARD_FULL,
+		// ABNORMAL
+		VPK_KEY_EVENT_NO_TF_CARD,
+		VPK_KEY_EVENT_TF_CARD_WRITE_PROTECT,
+		VPK_KEY_EVENT_TF_CARD_FULL,
+		VPK_KEY_EVENT_FILE_READ_ERROR,
+		VPK_KEY_EVENT_MEMORY_ERROR,
+		VPK_KEY_EVENT_TF_CARD_WR_ERROR,
+		VPK_KEY_EVENT_TF_CARD_MIN_ERROR,
+		VPK_KEY_EVENT_REAR_SENSOR_REMOVE,
+		VPK_KEY_EVENT_FILE_NOT_EXIST,
+		// ALERT
+		VPK_KEY_EVENT_CAR_CRASH_WARNING,
+		// ALERT
+		VPK_KEY_EVENT_PARKING_CRASH_WARNING,
+		VPK_KEY_EVENT_POLICE_COME_IN,
+		VPK_KEY_EVENT_CAR_FAST_ACCEL,
+		VPK_KEY_EVENT_CAR_FAST_SLOW_DOWN,
+		VPK_KEY_EVENT_CAR_RAPID_TURN,
 	},
 };
 
@@ -124,19 +140,36 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 		if (len >= CUSTOM_EVT_MQ_MSG_LEN_MAX)
 			thiz->recv_buff[CUSTOM_EVT_MQ_MSG_LEN_MAX-1] = '\0';
 
-// 		switch (atoi(thiz->recv))
-// 		{
-// 		case vpk.keys.EVENT_NO_TF_CARD:
-// 			e->type = vpk.events.ALERT;
-// 			break;
-// 		default:break;
-// 		}
+		int keycode = atoi(thiz->recv_buff);
+		switch (keycode)
+		{
+		case VPK_KEY_EVENT_NO_TF_CARD:
+		case VPK_KEY_EVENT_TF_CARD_WRITE_PROTECT:
+		case VPK_KEY_EVENT_TF_CARD_FULL:
+		case VPK_KEY_EVENT_FILE_READ_ERROR:
+		case VPK_KEY_EVENT_MEMORY_ERROR:
+		case VPK_KEY_EVENT_TF_CARD_WR_ERROR:
+		case VPK_KEY_EVENT_TF_CARD_MIN_ERROR:
+		case VPK_KEY_EVENT_REAR_SENSOR_REMOVE:
+		case VPK_KEY_EVENT_FILE_NOT_EXIST:
+		case VPK_KEY_EVENT_POLICE_COME_IN:
+		case VPK_KEY_EVENT_CAR_FAST_ACCEL:
+		case VPK_KEY_EVENT_CAR_FAST_SLOW_DOWN:
+		case VPK_KEY_EVENT_CAR_RAPID_TURN:
+			e->type = vpk.events.ABNORMAL;
+			e->abnormal.keycode = keycode;
+			break;
+		// ALERT
+		case VPK_KEY_EVENT_CAR_CRASH_WARNING:
+		case VPK_KEY_EVENT_PARKING_CRASH_WARNING:
+			e->type = vpk.events.ALERT;
+			e->alert.keycode = keycode;
+			break;
+		default:break;
+		}
 
-		e->alert.type = vpk.events.ALERT;
-		e->alert.keycode = atoi(thiz->recv_buff);
-		LOG_W("Alert message keycode: %d, string: %s, len: %d\n", atoi(thiz->recv_buff), thiz->recv_buff, len);
+		LOG_W("Alert message keycode(type:%x): 0x%x, string: %s, len: %d\n", e->type, keycode, thiz->recv_buff, len);
 	}
-
 
 	return len;
 }
@@ -151,11 +184,12 @@ static int nt966x_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 
 	switch (e->type)
 	{
-	case NT966X_EVENT_ALERT:	//vpk.events.ALERT:
+	case VPK_EVENT_ALERT:	//vpk.events.ALERT:
 		snprintf(send_buff, sizeof(send_buff), "0x%x", e->alert.keycode);
 		break;
-	//case vpk.events. other:
-	//	break;
+	case VPK_EVENT_ABNORMAL:
+		snprintf(send_buff, sizeof(send_buff), "0x%x", e->abnormal.keycode);
+		break;
 	default:break;
 	}
 

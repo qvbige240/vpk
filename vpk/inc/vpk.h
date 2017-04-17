@@ -17,6 +17,7 @@
 //#include "vpk_queues.h"
 #include "vpk_constants.h"
 #include "vpk_event.h"
+#include "vpk_mmap.h"
 
 TIMA_BEGIN_DELS
 
