@@ -12,9 +12,15 @@
 TIMA_BEGIN_DELS
 
 #define EVENT_MQ_MSG_NUM_MAX	10
-#define EVENT_MQ_MSG_LEN_MAX	32
+#define EVENT_MQ_MSG_LEN_MAX	16
 
 #define    extends_event()     unsigned int  type
+
+typedef struct vpk_abnormal_t
+{
+	extends_event();
+	int keycode;
+}vpk_abnormal_t;
 
 typedef struct vpk_alert_t
 {
@@ -26,6 +32,7 @@ typedef union vpk_event_t
 {
 	extends_event();
 	vpk_alert_t		alert;
+	vpk_abnormal_t	abnormal;
 }vpk_event_t;
 
 struct vpk_eventq_t;
@@ -34,9 +41,12 @@ typedef struct vpk_eventq_t vpk_eventq_t;
 /**
  * Create and open a event queue object.
  *
+ * @param name		The event queue name which was just "/" followed by some characters..
+ * @param mode		r/w/a+
+ *
  * @return The event queue object.
  */
-VPKAPI vpk_eventq_t* vpk_eventq_open(void);
+VPKAPI vpk_eventq_t* vpk_eventq_open(const char* name, const char* mode);
 
 /**
  * Receive event(alert, and so on) from event queue.

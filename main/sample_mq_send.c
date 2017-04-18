@@ -11,7 +11,7 @@
 
 #include "vpk.h"
 
-extern void *vpk_test2(void* arg);
+// extern void *vpk_test2(void* arg);
 extern void *vpk_test3(void* arg);
 
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	pthread_t pth_test3, pth_test2;
 
 	vpk_system_init(argc, argv);
-	vpk_logging_level_set("DEBUG");
+	//vpk_logging_level_set("DEBUG");
 
 	//eventq = vpk_eventq_open();
 
@@ -32,12 +32,12 @@ int main(int argc, char *argv[])
 	if (ret != 0)
 		LOG_E("create thread \'vpk_test3\' failed");
 
-	ret = pthread_create(&pth_test2, NULL, vpk_test2, (void*)NULL);
-	if (ret != 0)
-		LOG_E("create thread \'vpk_test2\' failed");
+// 	ret = pthread_create(&pth_test2, NULL, vpk_test2, (void*)NULL);
+// 	if (ret != 0)
+// 		LOG_E("create thread \'vpk_test2\' failed");
 
 	pthread_join(pth_test3, &thread_result);
-	pthread_join(pth_test2, &thread_result);
+// 	pthread_join(pth_test2, &thread_result);
 
 	return 0;
 }
@@ -75,31 +75,31 @@ int test_event_post(const char* name)
 
 	return ret;
 }
-
-int test_event_recv(const char* name)
-{
-	int ret = -1;
-	vpk_event_t alert = {0};
-	vpk_eventq_t* eventq = NULL;
-	return_val_if_fail(name != NULL, -1);
-
-	eventq = vpk_eventq_open("/test", "a+");
-	return_val_if_fail(eventq != NULL, -1);
-
-	LOG_D("recv queue start");
-	while (1)
-	{
-		memset(&alert, 0x00, sizeof(vpk_event_t));
-		ret = vpk_eventq_recv(eventq, &alert);
-		LOG_I("[%s] ret = %d, recv alert key = 0x%x\n", name, ret, alert.alert.keycode);
-		sleep(1);
-	}
-
-	vpk_eventq_close(eventq);
-	vpk_eventq_destroy(eventq);
-
-	return ret;
-}
+// 
+// int test_event_recv(const char* name)
+// {
+// 	int ret = -1;
+// 	vpk_event_t alert = {0};
+// 	vpk_eventq_t* eventq = NULL;
+// 	return_val_if_fail(name != NULL, -1);
+// 
+// 	eventq = vpk_eventq_open("/test", "a+");
+// 	return_val_if_fail(eventq != NULL, -1);
+// 
+// 	LOG_D("recv queue start");
+// 	while (1)
+// 	{
+// 		memset(&alert, 0x00, sizeof(vpk_event_t));
+// 		ret = vpk_eventq_recv(eventq, &alert);
+// 		LOG_I("[%s] ret = %d, recv alert key = 0x%x\n", name, ret, alert.alert.keycode);
+// 		sleep(1);
+// 	}
+// 
+// 	vpk_eventq_close(eventq);
+// 	vpk_eventq_destroy(eventq);
+// 
+// 	return ret;
+// }
 
 void *vpk_test3(void* arg)
 {
@@ -112,15 +112,15 @@ void *vpk_test3(void* arg)
 		sleep(1);
 	}
 }
-
-void *vpk_test2(void* arg)
-{
-	sleep(1);
-	LOG_D("start test2 thread!");
-	while(1)
-	{
-		LOG_D("test2 thread run.");
-		test_event_recv("RECV EVENT");
-		sleep(1);
-	}
-}
+// 
+// void *vpk_test2(void* arg)
+// {
+// 	sleep(1);
+// 	LOG_D("start test2 thread!");
+// 	while(1)
+// 	{
+// 		LOG_D("test2 thread run.");
+// 		test_event_recv("RECV EVENT");
+// 		sleep(1);
+// 	}
+// }

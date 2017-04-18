@@ -10,17 +10,15 @@
 #include <sys/stat.h>        /* For mode constants */
 #include <mqueue.h>
 
-#include "nt966x_eventq.h"
+#include "x86_eventq.h"
 #include "vpk_event.h"
 #include "vpk_logging.h"
 
-#include "nvtevent.h"
-
 // //customed event from uITRON
-// #define CUSTOM_EVT_PREFIX				"CST,"
-// #define CUSTOM_EVT_MQ_MSG_NUM_MAX		10
-// #define CUSTOM_EVT_MQ_MSG_LEN_MAX		12
-// #define CUSTOM_NOTIFY_EVENT_QUEUE_NAME	"/NvtCustomEventMq"
+#define CUSTOM_EVT_PREFIX				"CST,"
+#define CUSTOM_EVT_MQ_MSG_NUM_MAX		10
+#define CUSTOM_EVT_MQ_MSG_LEN_MAX		12
+#define CUSTOM_NOTIFY_EVENT_QUEUE_NAME	"/NvtCustomEventMq"
 
 #include "vpk_constants.h"
 
@@ -51,7 +49,7 @@ const vpk_constants_t vpk = {
 	},
 };
 
-static int nt966x_eventq_destruct(void *queue)
+static int x86_eventq_destruct(void *queue)
 {
 	vpk_eventq_t* thiz = (vpk_eventq_t*)queue;
 	if (thiz)
@@ -69,7 +67,7 @@ static int nt966x_eventq_destruct(void *queue)
 	return 0;
 }
 
-static vpk_eventq_t* nt966x_eventq_init(const char* name, const char* mode)
+static vpk_eventq_t* x86_eventq_init(const char* name, const char* mode)
 {
 	int rw, oflags, create = 0;
 	vpk_eventq_t* thiz = NULL;
@@ -103,11 +101,11 @@ static vpk_eventq_t* nt966x_eventq_init(const char* name, const char* mode)
 	if (thiz)
 	{
 		memset(thiz, 0x00, sizeof(*thiz));
-		thiz->destruct	= nt966x_eventq_destruct;
+		thiz->destruct	= x86_eventq_destruct;
 		thiz->fd		= -1;
-		memcpy(thiz->name, CUSTOM_NOTIFY_EVENT_QUEUE_NAME, sizeof(thiz->name));		
+		memcpy(thiz->name, CUSTOM_NOTIFY_EVENT_QUEUE_NAME, sizeof(thiz->name));
 		if (create)
-			thiz->fd = mq_open(CUSTOM_NOTIFY_EVENT_QUEUE_NAME, oflags, 0666, &attr);
+			thiz->fd = mq_open(CUSTOM_NOTIFY_EVENT_QUEUE_NAME, oflags, 0777, &attr);
 		else
 			thiz->fd = mq_open(CUSTOM_NOTIFY_EVENT_QUEUE_NAME, oflags);
 		if (thiz->fd < 0)
@@ -122,12 +120,12 @@ static vpk_eventq_t* nt966x_eventq_init(const char* name, const char* mode)
 	return thiz;
 }
 
-static int nt966x_eventq_empty(const vpk_eventq_t* queue)
+static int x86_eventq_empty(const vpk_eventq_t* queue)
 {
 	return 0;
 }
 
-static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
+static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 {
 	int len = 0;
 	vpk_eventq_t* thiz = queue;
@@ -159,15 +157,13 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 			e->type = vpk.events.ABNORMAL;
 			e->abnormal.keycode = keycode;
 			break;
-		// ALERT
+			// ALERT
 		case VPK_KEY_EVENT_CAR_CRASH_WARNING:
 		case VPK_KEY_EVENT_PARKING_CRASH_WARNING:
 			e->type = vpk.events.ALERT;
 			e->alert.keycode = keycode;
 			break;
-		default:
-			LOG_W("event keycode unrecognized, value = %d(0x%x)", keycode, keycode);
-			break;
+		default:break;
 		}
 
 		LOG_W("Alert message keycode(type:%x): 0x%x, string: %s, len: %d\n", e->type, keycode, thiz->recv_buff, len);
@@ -176,10 +172,10 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 	return len;
 }
 
-static int nt966x_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
+static int x86_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 {
 	int ret = 0;
-// 	struct timespec ts;
+	struct timespec ts;
 	vpk_eventq_t* thiz = queue;
 	char send_buff[EVENT_MQ_MSG_LEN_MAX];
 	return_val_if_fail(thiz != NULL && send_buff != NULL && e != NULL, -1);
@@ -187,19 +183,19 @@ static int nt966x_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 	switch (e->type)
 	{
 	case VPK_EVENT_ALERT:	//vpk.events.ALERT:
-		snprintf(send_buff, sizeof(send_buff), "%d", e->alert.keycode);
+		snprintf(send_buff, sizeof(send_buff), "0x%x", e->alert.keycode);
 		break;
 	case VPK_EVENT_ABNORMAL:
-		snprintf(send_buff, sizeof(send_buff), "%d", e->abnormal.keycode);
+		snprintf(send_buff, sizeof(send_buff), "0x%x", e->abnormal.keycode);
 		break;
 	default:break;
 	}
 
 	LOG_I("event post msg type: %d, keycode: 0x%x, string: %s", e->type, e->alert.keycode, send_buff);
 
-// 	ts.tv_sec	= 3;
-// 	ts.tv_nsec	= 0;
-// 	ret = mq_timedsend(thiz->fd, send_buff, EVENT_MQ_MSG_LEN_MAX, 0, &ts);
+	ts.tv_sec	= 3;
+	ts.tv_nsec	= 0;
+	//ret = mq_timedsend(thiz->fd, send_buff, EVENT_MQ_MSG_LEN_MAX, 0, &ts);
 	ret = mq_send(thiz->fd, send_buff, EVENT_MQ_MSG_LEN_MAX, 0);
 	if (ret != 0)
 	{
@@ -210,7 +206,7 @@ static int nt966x_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 	return 0;
 }
 
-static int nt966x_eventq_close(vpk_eventq_t *queue)
+static int x86_eventq_close(vpk_eventq_t *queue)
 {
 	vpk_eventq_t* thiz = queue;
 
@@ -228,16 +224,16 @@ static int nt966x_eventq_close(vpk_eventq_t *queue)
 	return 0;
 }
 
-static const eventq_ops nt966x_eventq_ops = 
+static const eventq_ops x86_eventq_ops = 
 {
-	nt966x_eventq_init,
-	nt966x_eventq_empty,
-	nt966x_eventq_recv,
-	nt966x_eventq_post,
-	nt966x_eventq_close,
+	x86_eventq_init,
+	x86_eventq_empty,
+	x86_eventq_recv,
+	x86_eventq_post,
+	x86_eventq_close,
 };
 
-const eventq_ops* get_nt966x_eventq_ops(void)
+const eventq_ops* get_x86_eventq_ops(void)
 {
-	return &nt966x_eventq_ops;
+	return &x86_eventq_ops;
 }
