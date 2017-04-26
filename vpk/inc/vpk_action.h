@@ -1,7 +1,7 @@
 /*
  * History:
  * ================================================================
- * 2017-05-05 qing.zou created
+ * 2017-04-02 qing.zou created
  *
  */
 #ifndef VPK_ACTION_H
@@ -13,11 +13,51 @@ TIMA_BEGIN_DELS
 
 typedef enum _VpkNvtuType
 {
+	VPK_NVTU_START_TAG = 0,				// without use
 	VPK_NVTU_GPSINFO = 1,
-	VPK_NVTU_ACCINFO,
+	VPK_NVTU_ACCEINFO,
 	VPK_NVTU_SNAPSHOT,
 	VPK_NVTU_MOVIEREC,
 	VPK_NVTU_MOVIELEN,
+	VPK_NVTU_DEVINFO,
+
+	// menu get
+	VPK_NVTU_MENU_PICSIZEGET,		// photo_resolution	
+	VPK_NVTU_MENU_RECSIZEGET,		// video_resolution
+	VPK_NVTU_MENU_CYCRECGET,		// video_time
+	VPK_NVTU_MENU_GSENSORGET,		// vibration_sensor
+	VPK_NVTU_MENU_PARKMONITORGET,	// parking_mode
+	VPK_NVTU_MENU_POWEROFFVOLTGET,	// off_voltage
+	VPK_NVTU_MENU_AUDIOGET,			// record_sound
+	VPK_NVTU_MENU_HDRGET,			// HDR
+	VPK_NVTU_MENU_TIMESTAMPGET,		// time_watermark
+	VPK_NVTU_MENU_UPDATEGET,		// upgrade			
+	VPK_NVTU_MENU_POWERSTATEGET,	// switch_machine
+	VPK_NVTU_MENU_CRASHSTATGET,		// car_warning
+	VPK_NVTU_MENU_DRIVEBEHAVIORGET, // driving
+	VPK_NVTU_MENU_DEVSTATGET,		// abnormal_equipment
+	VPK_NVTU_MENU_FORMATSD_NOP,		// format_tf		//
+	VPK_NVTU_MENU_FACTORYSET_NOP,	// factory_reset	//
+	VPK_NVTU_MENU_VERSIONGET,		// version			//
+	// menu set
+	VPK_NVTU_MENU_PICSIZESET,		// photo_resolution	
+	VPK_NVTU_MENU_RECSIZESET,		// video_resolution
+	VPK_NVTU_MENU_CYCRECSET,		// video_time
+	VPK_NVTU_MENU_GSENSORSET,		// vibration_sensor
+	VPK_NVTU_MENU_PARKMONITORSET,	// parking_mode
+	VPK_NVTU_MENU_POWEROFFVOLTSET,	// off_voltage
+	VPK_NVTU_MENU_AUDIOSET,			// record_sound
+	VPK_NVTU_MENU_HDRSET,			// HDR
+	VPK_NVTU_MENU_TIMESTAMPSET,		// time_watermark
+	VPK_NVTU_MENU_UPDATESET,		// upgrade			
+	VPK_NVTU_MENU_POWERSTATESET,	// switch_machine
+	VPK_NVTU_MENU_CRASHSTATSET,		// car_warning
+	VPK_NVTU_MENU_DRIVEBEHAVIORSET, // driving
+	VPK_NVTU_MENU_DEVSTATSET,		// abnormal_equipment
+	VPK_NVTU_MENU_FORMATSD,			// format_tf		//
+	VPK_NVTU_MENU_FACTORYSET,		// factory_reset	//
+	VPK_NVTU_MENU_VERSIONGET_NOP,	// version			//
+
 	VPK_NVTU_MAX,
 }VpkNvtuType;
 

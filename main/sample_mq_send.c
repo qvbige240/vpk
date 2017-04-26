@@ -19,7 +19,7 @@ extern void *vpk_test3(void* arg);
 
 int main(int argc, char *argv[])
 {
-	int ret = 0;
+	int ret = 0, type = 0;
 	void* thread_result;
 	pthread_t pth_test3, pth_test2;
 
@@ -27,8 +27,10 @@ int main(int argc, char *argv[])
 	//vpk_logging_level_set("DEBUG");
 
 	//eventq = vpk_eventq_open();
-
-	ret = pthread_create(&pth_test3, NULL, vpk_test3, (void*)NULL);
+	
+	if (argc > 1)
+		type = atoi(argv[1]);
+	ret = pthread_create(&pth_test3, NULL, vpk_test3, (void*)&type);
 	if (ret != 0)
 		LOG_E("create thread \'vpk_test3\' failed");
 
@@ -42,9 +44,10 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-int test_event_post(const char* name)
+int test_event_post(const char* name, void* type)
 {
 	int ret = -1;
+	vpk_event_t alert0 = {0};
 	vpk_event_t alert1 = {0};
 	vpk_event_t alert2 = {0};
 	vpk_eventq_t* eventq = NULL;
@@ -54,20 +57,33 @@ int test_event_post(const char* name)
 	return_val_if_fail(eventq != NULL, -1);
 
 	LOG_D("send queue start");
+	alert0.type = vpk.events.ABNORMAL;
+	alert0.abnormal.keycode = vpk.keys.EVENT_NO_TF_CARD;
+
 	alert1.type = vpk.events.ALERT;
-	alert1.alert.keycode = vpk.keys.EVENT_NO_TF_CARD;
+	alert1.alert.keycode = vpk.keys.EVENT_CAR_CRASH_WARNING;
 
 	alert2.type = vpk.events.ALERT;
-	alert2.alert.keycode = vpk.keys.EVENT_TF_CARD_WRITE_PROTECT;
+	alert2.alert.keycode = vpk.keys.EVENT_PARKING_CRASH_WARNING;
 	while (1)
 	{
-		ret = vpk_eventq_post(eventq, &alert1);
-		LOG_I("[%s] ret = %d, post alert key = 0x%x\n", name, ret, alert1.alert.keycode);
+		if (*((int*)type) == 1) 
+		{
+			ret = vpk_eventq_post(eventq, &alert1);
+			LOG_I("[%s] ret = %d, post alert key = 0x%x\n", name, ret, alert1.alert.keycode);
+		} 
+		else if (*((int*)type) == 2) 
+		{
+			ret = vpk_eventq_post(eventq, &alert2);
+			LOG_I("[%s] ret = %d, post alert key = 0x%x", name, ret, alert2.alert.keycode);
+		}
+		else
+		{
+			ret = vpk_eventq_post(eventq, &alert0);
+			LOG_I("[%s] ret = %d, post abnormal key = 0x%x\n", name, ret, alert0.abnormal.keycode);
+		}
+
 		sleep(10);
-// 
-// 		ret = vpk_eventq_post(eventq, &alert2);
-// 		LOG_I("[%s] ret = %d, post alert key = 0x%x", name, ret, alert2.alert.keycode);
-// 		sleep(10);
 	}
 
 	vpk_eventq_close(eventq);
@@ -108,7 +124,7 @@ void *vpk_test3(void* arg)
 	while(1)
 	{
 		LOG_D("test3 thread run.\n");
-		test_event_post("POST EVENT");
+		test_event_post("POST EVENT", arg);
 		sleep(1);
 	}
 }

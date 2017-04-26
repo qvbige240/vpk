@@ -22,19 +22,59 @@ typedef struct _ActionInfo
 {
 	VpkNvtuType type;
 
-	char name[16];
-	char action[32];
+	char* name;
+	char* action;
 }ActionInfo;
 
-static ActionInfo action_tables[] =
+static const ActionInfo action_tables[] =
 {
-	{VPK_NVTU_GPSINFO,	"GPS",		"ucustom -gpsinfo "},
-	{VPK_NVTU_SNAPSHOT,	"SNAP",		"ucustom -snapshot "},
-	{VPK_NVTU_MOVIEREC,	"VIDEO",	"ucustom -movierec "},
-	{VPK_NVTU_MOVIELEN,	"VIDEO",	"ucustom -movielen "},
+	/** it needs order by 'VpkNvtuType' **/
+	{VPK_NVTU_START_TAG,				"UCUSTOM",	"	"},
+	{VPK_NVTU_GPSINFO,					"GPS",		"ucustom -gpsinfo "},
+	{VPK_NVTU_ACCEINFO,					"ACCE",		"ucustom -accinfo "},
+	{VPK_NVTU_SNAPSHOT,					"SNAP",		"ucustom -snapshot "},
+	{VPK_NVTU_MOVIEREC,					"VIDEO",	"ucustom -movierec "},
+	{VPK_NVTU_MOVIELEN,					"VIDEO",	"ucustom -movielen "},
+	{VPK_NVTU_DEVINFO,					"DEVINFO",	"ucustom -getdevinfo "},
 
-	//	{VPK_NVTU_ACCINFO, "ACC", "ucustom -gpsinfo",},		//
-	//{VPK_NVTU_MAX,	"SNAP",	"ucustom -snapshot ",	NULL},
+	/* menu get */
+	{VPK_NVTU_MENU_PICSIZEGET,			"MENUGET",	"ucustom -picsizeget "},
+	{VPK_NVTU_MENU_RECSIZEGET,			"MENUGET",	"ucustom -recsizeget "},
+	{VPK_NVTU_MENU_CYCRECGET,			"MENUGET",	"ucustom -cycrecget "},
+	{VPK_NVTU_MENU_GSENSORGET,			"MENUGET",	"ucustom -gsensorget "},
+	{VPK_NVTU_MENU_PARKMONITORGET,		"MENUGET",	"ucustom -parkmonitorget "},
+	{VPK_NVTU_MENU_POWEROFFVOLTGET,		"MENUGET",	"ucustom -poweroffvoltget "},
+	{VPK_NVTU_MENU_AUDIOGET,			"MENUGET",	"ucustom -audioget "},
+	{VPK_NVTU_MENU_HDRGET,				"MENUGET",	"ucustom -hdrget "},
+	{VPK_NVTU_MENU_TIMESTAMPGET,		"MENUGET",	"ucustom -timestampget "},
+	{VPK_NVTU_MENU_UPDATEGET,			"MENUGET",	"ucustom -updateget "},
+	{VPK_NVTU_MENU_POWERSTATEGET,		"MENUGET",	"ucustom -powerstateget "},
+	{VPK_NVTU_MENU_CRASHSTATGET,		"MENUGET",	"ucustom -crashstatget "},
+	{VPK_NVTU_MENU_DRIVEBEHAVIORGET,	"MENUGET",	"ucustom -drivebehaviorget "},
+	{VPK_NVTU_MENU_DEVSTATGET,			"MENUGET",	"ucustom -devstatget "},
+	{VPK_NVTU_MENU_FORMATSD_NOP,		"MENUGET",	" "},	// be careful
+	{VPK_NVTU_MENU_FACTORYSET_NOP,		"MENUGET",	" "},	// be careful
+	{VPK_NVTU_MENU_VERSIONGET,			"MENUGET",	"ucustom -versionget "},
+
+	/* menu set */
+	{VPK_NVTU_MENU_PICSIZESET,			"MENUSET", "ucustom -picsizeset "},
+	{VPK_NVTU_MENU_RECSIZESET,			"MENUSET", "ucustom -recsizeset "},
+	{VPK_NVTU_MENU_CYCRECSET,			"MENUSET", "ucustom -cycrecset "},
+	{VPK_NVTU_MENU_GSENSORSET,			"MENUSET", "ucustom -gsensorset "},
+	{VPK_NVTU_MENU_PARKMONITORSET,		"MENUSET", "ucustom -parkmonitorset "},
+	{VPK_NVTU_MENU_POWEROFFVOLTSET,		"MENUSET", "ucustom -poweroffvoltset "},
+	{VPK_NVTU_MENU_AUDIOSET,			"MENUSET", "ucustom -audioset "},
+	{VPK_NVTU_MENU_HDRSET,				"MENUSET", "ucustom -hdrset "},
+	{VPK_NVTU_MENU_TIMESTAMPSET,		"MENUSET", "ucustom -timestampset "},
+	{VPK_NVTU_MENU_UPDATEGET,			"MENUSET", "ucustom -updateset "},
+	{VPK_NVTU_MENU_POWERSTATESET,		"MENUSET", "ucustom -powerstateset "},
+	{VPK_NVTU_MENU_CRASHSTATSET,		"MENUSET", "ucustom -crashstatset "},
+	{VPK_NVTU_MENU_DRIVEBEHAVIORSET,	"MENUSET", "ucustom -drivebehaviorset "},
+	{VPK_NVTU_MENU_DEVSTATSET,			"MENUSET", "ucustom -devstatset "},
+	{VPK_NVTU_MENU_FORMATSD,			"MENUSET", "ucustom -formatsd "},
+	{VPK_NVTU_MENU_FACTORYSET,			"MENUSET", "ucustom -factoryset "},
+	{VPK_NVTU_MENU_VERSIONGET_NOP,		"MENUSET", " "},		// not use
+
 };
 
 VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint32_t recvsize) 
@@ -49,15 +89,25 @@ VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint3
 		DECL_PRIV(thiz, priv);
 		memset(thiz, 0x00, sizeof(VpkAction) + sizeof(PrivInfo));
 
-		for (i = 0; i < _countof(action_tables); i++)
+		if (type == action_tables[type-VPK_NVTU_START_TAG].type) 
 		{
-			if (type == action_tables[i].type) {
-				thiz->type = type;
-				strcpy(priv->name, action_tables[i].name);
-				strncpy(priv->action, action_tables[i].action, strlen(action_tables[i].action));
-				break;
+			thiz->type = type;
+			strcpy(priv->name, action_tables[type-VPK_NVTU_START_TAG].name);
+			strncpy(priv->action, action_tables[type-VPK_NVTU_START_TAG].action, strlen(action_tables[type-VPK_NVTU_START_TAG].action));
+		}
+		else
+		{
+			for (i = 0; i < _countof(action_tables); i++)
+			{
+				if (type == action_tables[i].type) {
+					thiz->type = type;
+					strcpy(priv->name, action_tables[i].name);
+					strncpy(priv->action, action_tables[i].action, strlen(action_tables[i].action));
+					break;
+				}
 			}
 		}
+
 		if (thiz->type == 0)
 		{
 			TIMA_FREE(thiz);
@@ -68,7 +118,10 @@ VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint3
 		thiz->recvbuf	= recvbuf;
 		thiz->recvsize	= recvsize;
 		if (param != NULL)
+		{
+			/** "ucustom -snapshot 1" **/
 			sprintf(priv->action, "%s %s", priv->action, (char*)param);
+		}
 
 		LOG_D("[%s]action or instructions created: \'%s\'", priv->name, priv->action);
 
@@ -113,27 +166,39 @@ int vpk_action_param_set(VpkAction* thiz, VpkNvtuType type, void *param)
 // 		}
 // 	}
 
-	for (i = 0; i < _countof(action_tables); i++) 
+	if (type == action_tables[type-VPK_NVTU_START_TAG].type) 
 	{
-		if (type == action_tables[i].type) 
-		{
-			memset(priv->name, 0x00, sizeof(priv->name));
-			memset(priv->action, 0x00, sizeof(priv->action));
-			thiz->type = type;
-			strcpy(priv->name, action_tables[i].name);
-			strncpy(priv->action, action_tables[i].action, strlen(action_tables[i].action));
-			break;
-		}
+		memset(priv->name, 0x00, sizeof(priv->name));
+		memset(priv->action, 0x00, sizeof(priv->action));
+		thiz->type = type;
+		strcpy(priv->name, action_tables[type-VPK_NVTU_START_TAG].name);
+		strncpy(priv->action, action_tables[type-VPK_NVTU_START_TAG].action, strlen(action_tables[type-VPK_NVTU_START_TAG].action));
 	}
-
-	if (i == _countof(action_tables))
+	else
 	{
-		LOG_W("failed set the cmd or instructions[type:%d] unrecognized!!!", type);
-		return -1;
+		for (i = 1; i < _countof(action_tables); i++) 
+		{
+			if (type == action_tables[i].type) 
+			{
+				memset(priv->name, 0x00, sizeof(priv->name));
+				memset(priv->action, 0x00, sizeof(priv->action));
+				thiz->type = type;
+				strcpy(priv->name, action_tables[i].name);
+				strncpy(priv->action, action_tables[i].action, strlen(action_tables[i].action));
+				break;
+			}
+		}
+
+		if (i == _countof(action_tables))
+		{
+			LOG_W("failed set the cmd or instructions[type:%d] unrecognized!!!", type);
+			return -1;
+		}
 	}
 
 	if (param != NULL) 
 	{
+		/** "ucustom -snapshot 1" **/
 		sprintf(priv->action, "%s %s", priv->action, (char*)param);
 	}
 

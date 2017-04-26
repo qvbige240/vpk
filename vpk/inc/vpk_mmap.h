@@ -14,6 +14,14 @@ TIMA_BEGIN_DELS
 struct _VpkMmap;
 typedef struct _VpkMmap VpkMmap;
 
+/**
+ * Create a file map object.
+ *
+ * @param offset		The file position offset.
+ * @param size			need size which read from file, -1 means total file
+ *
+ * @return The file map object which content length, data and so on.
+ */
 VpkMmap*	vpk_mmap_create(const char* filename, size_t offset, size_t size);
 void*		vpk_mmap_data(VpkMmap* thiz);
 size_t		vpk_mmap_length(VpkMmap* thiz);
