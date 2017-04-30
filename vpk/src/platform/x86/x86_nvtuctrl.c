@@ -113,6 +113,13 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}
+		p = strstr(buf, "get");
+		if (p != NULL)
+		{
+			char *str = "0";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
 		else
 		{
 			char *str = "unkonwn command!!!";

@@ -34,12 +34,13 @@ if test x$enable_x86 = xyes; then
 	GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
 	AC_SUBST(GOLBAL_CFLAGS)
 	
-	JANSSON_LIB='$(project_dir)/nvt/lib/x86/libjansson.a'
+	#JANSSON_LIB='$(project_dir)/nvt/lib/x86/libjansson.a'
+	JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
 	AC_SUBST(JANSSON_LIB)
 	
 	DYNAMIC_LIBS="-lpthread -lrt"
 	AC_SUBST(DYNAMIC_LIBS)
-	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/nvt/include/x86 -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS)'
 	AC_SUBST(EXTRA_LDFLAGS)
 else
@@ -51,13 +52,13 @@ else
 	GOLBAL_LDFLAGS="-L${GBASE_LIB}"
 	AC_SUBST(GOLBAL_CFLAGS)
 	
-	JANSSON_LIB='$(project_dir)/nvt/lib/mips/libjansson.a'
+	JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
 	AC_SUBST(JANSSON_LIB)
 	DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
 	AC_SUBST(DYNAMIC_LIBS)
-	EXTRA_LDFLAGS='-L$(project_dir)/nvt/lib'
+	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib'
 	AC_SUBST(EXTRA_LDFLAGS)
-	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/nvt/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/mips/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 fi
 echo "platform: $PLATFORMS"
 echo "platform11111: ${PLATFORMS}"

@@ -71,6 +71,17 @@ VPKAPI int vpk_mkdir(const char* path)
 	return 0;
 }
 
+int vpk_filename_get(const char *full, char *name)
+{
+	const char *pos = strrchr(full, '/');
+	if (pos == NULL)
+		strcpy(name, full);
+	else
+		strcpy(name, pos+1);
+
+	return 0;
+}
+
 VPKAPI int vpk_remove(const char* path)
 {
 	if (!vpk_exists(path)) {
