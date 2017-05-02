@@ -36,9 +36,11 @@ if test x$enable_x86 = xyes; then
 	
 	#JANSSON_LIB='$(project_dir)/nvt/lib/x86/libjansson.a'
 	JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
+	CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
+    AC_SUBST(CURL_LIB)
 	AC_SUBST(JANSSON_LIB)
 	
-	DYNAMIC_LIBS="-lpthread -lrt"
+	DYNAMIC_LIBS="-lpthread -lrt -lz"
 	AC_SUBST(DYNAMIC_LIBS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS)'
@@ -53,7 +55,10 @@ else
 	AC_SUBST(GOLBAL_CFLAGS)
 	
 	JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
+	CURL_LIB='$(project_dir)/mips/lib/libcurl.a'
 	AC_SUBST(JANSSON_LIB)
+    AC_SUBST(CURL_LIB)
+
 	DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
 	AC_SUBST(DYNAMIC_LIBS)
 	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib'

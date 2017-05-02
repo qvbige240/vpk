@@ -3,7 +3,7 @@ bin_PROGRAMS = test
 #bin_PROGRAMS = jansson
 #test_LDFLAGS=-static
 test_LDADD =\
-$(JANSSON_LIB) \
+$(JANSSON_LIB) $(CURL_LIB) \
 $(project_dir)/vpk/libvpk.a
 #$(project_dir)/vpk/nvt/lib/libjansson.a
 #LIBS=-lnvtuctrl -lpthread -lm
@@ -11,7 +11,8 @@ $(project_dir)/vpk/libvpk.a
 LIBS=$(DYNAMIC_LIBS)
 test_LDFLAGS=$(EXTRA_LDFLAGS)
 test_SOURCES =\
-sample_semaphore.c
+sample_download.c
+#sample_semaphore.c
 #sample_mq_recv.c
 #sample_mq_send.c
 #sample_mq.c
