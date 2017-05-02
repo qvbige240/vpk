@@ -41,6 +41,7 @@ inc/vpk_libc.h \
 inc/vpk_logging.h \
 inc/vpk_mmap.h \
 inc/vpk_nvtuctrlc.h \
+inc/vpk_queues.h \
 inc/vpk_serialc.h \
 inc/vpk_typedef.h \
 inc/vpk_util.h \
@@ -66,6 +67,8 @@ src/vpk_session.c \
 src/vpk_session.h \
 src/vpk_system.c \
 src/vpk_system.h \
+src/vpk_tqueue.c \
+src/vpk_tqueue.h \
 src/vpk_util.c \
 $(platform_sources)
 #noinst_LIBRARIES=libvpk.a

@@ -14,7 +14,7 @@
 #include "vpk_nvtuctrlc.h"
 #include "vpk_action.h"
 #include "vpk_filesys.h"
-//#include "vpk_queues.h"
+#include "vpk_queues.h"
 #include "vpk_constants.h"
 #include "vpk_event.h"
 #include "vpk_mmap.h"
