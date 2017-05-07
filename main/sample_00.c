@@ -54,6 +54,7 @@ int test_nvtuctrl(const char* name)
 	char recv_buf[256] = {0};
 	char cmd[256] = {0};
 	char cmd_2[256] = {0};
+	char cmd_3[256] = {0};
 	vpk_nvtuctrl_t* nvtuctrl = NULL;
 	return_val_if_fail(name != NULL, -1);
 
@@ -68,6 +69,7 @@ int test_nvtuctrl(const char* name)
 
 	snprintf(cmd, sizeof(cmd), "ucustom -gpsinfo");
 	snprintf(cmd_2, sizeof(cmd_2), "ucustom -snapshot 1");
+	snprintf(cmd_3, sizeof(cmd_3), "ucustom -getdevinfo ");
 
 	while (1)
 	{
@@ -77,6 +79,10 @@ int test_nvtuctrl(const char* name)
 
 		ret = vpk_nvtuctrl_write(nvtuctrl, cmd_2, sizeof(cmd_2), recv_buf, sizeof(recv_buf), 0);
 		LOG_I("[%s] ret = %d, recv_buf: %s, len: %d", name, ret, recv_buf, strlen(recv_buf));
+		sleep(1);
+
+		ret = vpk_nvtuctrl_write(nvtuctrl, cmd_3, sizeof(cmd_3), recv_buf, sizeof(recv_buf), 0);
+		LOG_I("[%s]devinfo ret = %d, recv_buf: %s, len: %d", name, ret, recv_buf, strlen(recv_buf));
 		sleep(1);
 	}
 
@@ -95,7 +101,7 @@ void *vpk_test3(void* arg)
 		LOG_D("test3 thread run.");
 		//test_nvtuctrl1("/dev/ttyAMA3");
 		test_nvtuctrl("GPS1");
-		sleep(1);
+		sleep(2);
 	}
 }
 
@@ -106,6 +112,6 @@ void *vpk_test2(void* arg)
 	{
 		LOG_D("test2 thread run.");
 		test_nvtuctrl("GPS2");
-		sleep(1);
+		sleep(2);
 	}
 }

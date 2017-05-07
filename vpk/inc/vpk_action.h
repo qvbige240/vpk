@@ -58,6 +58,8 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_MENU_FACTORYSET,		// factory_reset	//
 	VPK_NVTU_MENU_VERSIONGET_NOP,	// version			//
 
+	VPK_NVTU_QRCODE,
+
 	VPK_NVTU_MAX,
 }VpkNvtuType;
 

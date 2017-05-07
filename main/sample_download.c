@@ -178,8 +178,9 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 
  	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
  	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
-  /* get it! */
-    res = curl_easy_perform(curl_handle);
+  
+	/* get it! */
+	res = curl_easy_perform(curl_handle);
 	if (res == CURLE_OK)
 	{
 		res = curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &response_code);

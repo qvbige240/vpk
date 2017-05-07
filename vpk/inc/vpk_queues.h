@@ -1,7 +1,7 @@
-/*
+/**
  * History:
  * ================================================================
- * 2015-5-29 qing.zou created
+ * 2017-5-2 qing.zou created
  *
  */
 #ifndef VPK_QUEUES_H
