@@ -217,6 +217,7 @@ int vpk_action_exec(VpkAction* thiz, VpkActionCallback callback, void *ctx)
 
 	memset(thiz->recvbuf, 0x00, thiz->recvsize);
 	ret = vpk_nvtuctrl_write(priv->nvtuctrl, priv->action, strlen(priv->action), thiz->recvbuf, thiz->recvsize, 0);
+	if (!strstr(priv->action, "gpsinfo"))
 	LOG_D("[%s] ret = %d, recv_buf: %s, len: %d", priv->name, ret, thiz->recvbuf, strlen(thiz->recvbuf));
 	if (callback == NULL)
 	{

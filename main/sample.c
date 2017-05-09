@@ -11,6 +11,8 @@
 
 #include "vpk.h"
 
+extern int download_main(int argc, char *argv[]);
+extern int json_main(int argc, char *argv[]);
 extern int vpk_tqueue_test(int argc, char *argv[]);
 
 // #define LOG_D(...)	do {printf(__VA_ARGS__); printf("\n");}while(0)
@@ -54,18 +56,20 @@ int vpk_testbyte()
 
 int main(int argc, char *argv[])
 {
-// 	void* thread_result;
-// 	pthread_t pth_test3, pth_test2;
-
 	vpk_system_init(argc, argv);
 	LOG_I("log level: %s\n", vpk_logging_level_get());
 	vpk_logging_level_set("DEBUG");
 
+#if 0
 	vpk_testbyte();
-
 	vpk_wlan0_ifcheck();
-
+#elif 1
+	download_main(argc, argv);
+#elif 1
+	json_main(argc, argv);
+#elif 0
 	vpk_tqueue_test(argc, argv);
+#endif
 
 	return 0;
 }

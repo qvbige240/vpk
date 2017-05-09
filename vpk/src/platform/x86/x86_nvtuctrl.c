@@ -8,6 +8,7 @@
 
 //#include "nvtuctrl.h"
 
+#include "vpk_mmap.h"
 #include "vpk_logging.h"
 #include "x86_nvtuctrl.h"
 
@@ -110,6 +111,16 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 		if (p != NULL)
 		{
 			char *str = "movie len:8288";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
+		p = strstr(buf, "-getdevinfo");
+		if (p != NULL)
+		{
+			#define DEVICE_RELEASE_INFO_FILE	"dev_info_pc.json"
+			ret = vpk_mmap_exist(DEVICE_RELEASE_INFO_FILE);
+			VpkMmap* mmap = vpk_mmap_create(DEVICE_RELEASE_INFO_FILE, 0, -1);
+			char* str = vpk_mmap_data(mmap);
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}

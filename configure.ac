@@ -47,19 +47,20 @@ if test x$enable_x86 = xyes; then
 	AC_SUBST(EXTRA_LDFLAGS)
 else
     PLATFORMS="_NT966X_"
-	GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/mipsel-24kec-linux-uclibc/sysroot/usr/include"
-	GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/mipsel-24kec-linux-uclibc/sysroot/lib"
+	GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/usr/include"
+	GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/lib"
 	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
 	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
 	GOLBAL_LDFLAGS="-L${GBASE_LIB}"
 	AC_SUBST(GOLBAL_CFLAGS)
 	
 	JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
-	CURL_LIB='$(project_dir)/mips/lib/libcurl.a'
+	#CURL_LIB='$(project_dir)/mips/lib/libcurl.a'
+	CURL_LIB=''
 	AC_SUBST(JANSSON_LIB)
     AC_SUBST(CURL_LIB)
 
-	DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
+	DYNAMIC_LIBS="-lcurl -lnvtuctrl -lpthread -lrt -lm"
 	AC_SUBST(DYNAMIC_LIBS)
 	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib'
 	AC_SUBST(EXTRA_LDFLAGS)
