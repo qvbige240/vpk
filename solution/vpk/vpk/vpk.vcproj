@@ -207,6 +207,10 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\vpk\inc\vpk_queues.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\vpk\inc\vpk_serialc.h"
 							>
 						</File>
@@ -308,6 +312,14 @@
 						</File>
 						<File
 							RelativePath="..\..\..\vpk\src\vpk_system.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_tqueue.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_tqueue.h"
 							>
 						</File>
 						<File
@@ -428,7 +440,15 @@
 					Name="main"
 					>
 					<File
+						RelativePath="..\..\..\main\sample.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\main\sample_00.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_download.c"
 						>
 					</File>
 					<File
@@ -439,6 +459,86 @@
 						RelativePath="..\..\..\main\sample_mq.c"
 						>
 					</File>
+					<File
+						RelativePath="..\..\..\main\sample_mq_recv.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_mq_send.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_semaphore.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_string.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\tqueue_demo.c"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="x86"
+					>
+					<Filter
+						Name="inc"
+						>
+						<File
+							RelativePath="..\..\..\x86\include\jansson.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\x86\include\jansson_config.h"
+							>
+						</File>
+						<Filter
+							Name="curl"
+							>
+							<File
+								RelativePath="..\..\..\x86\include\curl\curl.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\curlbuild.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\curlrules.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\curlver.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\easy.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\mprintf.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\multi.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\stdcheaders.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\x86\include\curl\typecheck-gcc.h"
+								>
+							</File>
+						</Filter>
+					</Filter>
+					<Filter
+						Name="src"
+						>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter
@@ -464,6 +564,14 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\..\bll\bll_processmisc.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\bll\bll_processmisc.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\bll\bll_remotelocation.c"
 						>
 					</File>
@@ -472,11 +580,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\bll\bll_remotephoto.c"
+						RelativePath="..\..\..\..\include\bll\bll_remotemedia.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\bll\bll_remotevideo.c"
+						RelativePath="..\..\..\..\bll\bll_remotesetting.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\bll\bll_remotesetting.h"
 						>
 					</File>
 					<File
@@ -485,6 +597,14 @@
 					</File>
 					<File
 						RelativePath="..\..\..\..\include\bll\bll_reportevent.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\bll\bll_upgrade.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\bll\bll_upgrade.h"
 						>
 					</File>
 				</Filter>
@@ -1795,7 +1915,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat.h"
+							RelativePath="..\..\..\..\include\platform\plat.h"
 							>
 						</File>
 						<File
@@ -1803,7 +1923,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_event.h"
+							RelativePath="..\..\..\..\include\platform\plat_event.h"
 							>
 						</File>
 						<File
@@ -1811,7 +1931,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_gps.h"
+							RelativePath="..\..\..\..\include\platform\plat_gps.h"
 							>
 						</File>
 						<File
@@ -1819,11 +1939,27 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\..\mw\platform\plat_menu.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\platform\plat_menu.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\platform\plat_misc.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\platform\plat_misc.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\mw\platform\plat_snapshot.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_snapshot.h"
+							RelativePath="..\..\..\..\include\platform\plat_snapshot.h"
 							>
 						</File>
 						<File
@@ -1831,7 +1967,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_video.h"
+							RelativePath="..\..\..\..\include\platform\plat_video.h"
 							>
 						</File>
 					</Filter>
@@ -1872,6 +2008,10 @@
 						</File>
 						<File
 							RelativePath="..\..\..\..\mw\qiniu\qiniu_upload.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\qiniu\qiniu_upload.h"
 							>
 						</File>
 						<Filter
@@ -2015,6 +2155,18 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\..\include\tima\getprofile.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\tima\report_alert.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\report_alert.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\mw\tima\report_exception.c"
 							>
 						</File>
@@ -2027,6 +2179,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\..\mw\tima\tima_buffer.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_buffer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_config.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_downloader.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\tima\tima_downloader_curl.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\tima\tima_firmwareinfo.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_firmwareinfo.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\mw\tima\tima_socket.c"
 							>
 						</File>
@@ -2036,6 +2216,14 @@
 						</File>
 						<File
 							RelativePath="..\..\..\..\mw\tima\tima_uploadmedia.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\tima\tima_uploadsetting.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_uploadsetting.h"
 							>
 						</File>
 						<File
@@ -2060,10 +2248,6 @@
 						</File>
 						<File
 							RelativePath="..\..\..\..\include\bll\bll_remotelocation.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\bll\bll_remotemedia.h"
 							>
 						</File>
 						<File
@@ -2175,11 +2359,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\include\libevent\event2\event.h"
+							RelativePath="..\..\..\..\include\libevent\event.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\include\libevent\event.h"
+							RelativePath="..\..\..\..\include\libevent\event2\event.h"
 							>
 						</File>
 						<File
@@ -2243,11 +2427,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\include\libevent\ipv6-internal.h"
+							RelativePath="..\..\..\..\include\libevent\internal\ipv6-internal.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\include\libevent\internal\ipv6-internal.h"
+							RelativePath="..\..\..\..\include\libevent\ipv6-internal.h"
 							>
 						</File>
 						<File
@@ -2674,10 +2858,6 @@
 							RelativePath="..\..\..\..\include\qiniu\qiniu.h"
 							>
 						</File>
-						<File
-							RelativePath="..\..\..\..\include\qiniu\qiniu_upload.h"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="threadpool"
@@ -2719,10 +2899,6 @@
 						Name="tima"
 						>
 						<File
-							RelativePath="..\..\..\..\include\tima\getprofile.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\include\tima\tima.h"
 							>
 						</File>
@@ -2763,11 +2939,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\acct.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\acct.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\acct.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\acct.h"
 					>
 				</File>
 				<File
@@ -2915,19 +3091,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\atomic.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\atomic.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\usb\audio.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\atomic.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\dvb\audio.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\usb\audio.h"
 					>
 				</File>
 				<File
@@ -2967,11 +3143,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ax25.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netax25\ax25.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netax25\ax25.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ax25.h"
 					>
 				</File>
 				<File
@@ -3007,11 +3183,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\bitsperlong.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\bitsperlong.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\bitsperlong.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\bitsperlong.h"
 					>
 				</File>
 				<File
@@ -3059,11 +3235,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\cachectl.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\cachectl.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\cachectl.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\cachectl.h"
 					>
 				</File>
 				<File
@@ -3215,11 +3391,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\nfsd\debug.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\sunrpc\debug.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\sunrpc\debug.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\nfsd\debug.h"
 					>
 				</File>
 				<File
@@ -3235,11 +3411,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\dlfcn.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\dlfcn.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\dlfcn.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\dlfcn.h"
 					>
 				</File>
 				<File
@@ -3431,11 +3607,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\epoll.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\epoll.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\epoll.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\epoll.h"
 					>
 				</File>
 				<File
@@ -3471,11 +3647,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\can\error.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\error.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\error.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\can\error.h"
 					>
 				</File>
 				<File
@@ -3687,11 +3863,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\getopt.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\getopt.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\getopt.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\getopt.h"
 					>
 				</File>
 				<File
@@ -3839,11 +4015,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_arp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_arp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_arp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_arp.h"
 					>
 				</File>
 				<File
@@ -3871,11 +4047,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\if_ether.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_ether.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_ether.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\if_ether.h"
 					>
 				</File>
 				<File
@@ -3883,11 +4059,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\if_fddi.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_fddi.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_fddi.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\if_fddi.h"
 					>
 				</File>
 				<File
@@ -3911,11 +4087,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_packet.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_packet.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_packet.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_packet.h"
 					>
 				</File>
 				<File
@@ -3927,11 +4103,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_ppp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_ppp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_ppp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_ppp.h"
 					>
 				</File>
 				<File
@@ -3947,11 +4123,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_slip.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_slip.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\net\if_slip.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_slip.h"
 					>
 				</File>
 				<File
@@ -3959,11 +4135,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\if_tr.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_tr.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\if_tr.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\if_tr.h"
 					>
 				</File>
 				<File
@@ -3987,11 +4163,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\igmp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\igmp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\igmp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\igmp.h"
 					>
 				</File>
 				<File
@@ -4039,15 +4215,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\inotify.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\inotify.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\inotify.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\inotify.h"
 					>
 				</File>
 				<File
@@ -4091,6 +4267,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\ioctls.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\ioctls.h"
 					>
 				</File>
@@ -4099,15 +4279,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\ioctls.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\ip.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ip.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\ip.h"
 					>
 				</File>
 				<File
@@ -4191,15 +4367,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\ipc.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ipc.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\ipc.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\ipc.h"
 					>
 				</File>
 				<File
@@ -4271,11 +4447,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ipx.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netipx\ipx.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netipx\ipx.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ipx.h"
 					>
 				</File>
 				<File
@@ -4327,11 +4503,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\kd.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\kd.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\kd.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\kd.h"
 					>
 				</File>
 				<File
@@ -4383,11 +4559,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\libelf.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\libelf\libelf.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\libelf\libelf.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\libelf.h"
 					>
 				</File>
 				<File
@@ -4395,11 +4571,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\limits.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\limits.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\limits.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\limits.h"
 					>
 				</File>
 				<File
@@ -4419,11 +4595,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\locale.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\locale.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\locale.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\locale.h"
 					>
 				</File>
 				<File
@@ -4511,11 +4687,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\mman-common.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\mman-common.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\mman-common.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\mman-common.h"
 					>
 				</File>
 				<File
@@ -4551,15 +4727,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\mqueue.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\mqueue.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\mqueue.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\mqueue.h"
 					>
 				</File>
 				<File
@@ -4575,19 +4751,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\msg.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\msg.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\msgbuf.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\msg.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\msgbuf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\msgbuf.h"
 					>
 				</File>
 				<File
@@ -4603,11 +4779,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\mtio.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\mtio.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\mtio.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\mtio.h"
 					>
 				</File>
 				<File
@@ -4651,11 +4827,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\dvb\net.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\net.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\net.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\dvb\net.h"
 					>
 				</File>
 				<File
@@ -4707,11 +4883,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\can\netlink.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\netlink.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\netlink.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\can\netlink.h"
 					>
 				</File>
 				<File
@@ -4811,11 +4987,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\libelf\nlist.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\nlist.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\nlist.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\libelf\nlist.h"
 					>
 				</File>
 				<File
@@ -4855,6 +5031,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\param.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\param.h"
 					>
 				</File>
@@ -4864,10 +5044,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\param.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\param.h"
 					>
 				</File>
 				<File
@@ -5003,19 +5179,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\net\ppp-comp.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ppp-comp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ppp_defs.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\net\ppp-comp.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\net\ppp_defs.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ppp_defs.h"
 					>
 				</File>
 				<File
@@ -5119,11 +5295,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\reboot.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\reboot.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\reboot.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\reboot.h"
 					>
 				</File>
 				<File
@@ -5151,10 +5327,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\resource.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\resource.h"
 					>
 				</File>
@@ -5171,6 +5343,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\resource.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\rfkill.h"
 					>
 				</File>
@@ -5183,11 +5359,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\route.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\net\route.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\net\route.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\route.h"
 					>
 				</File>
 				<File
@@ -5275,11 +5451,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\select.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\select.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\select.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\select.h"
 					>
 				</File>
 				<File
@@ -5299,19 +5475,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\semaphore.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\semaphore.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\sembuf.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\semaphore.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\sembuf.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\sembuf.h"
 					>
 				</File>
 				<File
@@ -5335,11 +5511,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\setjmp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\setjmp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\setjmp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\setjmp.h"
 					>
 				</File>
 				<File
@@ -5359,11 +5535,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sgidefs.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\sgidefs.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\sgidefs.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sgidefs.h"
 					>
 				</File>
 				<File
@@ -5387,11 +5563,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\shmbuf.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\shmbuf.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\shmbuf.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\shmbuf.h"
 					>
 				</File>
 				<File
@@ -5411,15 +5587,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\siginfo.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\siginfo.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm\siginfo.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\siginfo.h"
 					>
 				</File>
 				<File
@@ -5447,15 +5623,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\signalfd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\signalfd.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\signalfd.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\signalfd.h"
 					>
 				</File>
 				<File
@@ -5543,19 +5719,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\soundcard.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\soundcard.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\spi\spidev.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\soundcard.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\stat.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\spi\spidev.h"
 					>
 				</File>
 				<File
@@ -5572,6 +5744,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\stat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\stat.h"
 					>
 				</File>
 				<File
@@ -5595,11 +5771,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\statvfs.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\statvfs.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\statvfs.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\statvfs.h"
 					>
 				</File>
 				<File
@@ -5635,11 +5811,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\string.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\string.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\string.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\string.h"
 					>
 				</File>
 				<File
@@ -5659,15 +5835,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\swab.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\swab.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm\swab.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\swab.h"
 					>
 				</File>
 				<File
@@ -5687,6 +5863,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\syscall.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\nfsd\syscall.h"
 					>
 				</File>
@@ -5695,15 +5875,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\syscall.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\sysctl.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\sysctl.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\sysctl.h"
 					>
 				</File>
 				<File
@@ -5715,11 +5891,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\syslog.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\syslog.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\syslog.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\syslog.h"
 					>
 				</File>
 				<File
@@ -5727,11 +5903,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\sysmips.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\sysmips.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\sysmips.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\sysmips.h"
 					>
 				</File>
 				<File
@@ -5799,11 +5975,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\tcp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\tcp.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\tcp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\netinet\tcp.h"
 					>
 				</File>
 				<File
@@ -5815,15 +5991,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\termbits.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm\termbits.h"
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\termbits.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\termio.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\termios.h"
 					>
 				</File>
 				<File
@@ -5847,10 +6027,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\termios.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\arpa\tftp.h"
 					>
 				</File>
@@ -5860,6 +6036,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\thread_db.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\time.h"
 					>
 				</File>
 				<File
@@ -5875,10 +6055,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\time.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\timeb.h"
 					>
 				</File>
@@ -5887,15 +6063,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\timerfd.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\timerfd.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\times.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\timerfd.h"
 					>
 				</File>
 				<File
@@ -5903,11 +6075,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\timex.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\times.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\timex.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\timex.h"
 					>
 				</File>
 				<File
@@ -6019,15 +6195,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\ucontext.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\ucontext.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\ucontext.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\ucontext.h"
 					>
 				</File>
 				<File
@@ -6047,15 +6223,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\uio.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\uio.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\uio.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\uio.h"
 					>
 				</File>
 				<File
@@ -6067,11 +6243,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\un.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\un.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\un.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\un.h"
 					>
 				</File>
 				<File
@@ -6103,19 +6279,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\utime.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\utime.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\utmp.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\utime.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\utmp.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\utmp.h"
 					>
 				</File>
 				<File
@@ -6127,15 +6303,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\utsname.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\utsname.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\utsname.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\utsname.h"
 					>
 				</File>
 				<File
@@ -6155,11 +6331,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\version.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\dvb\version.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\dvb\version.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\version.h"
 					>
 				</File>
 				<File
@@ -6231,11 +6407,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\vt.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\vt.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\vt.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\vt.h"
 					>
 				</File>
 				<File
@@ -6299,11 +6475,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\xattr.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\xattr.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\xattr.h"
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\xattr.h"
 					>
 				</File>
 				<File
