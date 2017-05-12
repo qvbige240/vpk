@@ -13,6 +13,7 @@
 #include "nt966x_eventq.h"
 #include "vpk_event.h"
 #include "vpk_logging.h"
+#include "vpk_util.h"
 
 #include "nvtevent.h"
 
@@ -28,6 +29,7 @@ const vpk_constants_t vpk = {
 	{
 		VPK_EVENT_ABNORMAL,
 		VPK_EVENT_ALERT,
+		VPK_EVENT_NOTICE,
 	},
 	{
 		// ABNORMAL
@@ -48,6 +50,10 @@ const vpk_constants_t vpk = {
 		VPK_KEY_EVENT_CAR_FAST_ACCEL,
 		VPK_KEY_EVENT_CAR_FAST_SLOW_DOWN,
 		VPK_KEY_EVENT_CAR_RAPID_TURN,
+		// NOTICE
+		VPK_KEY_EVENT_QRCODE_GEN,
+		VPK_KEY_EVENT_FIRMWARE_DOWNLOAD,
+		VPK_KEY_EVENT_UPDATE_SYSTEM,
 	},
 };
 
@@ -127,6 +133,10 @@ static int nt966x_eventq_empty(const vpk_eventq_t* queue)
 	return 0;
 }
 
+#define HEXSTR_PARSE(ptr)	\
+	((vpk_hex_to_int(*(ptr)) << 12) | (vpk_hex_to_int(*((ptr)+1)) << 8) \
+	| (vpk_hex_to_int(*((ptr)+2)) << 4) | vpk_hex_to_int(*((ptr)+3)))
+
 static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 {
 	int len = 0;
@@ -140,7 +150,8 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 		if (len >= CUSTOM_EVT_MQ_MSG_LEN_MAX)
 			thiz->recv_buff[CUSTOM_EVT_MQ_MSG_LEN_MAX-1] = '\0';
 
-		int keycode = atoi(thiz->recv_buff);
+		//int keycode = atoi(thiz->recv_buff);
+		int keycode = HEXSTR_PARSE(&thiz->recv_buff[0]);
 		switch (keycode)
 		{
 		case VPK_KEY_EVENT_NO_TF_CARD:
@@ -158,12 +169,21 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 		case VPK_KEY_EVENT_CAR_RAPID_TURN:
 			e->type = vpk.events.ABNORMAL;
 			e->abnormal.keycode = keycode;
+			LOG_I("vpk.events.ABNORMAL = %d, %d %d", vpk.events.ABNORMAL, keycode, VPK_KEY_EVENT_NO_TF_CARD);
 			break;
 		// ALERT
 		case VPK_KEY_EVENT_CAR_CRASH_WARNING:
 		case VPK_KEY_EVENT_PARKING_CRASH_WARNING:
 			e->type = vpk.events.ALERT;
 			e->alert.keycode = keycode;
+			LOG_I("vpk.events.ALERT = %d", vpk.events.ALERT);
+			break;
+		case VPK_KEY_EVENT_QRCODE_GEN:
+		case VPK_KEY_EVENT_FIRMWARE_DOWNLOAD:
+		case VPK_KEY_EVENT_UPDATE_SYSTEM:
+			e->type = vpk.events.NOTICE;
+			e->notice.keycode = keycode;
+			LOG_I("vpk.events.NOTICE = %d", vpk.events.NOTICE);
 			break;
 		default:
 			LOG_W("event keycode unrecognized, value = %d(0x%x)", keycode, keycode);
@@ -191,6 +211,9 @@ static int nt966x_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 		break;
 	case VPK_EVENT_ABNORMAL:
 		snprintf(send_buff, sizeof(send_buff), "%d", e->abnormal.keycode);
+		break;
+	case VPK_EVENT_NOTICE:
+		snprintf(send_buff, sizeof(send_buff), "%d", e->notice.keycode);
 		break;
 	default:break;
 	}

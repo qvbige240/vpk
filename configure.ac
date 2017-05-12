@@ -60,7 +60,8 @@ else
 	AC_SUBST(JANSSON_LIB)
     AC_SUBST(CURL_LIB)
 
-	DYNAMIC_LIBS="-lcurl -lnvtuctrl -lpthread -lrt -lm"
+	DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -lpthread -lrt -lm"
+	#DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
 	AC_SUBST(DYNAMIC_LIBS)
 	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib'
 	AC_SUBST(EXTRA_LDFLAGS)

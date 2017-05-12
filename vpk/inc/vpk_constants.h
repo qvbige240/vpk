@@ -15,6 +15,7 @@ typedef struct vpk_event_type_t
 {
 	unsigned int ABNORMAL;
 	unsigned int ALERT;
+	unsigned int NOTICE;
 	//...
 }vpk_event_type_t;
 
@@ -38,6 +39,10 @@ typedef struct vpk_keycodes_t
 	unsigned int EVENT_CAR_FAST_ACCEL;
 	unsigned int EVENT_CAR_FAST_SLOW_DOWN;
 	unsigned int EVENT_CAR_RAPID_TURN;
+	// NOTICE
+	unsigned int EVENT_QRCODE_GEN;
+	unsigned int EVENT_FIRMWARE_DOWNLOAD;
+	unsigned int EVENT_UPDATE_SYSTEM;
 }vpk_keycodes_t;
 
 typedef struct vpk_constants_t

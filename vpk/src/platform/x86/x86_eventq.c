@@ -36,6 +36,7 @@ const vpk_constants_t vpk = {
 	{
 		VPK_EVENT_ABNORMAL,
 		VPK_EVENT_ALERT,
+		VPK_EVENT_NOTICE,
 	},
 	{
 		// ABNORMAL
@@ -56,6 +57,10 @@ const vpk_constants_t vpk = {
 		VPK_KEY_EVENT_CAR_FAST_ACCEL,
 		VPK_KEY_EVENT_CAR_FAST_SLOW_DOWN,
 		VPK_KEY_EVENT_CAR_RAPID_TURN,
+		// NOTICE
+		VPK_KEY_EVENT_QRCODE_GEN,
+		VPK_KEY_EVENT_FIRMWARE_DOWNLOAD,
+		VPK_KEY_EVENT_UPDATE_SYSTEM,
 	},
 };
 
@@ -223,17 +228,24 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 	case VPK_KEY_EVENT_CAR_RAPID_TURN:
 		e->type = vpk.events.ABNORMAL;
 		e->abnormal.keycode = keycode;
-		LOG_I("vpk.events.ABNORMAL111 = %d, %d %d", vpk.events.ABNORMAL, keycode, VPK_KEY_EVENT_NO_TF_CARD);
+		LOG_I("vpk.events.ABNORMAL = %d, %d %d", vpk.events.ABNORMAL, keycode, VPK_KEY_EVENT_NO_TF_CARD);
 		break;
 	// ALERT
 	case VPK_KEY_EVENT_CAR_CRASH_WARNING:
 	case VPK_KEY_EVENT_PARKING_CRASH_WARNING:
 		e->type = vpk.events.ALERT;
 		e->alert.keycode = keycode;
-		LOG_I("vpk.events.ABNORMAL222 = %d", vpk.events.ABNORMAL);
+		LOG_I("vpk.events.ALERT = %d", vpk.events.ALERT);
+		break;
+	case VPK_KEY_EVENT_QRCODE_GEN:
+	case VPK_KEY_EVENT_FIRMWARE_DOWNLOAD:
+	case VPK_KEY_EVENT_UPDATE_SYSTEM:
+		e->type = vpk.events.NOTICE;
+		e->notice.keycode = keycode;
+		LOG_I("vpk.events.NOTICE = %d", vpk.events.NOTICE);
 		break;
 	default:
-		LOG_I("vpk.events.ABNORMAL333 = %d, %d %d", vpk.events.ABNORMAL, keycode, VPK_KEY_EVENT_NO_TF_CARD);
+		LOG_W("vpk.events.other = %d, %d", vpk.events.ABNORMAL, keycode);
 		break;
 	}
 
@@ -257,6 +269,9 @@ static int x86_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 		break;
 	case VPK_EVENT_ABNORMAL:
 		snprintf(send_buff, sizeof(send_buff), "%x", e->abnormal.keycode);
+		break;
+	case VPK_EVENT_NOTICE:
+		snprintf(send_buff, sizeof(send_buff), "%x", e->notice.keycode);
 		break;
 	default:break;
 	}

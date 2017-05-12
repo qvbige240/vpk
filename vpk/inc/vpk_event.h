@@ -28,11 +28,18 @@ typedef struct vpk_alert_t
 	int keycode;
 }vpk_alert_t;
 
+typedef struct vpk_notice_t
+{
+	extends_event();
+	int keycode;
+}vpk_notice_t;
+
 typedef union vpk_event_t
 {
 	extends_event();
 	vpk_alert_t		alert;
 	vpk_abnormal_t	abnormal;
+	vpk_notice_t	notice;
 }vpk_event_t;
 
 struct vpk_eventq_t;
