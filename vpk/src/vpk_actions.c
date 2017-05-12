@@ -76,7 +76,8 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_MENU_VERSIONGET_NOP,		"MENUSET", " "},		// not use
 
 	{VPK_NVTU_QRCODE,					"QRCODE",	"ucustom -qrcodeshow "},
-
+	{VPK_NVTU_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
+	{VPK_NVTU_UPDATE_FIRMWARE,			"UPDATE",	"ucustom -updatefirmware "},
 };
 
 VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint32_t recvsize) 

@@ -59,6 +59,8 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_MENU_VERSIONGET_NOP,	// version			//
 
 	VPK_NVTU_QRCODE,
+	VPK_NVTU_UPDATE_FREQGET,
+	VPK_NVTU_UPDATE_FIRMWARE,
 
 	VPK_NVTU_MAX,
 }VpkNvtuType;

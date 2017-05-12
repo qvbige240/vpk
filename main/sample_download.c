@@ -1,14 +1,14 @@
 /**
  * History:
  * ================================================================
- * 2015-05-01 qing.zou created
+ * 2017-05-01 qing.zou created
  *
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <pthread.h>
-#include <semaphore.h>
+// #include <pthread.h>
+// #include <semaphore.h>
 
 #include "vpk.h"
 #include "curl/curl.h"
@@ -26,6 +26,9 @@
 // 
 // PrivInfo info;
 
+int cnt_w = 0;
+int total = 0;
+
 int http_download(const char* remote_path, const char* local_path, long timout);
 
 int download_main(int argc, char *argv[])
@@ -40,7 +43,8 @@ int download_main(int argc, char *argv[])
 	//const char* remoteurl = "http://test.7xl1at.com2.z0.glb.qiniucdn.com/1493564584?e=1493568191&token=jB7K75I0zFaneS5mBfra-2hsnHU4XyxQdBL5dRuR:aCjaueUS_XywueLhp9TR4MYGFjU=";
 	
 	char* remoteurl = "http://test.7xl1at.com2.z0.glb.qiniucdn.com/1493564584";
-	char* localpath = "./resource/123.mp4";
+	//char* localpath = "./resource/123.mp4";
+	char* localpath = "./FW966X.crdownload.mp4";
 	if (argc > 2)
 	{
 		localpath = argv[1];
@@ -91,7 +95,21 @@ size_t get_contentlength_func(void *ptr, size_t size, size_t nmemb, void *stream
 static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
 {
 	size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
+	cnt_w++;
+	total += written;
+	//LOG_D(" written: %d", written);
 	return written;
+}
+
+int my_progress_func(void *bar,
+					 double t, /* dltotal */
+					 double d, /* dlnow */
+					 double ultotal,
+					 double ulnow)
+{
+	//printf("%f / %f (%g %%)\n", d, t, d*100.0/t);
+
+	return 0;
 }
 
 int http_download(const char* remote_path, const char* local_path, long timout)
@@ -182,6 +200,11 @@ int http_download(const char* remote_path, const char* local_path, long timout)
  	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
  	curl_easy_setopt(curl_handle, CURLOPT_FILE, fp);
 
+	/* get progress bar */
+	curl_easy_setopt(curl_handle, CURLOPT_PROGRESSFUNCTION, my_progress_func);
+	/* set bar ctx */
+	//curl_easy_setopt(curl_handle, CURLOPT_PROGRESSDATA, Bar);
+
 	curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, timout);
 
  	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
@@ -191,6 +214,36 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	res = curl_easy_perform(curl_handle);
 	if (res == CURLE_OK)
 	{
+		double val;
+
+		/* check for bytes downloaded */
+		res = curl_easy_getinfo(curl_handle, CURLINFO_SIZE_DOWNLOAD, &val);
+		if((CURLE_OK == res) && (val>0))
+			printf("Data downloaded: %0.0f bytes.\n", val);
+
+		/* check for total download time */
+		res = curl_easy_getinfo(curl_handle, CURLINFO_TOTAL_TIME, &val);
+		if((CURLE_OK == res) && (val>0))
+			printf("Total download time: %0.3f sec.\n", val);
+
+		/* check for average download speed */
+		res = curl_easy_getinfo(curl_handle, CURLINFO_SPEED_DOWNLOAD, &val);
+		if((CURLE_OK == res) && (val>0))
+			printf("Average download speed: %0.3f kbyte/sec.\n", val / 1024);
+
+		if(1) {
+			/* check for name resolution time */
+			res = curl_easy_getinfo(curl_handle, CURLINFO_NAMELOOKUP_TIME, &val);
+			if((CURLE_OK == res) && (val>0))
+				printf("Name lookup time: %0.3f sec.\n", val);
+
+			/* check for connect time */
+			res = curl_easy_getinfo(curl_handle, CURLINFO_CONNECT_TIME, &val);
+			if((CURLE_OK == res) && (val>0))
+				printf("Connect time: %0.3f sec.\n", val);
+		}
+
+
 		res = curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
 		if (res != CURLE_OK) {
 			LOG_E("CURLINFO_RESPONSE_CODE error : %s\n", curl_easy_strerror(res));
@@ -209,6 +262,8 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	{
 		LOG_E("curl_easy_perform error : %s\n",curl_easy_strerror(res));
 	}
+
+	LOG_D("write times(%d) count = %d", cnt_w, total);
 
 	/* cleanup curl stuff */
 	curl_easy_cleanup(curl_handle);

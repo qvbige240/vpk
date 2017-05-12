@@ -12,6 +12,7 @@
 #include "vpk_logging.h"
 #include "x86_nvtuctrl.h"
 
+#include "jansson.h"
 
 static int x86_nvtuctrl_destruct(void *session)
 {
@@ -70,6 +71,86 @@ static int x86_nvtuctrl_read(vpk_session_t *session, void *buf, size_t nbytes, i
 	return 0;
 }
 
+static int setting_item_get(const char* file, char* key, int* value)
+{
+	int ret = 0;
+	json_t* json_root = NULL;
+	if (vpk_mmap_exist(file)) {
+		json_root = json_load_file(file, 0, NULL);
+	}
+	else {
+		LOG_W("file not exist, and new json_root");
+		json_root = json_object();
+	}
+
+	if (json_root)
+	{
+		json_t* jobject = json_object_get(json_root, key);
+		if (!jobject)
+		{
+			LOG_W("jobject not exist, and return default 0.");
+			*value = 0;
+			ret = -1;
+		}
+		else
+		{
+			*value = json_integer_value(jobject);
+		}
+
+		json_decref(json_root);
+	}
+
+	return ret;
+}
+
+static int setting_item_write(const char* file, char* key, int value)
+{
+	json_t* json_root = NULL;
+	if (vpk_mmap_exist(file)) {
+		json_root = json_load_file(file, 0, NULL);
+	}
+	else {
+		LOG_W("file not exist, and new json_root");
+		json_root = json_object();
+	}
+
+	if (json_root)
+	{
+		json_t* jobject = json_object_get(json_root, key);
+		if (!jobject)
+		{
+			LOG_W("jobject not exist, and new json object.");
+			json_object_set(json_root, key, json_integer(value));
+			json_dump_file(json_root, file, 0);						/* to file */
+
+			char* update_dump = json_dumps(json_root, 0);			/* to buffer */
+			LOG_D("update_dump setting:\n%s\n", update_dump);
+			free(update_dump);
+		}
+		else
+		{
+			int curr_val = json_integer_value(jobject);
+			if (curr_val != value)
+			{
+				json_object_set(json_root, key, json_integer(value));
+				json_dump_file(json_root, file, 0);						/* to file */
+
+				char* update_dump = json_dumps(json_root, 0);			/* to buffer */
+				LOG_D("update_dump setting:\n%s\n", update_dump);
+				free(update_dump);
+			}
+			else
+			{
+				LOG_D("no value change at \'%s\'", key);
+			}
+		}
+
+		json_decref(json_root);
+	}
+
+	return 0;
+}
+
 static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, int timout)
 {
 	int ret = -1;
@@ -124,11 +205,81 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}
-		p = strstr(buf, "get");
+		p = strstr(buf, "-qrcodeshow");
 		if (p != NULL)
 		{
-			char *str = "0";
+			return 0;
+		}
+		p = strstr(buf, "-updateconditionget");
+		if (p != NULL)
+		{
+			char *str = "1";
 			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
+		p = strstr(buf, "-updatefirmware");
+		if (p != NULL)
+		{
+			char *str = "1";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
+		p = strstr(buf, "-versionget");
+		if (p != NULL)
+		{
+			char *str = "2017_05_10_V02_L";
+			memcpy(thiz->data_buff, str, strlen(str));
+			return 0;
+		}
+		p = strstr(buf, "MENUMOCK");		/* menus setting mock */
+		if (p != NULL)
+		{
+			#define DEVICE_MENUS_INFO_FILE	"menu_setting_pc.json"
+			char* key = NULL;
+			int value = 0;
+			char tmp[256] = {0};
+			int r = sscanf(buf, "ucustom -%s MENUMOCK\n", tmp);
+			if (r) {
+				p = strstr(tmp, "set");
+				if (p)
+				{
+					int pos = p - tmp;
+					tmp[pos] = '\0';
+					key = tmp;
+					p = strstr(buf, "MENUMOCK");
+					if (p)
+					{
+						p = p + strlen("MENUMOCK");
+						value = atoi(p);
+						LOG_D("set key = %s, value(atoi) = %d\n", key, value);
+						setting_item_write(DEVICE_MENUS_INFO_FILE, key, value);
+						sprintf(thiz->data_buff, "%d", value);
+						//memcpy(thiz->data_buff, &value, sizeof(int));
+					}
+				}
+				p = strstr(tmp, "get");
+				if (p)
+				{
+					int pos = p - tmp;
+					tmp[pos] = '\0';
+					key = tmp;
+					setting_item_get(DEVICE_MENUS_INFO_FILE, key, &value);
+					LOG_D("get key = %s, value = %d\n", key, value);
+					sprintf(thiz->data_buff, "%d", value);
+					//memcpy(thiz->data_buff, &value, sizeof(int));
+				}
+				else
+				{
+					char *str = "0";
+					memcpy(thiz->data_buff, str, strlen(str));
+				}
+			}				
+			else {
+				char *str = "0";
+				memcpy(thiz->data_buff, str, strlen(str));
+			}
+
+
 			return 0;
 		}
 		else
