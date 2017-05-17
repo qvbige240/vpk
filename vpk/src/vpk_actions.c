@@ -35,6 +35,7 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_SNAPSHOT,					"SNAP",		"ucustom -snapshot "},
 	{VPK_NVTU_MOVIEREC,					"VIDEO",	"ucustom -movierec "},
 	{VPK_NVTU_MOVIELEN,					"VIDEO",	"ucustom -movielen "},
+	{VPK_NVTU_RECSTATE,					"VIDEO",	"ucustom -recstate "},
 	{VPK_NVTU_DEVINFO,					"DEVINFO",	"ucustom -getdevinfo "},
 
 	/* menu get */
@@ -76,9 +77,11 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_MENU_VERSIONGET_NOP,		"MENUSET", " "},		// not use
 
 	{VPK_NVTU_QRCODE,					"QRCODE",	"ucustom -qrcodeshow "},
-	{VPK_NVTU_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
-	{VPK_NVTU_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -updateisdownload "},
-	{VPK_NVTU_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -updateisupgrade "},
+//	{VPK_NVTU_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
+	{VPK_NVTU_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -fwdownload "},
+	{VPK_NVTU_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -fwupdate "},
+
+	{VPK_NVTU_POWER_OFF,				"POWEROFF",	"ucustom -poweroff "},
 };
 
 VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint32_t recvsize) 

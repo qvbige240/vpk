@@ -11,6 +11,8 @@
 
 #include "vpk.h"
 
+extern int mqsend_main(int argc, char *argv[]);
+extern int md5_main(int argc, char *argv[]);
 extern int string_main(int argc, char *argv[]);
 extern int download_main(int argc, char *argv[]);
 extern int json_main(int argc, char *argv[]);
@@ -63,7 +65,11 @@ int main(int argc, char *argv[])
 
 #if 0
 	vpk_testbyte();
-vpk_wlan0_ifcheck();
+	vpk_wlan0_ifcheck();
+#elif 1
+	mqsend_main(argc, argv);
+#elif 0
+	md5_main(argc, argv);
 #elif 1
 	string_main(argc, argv);
 #elif 1

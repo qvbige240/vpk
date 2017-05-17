@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <limits.h>
 #include <stdarg.h>
 // #include <pthread.h>
 
@@ -145,6 +146,42 @@ int test_findstr(const char* str)
 	return 0;
 }
 
+void test_null(void)
+{
+	//char buffer[64] = {0};
+	char* str = NULL;
+	int ret = -1;
+	if (str && strlen(str))
+	 	ret = strlen(str);
+	//memcpy(buffer, NULL, 0);
+
+	LOG_D("ret len: %d", ret);
+	//ret = strcasecmp("1", NULL);
+	LOG_D("ret cmp: %d", ret);
+	//const char* desc = "hello";
+	const char* desc = NULL;
+	if (!desc) desc = "Device Exception Parse Error!";
+	LOG_D("desc: %s", desc);
+}
+
+typedef struct _MediaList 
+{
+	char		file[NAME_MAX+1];
+} MediaList;
+
+typedef struct _MediaRes 
+{
+	int			count;
+	MediaList	media[4];
+} MediaRes;
+
+void test_struct(void)
+{
+	MediaRes res = {0};
+	int size = sizeof(res.media);
+	LOG_D("struct size = %d", size);
+}
+
 int string_main(int argc, char *argv[])
 {
 // 	int ret = 0;
@@ -152,24 +189,19 @@ int string_main(int argc, char *argv[])
 // 	vpk_system_init(argc, argv);
 // 	vpk_logging_level_set("DEBUG");
 
-	//char* data = "{\"returnSuccess\": true,\"returnErrCode\": null,\"returnErrMsg\": null,\"appUpgraderInfoDto\": {		\
-				\"version\": \"3.03.100\",			\
-				\"url\": \"http://7xl1at.com2.z0.glb.qiniucdn.com/121.mp4\",		\
-				\"appName\": \"升级固件包\",		\
-				\"deployDesc\": \"升级固件包\",		\
-				\"md5\": \"asdfewfd\",						\
-				\"pkgSize\": 43333333}}";
-
 	char* menus = "{\"photo_resolution\": 0, \"video_resolution\": 0, \"video_time\": 0, \"vibration_sensor\": 0, \"parking_mode\": 0, \"off_voltage\": 0, \"record_sound\": 0, \"HDR\": 0, \"time_watermark\": 0, \"upgrade\": 0, \"switch_machine\": 0, \"car_warning\": 0, \"driving\": 0, \"abnormal_equipment\": 0, \"format_tf\": 0, \"factory_reset\": 0, \"version\": \"0\"}";
 	char* data = malloc(strlen(menus)+1);
 	strcpy(data, menus);
 	//LOG_D("data: %s\n", data);
+	test_struct();
 	int i = atoi(" 2");
 	LOG_D("i(atoi) = %d\n", i);
+	test_null();
 	test_findstr(NULL);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 1);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 2);
-	//json_item_set(data, "photo_resolution", 1);
+	
+	json_item_set(data, "photo_resolution", 1);
 
 	return 0;
 }

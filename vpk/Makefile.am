@@ -39,6 +39,7 @@ inc/vpk_filesys.h \
 inc/vpk.h \
 inc/vpk_libc.h \
 inc/vpk_logging.h \
+inc/vpk_md5.h \
 inc/vpk_mmap.h \
 inc/vpk_nvtuctrlc.h \
 inc/vpk_queues.h \
@@ -56,6 +57,7 @@ src/vpk_ifilesys.h \
 src/vpk_libc.c \
 src/vpk_logger.c \
 src/vpk_logger.h \
+src/vpk_md5.c \
 src/vpk_mmap.c \
 src/vpk_nvtuctrl.c \
 src/vpk_nvtuctrl.h \
