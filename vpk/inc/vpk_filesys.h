@@ -29,6 +29,15 @@ typedef enum vpk_disk_type_t
 VPKAPI int vpk_exists(const char* path);
 
 /**
+ * Get the input file length.
+ *
+ * @param path	The input file.
+ *
+ * @return > 0 on file size, 0 on not file, -1 on failure.
+ */
+VPKAPI long vpk_file_length(const char* path);
+
+/**
  * Whether the input path is directory.
  *
  * @param path	The input file or directory.
@@ -42,7 +51,7 @@ VPKAPI int vpk_isdir(const char* path);
  *
  * @param path	The input file or directory.
  *
- * @return 0 success, -1 on failure.
+ * @return 0 on success, -1 on failure.
  */
 VPKAPI int vpk_mkdir(const char* path);
 

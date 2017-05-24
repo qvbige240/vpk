@@ -14,6 +14,30 @@ TIMA_BEGIN_DELS
 /* VPK_SWAP_VALUE - this swaps x for y */
 #define VPK_SWAP_VALUE(x, y)	do { (x) ^= (y); (y) ^= (x); (x) ^= (y); } while(0)
 
+#ifdef VPK__HAVE_TIMERADD
+#define vpk_timeradd(tvp, uvp, vvp) timeradd((tvp), (uvp), (vvp))
+#define vpk_timersub(tvp, uvp, vvp) timersub((tvp), (uvp), (vvp))
+#else
+#define vpk_timeradd(tvp, uvp, vvp)					\
+	do {								\
+		(vvp)->tv_sec = (tvp)->tv_sec + (uvp)->tv_sec;		\
+		(vvp)->tv_usec = (tvp)->tv_usec + (uvp)->tv_usec;       \
+		if ((vvp)->tv_usec >= 1000000) {			\
+			(vvp)->tv_sec++;				\
+			(vvp)->tv_usec -= 1000000;			\
+		}							\
+	} while (0)
+#define	vpk_timersub(tvp, uvp, vvp)					\
+	do {								\
+		(vvp)->tv_sec = (tvp)->tv_sec - (uvp)->tv_sec;		\
+		(vvp)->tv_usec = (tvp)->tv_usec - (uvp)->tv_usec;	\
+		if ((vvp)->tv_usec < 0) {				\
+			(vvp)->tv_sec--;				\
+			(vvp)->tv_usec += 1000000;			\
+		}							\
+	} while (0)
+#endif /* !VPK__HAVE_TIMERADD */
+
 int vpk_hex_to_int(char c);
 
 /**

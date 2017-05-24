@@ -46,10 +46,30 @@ VPKAPI int vpk_exists(const char* path)
 	return access(path, 0) == 0;
 }
 
+VPKAPI long vpk_file_length(const char* path)
+{
+	struct stat st;
+	memset(&st, 0x00, sizeof(struct stat));
+	if (lstat(path, &st) < 0) {
+		printf("file \'%s\': not exists or other.\n", path);
+		return -1;
+	}
+
+	if(S_ISREG(st.st_mode))
+		return st.st_size;
+
+	return 0;
+}
+
 VPKAPI int vpk_isdir(const char* path)
 {
 	struct stat st;
-	lstat(path, &st);
+	memset(&st, 0x00, sizeof(struct stat));
+	if (lstat(path, &st) < 0) {
+		printf("lstat error, directory \'%s\': not exists or other.\n", path);
+		return 0;
+	}
+	//printf("%07o ", st.st_mode);
 	return S_ISDIR(st.st_mode);
 }
 

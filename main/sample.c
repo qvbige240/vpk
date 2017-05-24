@@ -12,6 +12,7 @@
 
 #include "vpk.h"
 
+extern int filesys_main(int argc, char *argv[]);
 extern int mqsend_main(int argc, char *argv[]);
 extern int md5_main(int argc, char *argv[]);
 extern int string_main(int argc, char *argv[]);
@@ -83,11 +84,11 @@ static void help(FILE *f) {
 #define SAMPLE_CONFIG_FILE	"./test"
 static void help(FILE *f) {
 	fprintf(f,
-		"%s [options]\n"
+		"   [options]\n"
 		"    -h --help          Show this help\n"
 		"    -V --version       Show version\n"
 		"    -d --sample        Target sample demo which will be running(mqsend, \n"
-		"                       tqueue, download, md5, json).\n"
+		"                       tqueue, download, md5, json, filesys).\n"
 		"    -t --type          Event type for keycode\n"
 		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
 		"    -u --url           Target remote url.\n"
@@ -108,6 +109,7 @@ typedef enum {
 	SAMPLE_DEMO_DOWNLOAD,
 	SAMPLE_DEMO_TQUEUE,
 	SAMPLE_DEMO_JSON,
+	SAMPLE_DEMO_FILESYS,
 } SampleDemo;
 
 typedef struct _demo_exec
@@ -123,6 +125,7 @@ static const demo_exec demo_tables[] = {
 	{SAMPLE_DEMO_DOWNLOAD,	"download"},
 	{SAMPLE_DEMO_TQUEUE,	"tqueue"},
 	{SAMPLE_DEMO_JSON,		"json"},
+	{SAMPLE_DEMO_FILESYS,	"filesys"},
 };
 
 static int find_demo(const char* demo)
@@ -216,6 +219,8 @@ int main(int argc, char *argv[])
 		vpk_tqueue_test(argc, argv);
 	} else if (index == SAMPLE_DEMO_JSON) {
 		json_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_FILESYS) {
+		filesys_main(argc, argv);
 	} else {
 		fprintf(stderr, "\n\n-d --sample without arguments error\n");
 		vpk_testbyte();

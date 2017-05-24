@@ -229,9 +229,8 @@ int json_array_test()
 
 int load_file_test()
 {
-	int ret = 0;
 #define DEVICE_RELEASE_INFO_FILE	"dev_info_pc.json"
-	ret = vpk_mmap_exist(DEVICE_RELEASE_INFO_FILE);
+	vpk_mmap_exist(DEVICE_RELEASE_INFO_FILE);
 	VpkMmap* mmap = vpk_mmap_create(DEVICE_RELEASE_INFO_FILE, 0, -1);
 	char* str = vpk_mmap_data(mmap);
 

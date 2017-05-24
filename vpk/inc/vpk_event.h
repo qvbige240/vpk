@@ -61,7 +61,7 @@ VPKAPI vpk_eventq_t* vpk_eventq_open(const char* name, const char* mode);
  * @param queue		The event queue object.
  * @param e			an event
  *
- * @return The receive message len, -1 failed.
+ * @return The receive message len, -1 on failure.
  */
 VPKAPI int vpk_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e);
 
