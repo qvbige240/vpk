@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <getopt.h>
 #include <sys/time.h>
 
 #include "vpk.h"
@@ -252,9 +253,39 @@ int md5_main(int argc, char *argv[])
 	char ha_hex[64] = {0};
 
 	char* localpath = "./FW966X.crdownload.mp4";
-	if (argc > 1)
-	{
-		localpath = argv[1];
+	//if (argc > 1)
+	//{
+	//	localpath = argv[1];
+	//}
+
+	int o;
+	static const struct option long_options[] = {
+		{ "help",			no_argument,			NULL, 'h' },
+		{ "version",		no_argument,			NULL, 'V' },
+		{ "sample",			required_argument,		NULL, 'd' },
+		{ "type",			required_argument,		NULL, 't' },
+		{ "keycode",		required_argument,		NULL, 'k' },
+		{ "file",			required_argument,		NULL, 'f' },
+		{ "url",			required_argument,		NULL, 'u' },
+		{ "log",			optional_argument,		NULL, 'l' },
+		{ NULL, 0, NULL, 0 }
+	};
+
+	optind = 1;
+	//LOG_I("22 optind = %d, argc = %d", optind, argc);
+	while ((o = getopt_long(argc, argv, "hVd:t:k:f:u:l", long_options, NULL)) >= 0) {
+		//printf("opt = %c\n", o);  
+		//printf("optarg = %s\n", optarg);  
+		//printf("optind = %d\n", optind);  
+		//printf("argv[optind - 1] = %s\n",  argv[optind - 1]);
+
+		switch(o) {
+			case 'f':
+				localpath = optarg;
+				break;
+			default:
+				break;
+		}
 	}
 
 	LOG_D("file = %s", localpath);

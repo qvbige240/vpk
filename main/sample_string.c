@@ -164,20 +164,20 @@ void test_null(void)
 	LOG_D("desc: %s", desc);
 }
 
-typedef struct _MediaList 
+typedef struct _MediaListTest 
 {
 	char		file[NAME_MAX+1];
-} MediaList;
+} MediaListTest ;
 
-typedef struct _MediaRes 
+typedef struct _MediaResTest 
 {
 	int			count;
-	MediaList	media[4];
-} MediaRes;
+	MediaListTest	media[4];
+} MediaResTest;
 
 void test_struct(void)
 {
-	MediaRes res = {0};
+	MediaResTest res = {0};
 	int size = sizeof(res.media);
 	LOG_D("struct size = %d", size);
 }

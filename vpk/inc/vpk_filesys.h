@@ -24,7 +24,7 @@ typedef enum vpk_disk_type_t
  *
  * @param path	The input file or directory.
  *
- * @return 1 exists, others fail.
+ * @return 1 exists, others on failure.
  */
 VPKAPI int vpk_exists(const char* path);
 
@@ -33,7 +33,7 @@ VPKAPI int vpk_exists(const char* path);
  *
  * @param path	The input file or directory.
  *
- * @return 1 is dir, others fail.
+ * @return 1 is dir, others on failure.
  */
 VPKAPI int vpk_isdir(const char* path);
 
@@ -42,7 +42,7 @@ VPKAPI int vpk_isdir(const char* path);
  *
  * @param path	The input file or directory.
  *
- * @return 0 success, -1 fail.
+ * @return 0 success, -1 on failure.
  */
 VPKAPI int vpk_mkdir(const char* path);
 
@@ -51,7 +51,7 @@ VPKAPI int vpk_mkdir(const char* path);
  *
  * @param path	The input file or directory.
  *
- * @return 0 success, -1 fail.
+ * @return 0 on success, -1 on failure.
  */
 VPKAPI int vpk_remove(const char* path);
 

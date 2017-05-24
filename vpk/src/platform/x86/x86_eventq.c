@@ -290,7 +290,7 @@ static int x86_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 	int ret = 0;
 //	struct timespec ts;
 	vpk_eventq_t* thiz = queue;
-	char send_buff[EVENT_MQ_MSG_LEN_MAX];
+	char send_buff[EVENT_MQ_MSG_LEN_MAX] = {0};
 	return_val_if_fail(thiz != NULL && send_buff != NULL && e != NULL, -1);
 
 	switch (e->type)
@@ -304,7 +304,10 @@ static int x86_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 	case VPK_EVENT_NOTICE:
 		snprintf(send_buff, sizeof(send_buff), "%x", e->notice.keycode);
 		break;
-	default:break;
+	default:
+		LOG_D("post default type, keycode: %x", e->alert.keycode);
+		snprintf(send_buff, sizeof(send_buff), "%x", e->alert.keycode);
+		break;
 	}
 
 	LOG_I("event post msg type: %d, keycode: 0x%x, string: %s", e->type, e->alert.keycode, send_buff);

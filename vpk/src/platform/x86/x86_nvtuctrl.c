@@ -203,6 +203,7 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 			VpkMmap* mmap = vpk_mmap_create(DEVICE_RELEASE_INFO_FILE, 0, -1);
 			char* str = vpk_mmap_data(mmap);
 			memcpy(thiz->data_buff, str, strlen(str));
+			vpk_mmap_destroy(mmap);
 			return 0;
 		}
 		p = strstr(buf, "-qrcodeshow");

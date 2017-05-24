@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <getopt.h>
 
 #include "vpk.h"
 
@@ -33,6 +34,66 @@ int mqsend_main(int argc, char *argv[])
 	
 	vpk_event_t evt = {0};
 
+	if (type == 0) {
+		evt.type = vpk.events.ABNORMAL;
+		evt.abnormal.keycode = vpk.keys.EVENT_NO_TF_CARD;
+	} else if (type == 1) {
+		evt.type = vpk.events.ABNORMAL;
+		evt.abnormal.keycode = vpk.keys.EVENT_NO_TF_CARD;
+	} else if (type == 2) {
+		evt.type = vpk.events.ALERT;
+		evt.alert.keycode = vpk.keys.EVENT_CAR_CRASH_WARNING;
+	} else if (type == 3) {
+		evt.type = vpk.events.ALERT;
+		evt.alert.keycode = vpk.keys.EVENT_PARKING_CRASH_WARNING;
+	} else if (type == 4) {
+		evt.type = vpk.events.NOTICE;
+		evt.notice.keycode = vpk.keys.EVENT_FIRMWARE_DOWNLOAD;
+	}
+
+	//LOG_I("type = %d, evt.type = %d, keycode = 0x%x\n", type, evt.type, evt.alert.keycode);
+
+	int o;
+	static const struct option long_options[] = {
+		{ "help",			no_argument,			NULL, 'h' },
+		{ "version",		no_argument,			NULL, 'V' },
+		{ "sample",			required_argument,		NULL, 'd' },
+		{ "type",			required_argument,		NULL, 't' },
+		{ "keycode",		required_argument,		NULL, 'k' },
+		{ "file",			required_argument,		NULL, 'f' },
+		{ "url",			required_argument,		NULL, 'u' },
+		{ "log",			optional_argument,		NULL, 'l' },
+		{ NULL, 0, NULL, 0 }
+	};
+
+	optind = 1;
+	//LOG_D("22 optind = %d, argc = %d", optind, argc);
+	while ((o = getopt_long(argc, argv, "hVd:t:k:f:u:l", long_options, NULL)) >= 0) {
+		//printf("opt = %c\n", o);  
+		//printf("optarg = %s\n", optarg);  
+		//printf("optind = %d\n", optind);  
+		//printf("argv[optind - 1] = %s\n",  argv[optind - 1]);
+
+		switch(o) {
+			case 't':
+				type = atoi(optarg);
+				LOG_D("type: %d", type);
+				break;
+			case 'k':
+				keycode = HEXSTR_PARSE(optarg);
+				LOG_D("keycode: %x", keycode);
+				break;
+			default:
+				break;
+		}
+	}
+
+	LOG_I("type = %d, keycode = 0x%x", type, keycode);
+	evt.type = type;
+	evt.alert.keycode = keycode;
+	LOG_I("evt.type = %d, keycode = 0x%x\n", evt.type, evt.alert.keycode);
+
+/*
 	if (argc > 1) {
 		type = atoi(argv[1]);
 
@@ -69,7 +130,7 @@ int mqsend_main(int argc, char *argv[])
 			evt.type = vpk.events.NOTICE;
 			evt.notice.keycode = keycode;
 		}
-	}
+	}*/
 
 	ret = pthread_create(&pth_test3, NULL, vpk_test3, (void*)&evt);
 	if (ret != 0)
@@ -188,11 +249,11 @@ int test_event_post(const char* name, void* args)
 
 void *vpk_test3(void* arg)
 {
-	sleep(2);
 	LOG_D("start test3 thread!");
+	sleep(2);
 	while(1)
 	{
-		LOG_D("test3 thread run.\n");
+		//LOG_D("test3 thread run.\n");
 		test_event_post("POST EVENT", arg);
 		sleep(1);
 	}
