@@ -145,6 +145,9 @@ static int file_dir_test(const char *prefix)
 
 	vpk_system_ex(cmd, 3);
 
+	ret = vpk_rename(tmpcc, tmpbb);
+	LOG_I("vpk_rename \'%s\' to \'%s\' ret = %d\n", tmpcc, tmpbb, ret);
+
 	printf("\r\n");
 	vpk_enumerate(path, dir_print, NULL);
 

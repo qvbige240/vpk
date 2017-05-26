@@ -340,6 +340,17 @@ int md5_main(int argc, char *argv[])
 	time_sub(&result, &prev, &next);
 	LOG_D("mvpk: %d(s), %d(us)  vpk_md5_file_gen \n", result.tv_sec, result.tv_usec);
 
+	int j = 1000000;
+	double ultotal = 1000000.0;
+
+	while (j--)
+	{
+		printf("%f / %f (%g %%)", ultotal-j, ultotal, (ultotal-j)*100.0/ultotal);
+		printf("\r");
+		//fflush(stdout);
+	}
+	
+
 	return 0;
 }
 

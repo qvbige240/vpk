@@ -102,6 +102,18 @@ int vpk_filename_get(const char *full, char *name)
 	return 0;
 }
 
+VPKAPI int vpk_rename(const char* oldname, const char* newname)
+{
+	if (!oldname || !newname)
+		printf("%s oldname or newname error\n", __FUNCTION__);
+
+	if (rename(oldname, newname) < 0) {
+		printf("%s file rename error: %s\n", __FUNCTION__, oldname);
+		return -1;
+	}
+	return 0;
+}
+
 VPKAPI int vpk_remove(const char* path)
 {
 	if (!vpk_exists(path)) {

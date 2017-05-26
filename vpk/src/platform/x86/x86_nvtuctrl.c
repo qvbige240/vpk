@@ -151,6 +151,7 @@ static int setting_item_write(const char* file, char* key, int value)
 	return 0;
 }
 
+static char gps_str[256] = {0};
 static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, int timout)
 {
 	int ret = -1;
@@ -167,9 +168,21 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 		p = strstr(buf, "-gpsinfo");
 		if (p != NULL) 
 		{
-            char *str = "{\"Latitude\":30.657300,\"Longitude\":104.065855,\"Speed\":0.300003,\"Angle\":0.400004}";
+			//char *str = "{\"Latitude\":30.657300,\"Longitude\":104.065855,\"Speed\":0.300003,\"Angle\":0.400004}";
 			//char *str = "{\"Latitude\":0.100001,\"Longitude\":0.200002,\"Speed\":0.300003,\"Angle\":0.400004}";
-			memcpy(thiz->data_buff, str, strlen(str));
+			//memcpy(thiz->data_buff, str, strlen(str));
+
+			#define DEVICE_GPS_INFO_FILE	"dev_gps_pc.json"
+			if (!strlen(gps_str)) {
+				ret = vpk_mmap_exist(DEVICE_GPS_INFO_FILE);
+				VpkMmap* mmap = vpk_mmap_create(DEVICE_GPS_INFO_FILE, 0, -1);
+				char* str = vpk_mmap_data(mmap);
+				strncpy(gps_str, str, sizeof(gps_str));
+				LOG_D("read GPS json: %s", gps_str);
+				vpk_mmap_destroy(mmap);
+			}
+			memcpy(thiz->data_buff, gps_str, strlen(gps_str));
+
 			return 0;
 		}
 		// SNAP

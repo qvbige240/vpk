@@ -56,6 +56,16 @@ VPKAPI int vpk_isdir(const char* path);
 VPKAPI int vpk_mkdir(const char* path);
 
 /**
+ * rename file.
+ *
+ * @param oldname	The input file which will be rename.
+ * @param newname	The new name.
+ *
+ * @return 0 on success, -1 on failure.
+ */
+VPKAPI int vpk_rename(const char* oldname, const char* newname);
+
+/**
  * remove the input path or file.
  *
  * @param path	The input file or directory.
