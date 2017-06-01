@@ -37,6 +37,7 @@ inc/vpk_constants.h \
 inc/vpk_event.h \
 inc/vpk_filesys.h \
 inc/vpk.h \
+inc/vpk_ipc.h \
 inc/vpk_libc.h \
 inc/vpk_logging.h \
 inc/vpk_md5.h \
@@ -54,6 +55,11 @@ src/vpk_ieventq.c \
 src/vpk_ieventq.h \
 src/vpk_ifilesys.c \
 src/vpk_ifilesys.h \
+src/vpk_ipc.c \
+src/vpk_ipc_sem.c \
+src/vpk_ipc_sem.h \
+src/vpk_ipc_shm.c \
+src/vpk_ipc_shm.h \
 src/vpk_libc.c \
 src/vpk_logger.c \
 src/vpk_logger.h \

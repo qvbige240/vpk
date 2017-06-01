@@ -61,6 +61,50 @@ void vpk_snprintf(char *buf, unsigned int *pos, int len, const char *format, ...
 		*pos = len;
 	}
 }
+/*
+static char* strcat_arg(char* str, unsigned int len, const char* first, va_list arg)
+{
+	unsigned int dst = 0;
+	const char* iter = first;
+	if (len <= 0 || iter == NULL)
+	{
+		return NULL;
+	}
+
+	while(iter != NULL && dst < len)
+	{
+		for (; *iter != NULL && dst < len; dst++,iter++)
+		{
+			str[dst] = *iter;
+		}
+
+		iter = va_arg(arg, char*);
+	}
+	va_end(arg);
+
+	if (dst < len)
+	{
+		str[dst] = '\0';
+	}
+	else
+	{
+		str[len-1] = '\0';
+	}
+
+	return str;
+}
+
+char* vpk_strcat(char* str, unsigned int len, const char* first, ...)
+{
+	va_list args;
+	return_val_if_fail(str != NULL && len > 0, NULL);
+
+	va_start(args, first);
+	strcat_arg(str, len, first, args);
+	//va_end(args);
+
+	return str;
+}*/
 
 #ifndef VPK_HAVE_GETTIMEOFDAY
 int vpk_gettimeofday(struct timeval *tv, struct timezone *tz)
