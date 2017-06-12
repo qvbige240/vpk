@@ -238,7 +238,12 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 			//memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}
-		p = strstr(buf, "-fwupdate") || strstr(buf, "-poweroff");
+		p = strstr(buf, "-fwupdate");
+		if (p != NULL)
+		{
+			return 0;
+		}
+		p = strstr(buf, "-poweroff");
 		if (p != NULL)
 		{
 			return 0;

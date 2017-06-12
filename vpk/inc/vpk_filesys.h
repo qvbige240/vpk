@@ -56,6 +56,34 @@ VPKAPI int vpk_isdir(const char* path);
 VPKAPI int vpk_mkdir(const char* path);
 
 /**
+ * create multilevel input directory.
+ *
+ * @param path	The input directory.
+ *
+ * @return 0 on success, -1 on failure.
+ */
+VPKAPI int vpk_mkdir_mult(const char* path);
+
+/**
+ * create file.
+ *
+ * @param filename	The input file name.
+ *
+ * @return 0 on success, -1 on failure.
+ */
+VPKAPI int vpk_create_file(const char *filename);
+
+/**
+ * get directory of input file full path.
+ *
+ * @param full	The input file full path.
+ * @param path	The output directory.
+ *
+ * @return 0 on success, -1 on failure.
+ */
+VPKAPI int vpk_pathname_get(const char* full, char* path);
+
+/**
  * rename file.
  *
  * @param oldname	The input file which will be rename.

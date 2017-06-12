@@ -16,7 +16,7 @@
 
 TIMA_BEGIN_DELS
 
-int vpk_shmget(key_t key, int size, int shmflg);
+int vpk_shmget(key_t key, size_t size, int shmflg);
 void *vpk_shmat(int shmid, const void* shmaddr, int shmflg);
 int vpk_shmdt(const void* shmaddr);
 int vpk_shmctl(int shmid, int cmd, struct shmid_ds *buf);

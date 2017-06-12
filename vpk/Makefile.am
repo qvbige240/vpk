@@ -1,5 +1,4 @@
 AUTOMAKE_OPTIONS=foreign
-noinst_LIBRARIES=libvpk.a
 platform_nt966x_sources = \
 src/platform/nt966x/nt966x_eventq.c \
 src/platform/nt966x/nt966x_eventq.h \
@@ -31,7 +30,7 @@ platform_sources = $(platform_x86_sources)
 else
 platform_sources = $(platform_nt966x_sources)
 endif
-libvpk_a_SOURCES=\
+vpk_all_sources = \
 inc/vpk_action.h \
 inc/vpk_constants.h \
 inc/vpk_event.h \
@@ -79,6 +78,24 @@ src/vpk_tqueue.c \
 src/vpk_tqueue.h \
 src/vpk_util.c \
 $(platform_sources)
+noinst_LIBRARIES=libvpk.a
+libvpk_a_SOURCES=$(vpk_all_sources)
+noinst_LIBRARIES += libipc.a
+libipc_a_SOURCES=\
+inc/vpk_filesys.h \
+inc/vpk_ipc.h \
+src/vpk_ifilesys.c \
+src/vpk_ifilesys.h \
+src/vpk_ipc.c \
+src/vpk_ipc_sem.c \
+src/vpk_ipc_sem.h \
+src/vpk_ipc_shm.c \
+src/vpk_ipc_shm.h \
+src/vpk_libc.c
+#lib_LTLIBRARIES=libvpk.la
+#libvpk_la_SOURCES=$(vpk_all_sources)
+#noinst_LIBRARIES=libvpk.a
+#libvpk_a_SOURCES=$(vpk_all_sources)
 #noinst_LIBRARIES=libvpk.a
 #libvpk_a_SOURCES=
 #lib_LTLIBRARIES=libvpk.la

@@ -106,6 +106,7 @@ static void help(FILE *f) {
 }
 
 typedef enum {
+	SAMPLE_DEMO_STRING = 0,
 	SAMPLE_DEMO_MQSEND = 1,
 	SAMPLE_DEMO_MD5,
 	SAMPLE_DEMO_DOWNLOAD,
@@ -124,6 +125,7 @@ typedef struct _demo_exec
 } demo_exec;
 
 static const demo_exec demo_tables[] = {
+	{SAMPLE_DEMO_STRING,	"string"},
 	{SAMPLE_DEMO_MQSEND,	"mqsend"},
 	{SAMPLE_DEMO_MD5,		"md5"},
 	{SAMPLE_DEMO_DOWNLOAD,	"download"},
@@ -215,7 +217,9 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	if (index == SAMPLE_DEMO_MQSEND) {
+	if (index == SAMPLE_DEMO_STRING) {
+		string_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_MQSEND) {
 		mqsend_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_MD5) {
 		md5_main(argc, argv);

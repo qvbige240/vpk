@@ -105,12 +105,14 @@ static int file_dir_test(const char *prefix)
 	char tmpaa[256] = {0};
 	char tmpbb[256] = {0};
 	char tmpcc[256] = {0};
+	char ipc[256] = {0};
 	char cmd[256] = {0};
 
 	const char* path = prefix;
 	snprintf(tmpaa, sizeof(tmpaa), "%s/aaaa/", path);
 	snprintf(tmpbb, sizeof(tmpbb), "%s/bbbb", path);
 	snprintf(tmpcc, sizeof(tmpcc), "%s/ctest", path);
+	snprintf(ipc, sizeof(ipc), "%s//1/ipc", tmpaa);
 	snprintf(cmd, sizeof(cmd), "touch %s", tmpcc);
 	LOG_I("prefix path \'%s\'\n", path);
 
@@ -140,6 +142,39 @@ static int file_dir_test(const char *prefix)
 	LOG_I("vpk_remove \'%s\' ret = %d", tmpaa, ret);
 	ret = vpk_remove((const char*)tmpbb);
 	LOG_I("vpk_remove \'%s\' ret = %d\n", tmpbb, ret);
+
+	if (vpk_exists((const char*)tmpaa))
+		ret = vpk_remove((const char*)tmpaa);
+	ret = vpk_exists((const char*)ipc);
+	LOG_I("vpk_exists \'%s\' ret = %d", ipc, ret);
+	if (!ret) 
+	{
+		char tmp[256] = {0};
+		vpk_pathname_get("./", tmp);
+		LOG_I("full: %s, pathname: %s", "./", tmp);
+		ret = vpk_mkdir_mult("./");
+		LOG_I("vpk_mkdir_mult \'%s\' ret = %d\n", "./", ret);
+		//memset(tmp, 0x00, 256);
+		vpk_pathname_get("/", tmp);
+		LOG_I("full: %s, pathname: %s", "/", tmp);
+		ret = vpk_mkdir_mult("/");
+		LOG_I("vpk_mkdir_mult \'%s\' ret = %d\n", "/", ret);
+		vpk_pathname_get(ipc, tmp);
+		LOG_I("full: %s, pathname: %s", ipc, tmp);
+		ret = vpk_mkdir_mult(tmp);
+		LOG_I("vpk_mkdir_mult \'%s\' ret = %d", tmp, ret);
+		ret = vpk_exists((const char*)ipc);
+		LOG_I("vpk_exists \'%s\' ret = %d", ipc, ret);
+		if (!ret) {
+			ret = vpk_create_file(ipc);
+			LOG_I("vpk_create_file \'%s\' ret = %d", ipc, ret);
+		}
+
+		vpk_pathname_get("tmp", tmp);
+		LOG_I("full: %s, pathname: %s", "tmp", tmp);
+		ret = vpk_mkdir_mult("tmp");
+		LOG_I("vpk_mkdir_mult \'%s\' ret = %d\n", "tmp", ret);
+	}
 
 	vpk_enumerate(path, dir_print, NULL);
 
@@ -199,6 +234,7 @@ int filesys_main(int argc, char *argv[])
 	}
 
 	LOG_D("file = %s", localpath);
+	printf("%s\n", "1""2");
 
 	double elapsed;
 	struct timeval result, prev, next;	

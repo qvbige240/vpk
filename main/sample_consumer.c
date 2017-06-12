@@ -613,7 +613,6 @@ static int vpk_feed_dog(key_t keyshm, key_t keysem)
 		shm_unlock(semid);
 		LOG_D("feed dog %d", dog);
 		sleep(5);
-		//while(1) sleep(5);
 	}
 
 	vpk_shmdt((void*)g_status);
@@ -640,7 +639,7 @@ static int watch_dog(key_t keyshm, key_t keysem)
 	union semun sem_args;
 	unsigned short array[1]={1};
 	sem_args.array = array;
-	if (vpk_semctl(semid, 1, SETALL, sem_args) < 0)
+	if (vpk_semctl(semid, 0, SETALL, sem_args) < 0)
 		LOG_E("vpk_semctl error.");
 
 	int dog = 0, ret = 0;
@@ -665,7 +664,7 @@ static int watch_dog(key_t keyshm, key_t keysem)
 		printf("semctl(IPC_RMID) failed\n");
 		//return -1;
 	}
-	if (-1 == vpk_semctl(semid, 1, IPC_RMID, 0))
+	if (-1 == vpk_semctl(semid, 0, IPC_RMID, 0))
 		LOG_E("semctl rm failed.");
 	vpk_shmdt((void*)g_status);
 	vpk_shmctl(shmid, IPC_RMID, 0);
@@ -681,7 +680,7 @@ int ipc_main(int argc, char *argv[])
 // 	vpk_system_init(argc, argv);
 // 	vpk_logging_level_set("DEBUG");
 
-	char* pathname = "./ipcs";
+	char* pathname = "./ipc";
 	int proj_id = 0x10;
 	char* type = "consumer";
 	//if (argc > 1)
@@ -721,7 +720,7 @@ int ipc_main(int argc, char *argv[])
 	LOG_D("type = %s", type);
 
 	key_t key = ftok(pathname, proj_id);
-	key_t keysem = ftok(pathname, proj_id+5);
+	key_t keysem = ftok(pathname, proj_id+4);
 
 	if (strcasecmp(type, "consumer") == 0) {
 		LOG_D("consumer start...");

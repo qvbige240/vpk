@@ -10,7 +10,7 @@
 #include "vpk_ipc_shm.h"
 
 
-int vpk_shmget(key_t key, int size, int shmflg)
+int vpk_shmget(key_t key, size_t size, int shmflg)
 {
 	int shm_id = shmget(key, size, IPC_CREAT | IPC_EXCL | 0666);		/** create share memory **/
 	if (shm_id < 0) {
@@ -19,11 +19,11 @@ int vpk_shmget(key_t key, int size, int shmflg)
 	}
 
 	if (shm_id < 0) {
-		printf("shmget failed! %s size:%d key:0x%08x\n", strerror(errno), size, key);
+		printf("shmget failed! %s size:%ld key:0x%08x\n", strerror(errno), size, key);
 		return -1;
 	}
 
-	printf("create shared-memory id: %d size:%d key:0x%08x\n", shm_id, size, key);
+	printf("create shared-memory id: %d size: %ld key: 0x%08x\n", shm_id, size, key);
 	return shm_id;
 }
 

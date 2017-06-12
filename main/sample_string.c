@@ -156,7 +156,7 @@ void test_null(void)
 	//memcpy(buffer, NULL, 0);
 
 	LOG_D("ret len: %d", ret);
-	//ret = strcasecmp("1", NULL);
+	ret = strcasecmp("1", "");
 	LOG_D("ret cmp: %d", ret);
 	//const char* desc = "hello";
 	const char* desc = NULL;

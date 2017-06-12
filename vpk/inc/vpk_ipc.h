@@ -48,7 +48,7 @@ VPKAPI int vpk_sem_v(int semid);
  *
  * @return shared memory identifier on success, -1 on failure.
  */
-VPKAPI int vpk_shmget(key_t key, int size, int shmflg);
+VPKAPI int vpk_shmget(key_t key, size_t size, int shmflg);
 
 /**
  *  Attaches shared memory segment.

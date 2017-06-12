@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <error.h>
+#include <fcntl.h>
 #include <sys/dir.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -80,12 +82,96 @@ VPKAPI int vpk_mkdir(const char* path)
 	if (stat(path, &st) != 0)
 	{
 		if (mkdir(path, 0777) != 0)
+		{
+			printf("mkdir \'%s\' error\n", path);
 			return -1;
+		}
 	}
 	else if (!S_ISDIR(st.st_mode))
 	{
 		printf("mkdir: cannot create directory \'%s\': File exists\n", path);
 		return -1;
+	}
+
+	return 0;
+}
+
+VPKAPI int vpk_mkdir_mult(const char* path)
+{
+	int len, i;
+	char tmp[FILENAME_MAX] = {0};
+
+	if (path == NULL)
+		return -1;
+
+	len = strlen(path);
+	if (len >= FILENAME_MAX-1)
+		return -1;
+
+	strncpy(tmp, path, len);
+	if (tmp[len-1] != '/')
+	{
+		tmp[len] = '/';
+		tmp[len+1] = '\0';
+	}
+
+	for (i = 0; i < len; i++)
+	{
+		if (tmp[i] == '/' && i > 0)
+		{
+			tmp[i] = '\0';
+			if (access(tmp, F_OK) != 0)		/* not exists */
+			{
+				if (mkdir(tmp, 0777) != 0)
+				{
+					printf("error: mkdir \'%s\'!\n", tmp);
+					return -1;
+				}
+				printf("mkdir \'%s\'\n", tmp);
+			}
+			else if (!vpk_isdir(tmp))
+			{
+				printf("mkdir: cannot create directory \'%s\': File exists\n", tmp);
+				return -1;
+			}
+			tmp[i] = '/';
+		}
+	}
+
+	return 0;
+}
+
+int vpk_create_file(const char *filename)
+{
+	if (creat(filename, 0755) < 0) {
+
+		printf("creat \'%s\' error\n", filename);
+		return -1;
+	}
+	return 0;
+}
+
+int vpk_pathname_get(const char *full, char *path)
+{
+	const char *pos = strrchr(full, '/');
+	if (pos == NULL)
+	{
+		if (vpk_isdir(full))
+		{
+			int len = strlen(full);
+			strcpy(path, full);
+			path[len] = '/';
+			path[len+1] = '\0';
+		}
+		else
+		{
+			strcpy(path, "./");
+		}
+	}
+	else 
+	{
+		strncpy(path, full, pos+1-full);
+		path[pos+1-full] = '\0';
 	}
 
 	return 0;
