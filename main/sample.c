@@ -12,6 +12,7 @@
 
 #include "vpk.h"
 
+extern int sort_main(int argc, char *argv[]);
 extern int timer_main(int argc, char *argv[]);
 extern int ipc_main(int argc, char *argv[]);
 extern int filesys_main(int argc, char *argv[]);
@@ -90,7 +91,7 @@ static void help(FILE *f) {
 		"    -h --help          Show this help\n"
 		"    -V --version       Show version\n"
 		"    -d --sample        Target sample demo which will be running(mqsend, \n"
-		"                       tqueue, download, md5, json, filesys, ipc).\n"
+		"                       tqueue, download, md5, json, filesys, ipc, sort).\n"
 		"    -t --type          Event type for keycode\n"
 		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
 		"    -u --url           Target remote url.\n"
@@ -115,6 +116,7 @@ typedef enum {
 	SAMPLE_DEMO_FILESYS,
 	SAMPLE_DEMO_IPC,
 	SAMPLE_DEMO_TIMER,
+	SAMPLE_DEMO_SORT,
 } SampleDemo;
 
 typedef struct _demo_exec
@@ -134,6 +136,7 @@ static const demo_exec demo_tables[] = {
 	{SAMPLE_DEMO_FILESYS,	"filesys"},
 	{SAMPLE_DEMO_IPC,		"ipc"},
 	{SAMPLE_DEMO_TIMER,		"timer"},
+	{SAMPLE_DEMO_SORT,		"sort"},
 };
 
 static int find_demo(const char* demo)
@@ -235,6 +238,8 @@ int main(int argc, char *argv[])
 		ipc_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_TIMER) {
 		timer_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_SORT) {
+		sort_main(argc, argv);
 	} else {
 		fprintf(stderr, "\n\n-d --sample without arguments error\n");
 		vpk_testbyte();

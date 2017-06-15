@@ -25,6 +25,65 @@ int vpk_hex_to_int(char c)
 	return 0;
 }
 
+char* vpk_strstrip(char* str, char c)
+{
+	if (str == NULL)
+		return str;
+
+	{
+		char* s = str;
+		char* d = str;
+		while (*s != '\0')
+		{
+			if (*s != c) 
+			{
+				*d = *s;
+				d++;
+			}
+			s++;
+		}
+		*d = '\0';
+	}
+
+	return str;
+}
+
+char* remove_colons(char* str)
+{
+	char* p = NULL;
+	if (str == NULL)
+		return str;
+
+	p = str + strlen(str) - 1;
+
+	while(p != str && *p == ':')
+	{
+		*p = '\0';
+		p--;
+	}
+
+	p = str;
+	while(*p != '\0' && *p == ':') p++;
+
+	//if (p != str)
+	{
+		char* s = p;
+		char* d = str;
+		while (*s != '\0')
+		{
+			if (*s != ':') 
+			{
+				*d = *s;
+				d++;
+			}
+			s++;
+		}
+		*d = '\0';
+	}
+
+	return str;
+}
+
 int vpk_strcntstr(const char *s1, const char *s2)
 {
 	int cnt = 0;

@@ -209,7 +209,7 @@ int vpk_action_param_set(VpkAction* thiz, VpkNvtuType type, void *param)
 		sprintf(priv->action, "%s %s", priv->action, (char*)param);
 	}
 
-	LOG_D("action[%s]: \'%s\' set successful!", priv->name, priv->action);
+	LOG_D("set action[%s]: \'%s\'", priv->name, priv->action);
 
 	return 0;
 }
@@ -223,7 +223,7 @@ int vpk_action_exec(VpkAction* thiz, VpkActionCallback callback, void *ctx)
 	memset(thiz->recvbuf, 0x00, thiz->recvsize);
 	ret = vpk_nvtuctrl_write(priv->nvtuctrl, priv->action, strlen(priv->action), thiz->recvbuf, thiz->recvsize, 0);
 	if (!strstr(priv->action, "gpsinfo"))
-	LOG_D("[%s] ret = %d, recv_buf: %s, len: %d", priv->name, ret, thiz->recvbuf, strlen(thiz->recvbuf));
+	LOG_D("action[%s] ret = %d, recv_buf: %s, len: %d", priv->name, ret, thiz->recvbuf, strlen(thiz->recvbuf));
 	if (callback == NULL)
 	{
 		LOG_E("callback is NULL!");

@@ -135,7 +135,7 @@ int test_findstr(const char* str)
 				p = p + strlen("MENUMOCK");
 				int value = atoi(p);
 
-				LOG_D("p = %s, value(atoi) = %d\n", p, value);
+				LOG_D("p = %s, value(atoi) = %d", p, value);
 			}
 		}
 
@@ -143,7 +143,46 @@ int test_findstr(const char* str)
 
 	}
 
+	printf("\n");
+
 	return 0;
+}
+
+void test_str(void)
+{
+	int i = 0, ret = 0;
+	char str[] = ";;;sd;fdfs.adf.;;;";
+	LOG_D("before str: %s", str);
+	char* p = vpk_strstrip(str, ';');
+	LOG_D("after str: %s, p: %s", str, p);
+
+	i = atoi(" 2");
+	LOG_D("i(atoi) = %d\n", i);
+	{
+		char cur_ver[] = "K40.20170612.01";
+		char new_ver[] = "K40.20170612.01";
+		ret = strncmp(new_ver, "K40", strlen("K40"));
+		LOG_D("ret = %d\n", ret);
+
+		char* p = strstr(new_ver, ".");
+		LOG_D("p: %s", p);
+		p = p + 1;
+		i = atoi(p);
+		LOG_D("p: %s, i(atoi) = %d\n", p, i);
+
+		ret = strcasecmp(new_ver, cur_ver);
+		LOG_D("new_ver cmp cur_ver, ret = %d", ret);
+
+
+		#define TIMA_PROJECT	    "K40"
+		char p1[16] = {0}, p2[16] = {0};
+		//int p1, p2;
+		sscanf(cur_ver, TIMA_PROJECT".%[0-9].%[0-9]", p1, p2);
+		LOG_D("cur_ver: %s", cur_ver);
+		LOG_D("p1(len=%d): %s, p2(len=%d): %s", strlen(p1), p1, strlen(p2), p2);
+	}
+
+	printf("\n");
 }
 
 void test_null(void)
@@ -162,6 +201,7 @@ void test_null(void)
 	const char* desc = NULL;
 	if (!desc) desc = "Device Exception Parse Error!";
 	LOG_D("desc: %s", desc);
+	printf("\n");
 }
 
 typedef struct _MediaListTest 
@@ -180,6 +220,18 @@ void test_struct(void)
 	MediaResTest res = {0};
 	int size = sizeof(res.media);
 	LOG_D("struct size = %d", size);
+	printf("\n");
+#define HELLOWORLD
+#if defined(HELLOWORLD)
+	LOG_D("if defined(HELLOWORLD)");
+#else
+#endif
+
+#ifdef HELLOWORLD
+	LOG_D("ifdef HELLOWORLD");
+#else
+#endif
+	printf("\n");
 }
 
 int string_main(int argc, char *argv[])
@@ -194,8 +246,7 @@ int string_main(int argc, char *argv[])
 	strcpy(data, menus);
 	//LOG_D("data: %s\n", data);
 	test_struct();
-	int i = atoi(" 2");
-	LOG_D("i(atoi) = %d\n", i);
+	test_str();
 	test_null();
 	test_findstr(NULL);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 1);

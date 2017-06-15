@@ -1,14 +1,13 @@
 /**
  * History:
  * ================================================================
- * 2017-05-28 qing.zou created
+ * 2017-06-12 qing.zou created
  *
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <getopt.h>
-#include <time.h>
 #include <sys/time.h>
 
 #include "vpk.h"
@@ -19,54 +18,49 @@
 
 #include <errno.h>
 
-void time_test()
+static int compare_desc(const void *a, const void *b)
 {
-	time_t timestamp;
-	struct tm *locals;
-	//char timestr[] = "2018-11-01 11:30:00";
-
-	timestamp = time(NULL);
-	LOG_D("timestamp: %ld", timestamp);
-	LOG_D("ctime: %s", ctime(&timestamp));
-	locals = localtime(&timestamp);
-	LOG_D("%d-%d-%d %02d:%02d:%02d", 
-		locals->tm_year+1900, locals->tm_mon+1, locals->tm_mday, 
-		locals->tm_hour, locals->tm_min, locals->tm_sec);
-
-	timestamp = mktime(locals);
-	LOG_D("timestamp: %ld", timestamp);
+	return ((int *)a)[0] - ((int *)b)[0];
+}
+static int compare_asc(const void *a, const void *b)
+{
+	return ((int *)b)[0] - ((int *)a)[0];
 }
 
-#if 1
-static void set_timer(int seconds, int mseconds)
+static int test_sort()
 {
-	struct timeval temp;
+	int nsize = 0, i = 0;
+	int array_num[] = {5, 9, 2, 4, 15, 28, 6, 3, 40, 7, 5, 1, 8};
 
-	temp.tv_sec = seconds;
-	temp.tv_usec = mseconds;
+	nsize = _countof(array_num);
+	printf("before sort: \n");
+	for (i = 0; i < nsize; i++)
+		printf("%2d ", array_num[i]);
 
-	select(0, NULL, NULL, NULL, &temp);
-	printf("timer\n");
+	printf("\nafter desc sort: \n");
+	vpk_ssort(array_num, nsize, sizeof(int), compare_desc);
 
-	return ;
+	for (i = 0; i < nsize; i++)
+		printf("%2d ", array_num[i]);
+
+	printf("\nafter asc sort: \n");
+	vpk_ssort(array_num, nsize, sizeof(int), compare_asc);
+
+	for (i = 0; i < nsize; i++)
+		printf("%2d ", array_num[i]);
+	printf("\n");
+
+	return 0;
 }
 
-#elif 0
-
-#elif 0
-
-#endif
-
-int timer_main(int argc, char *argv[])
+int sort_main(int argc, char *argv[])
 {
-// 	int ret = 0;
-// 
-// 	vpk_system_init(argc, argv);
-// 	vpk_logging_level_set("DEBUG");
+ 	//int ret = 0;
+ 
+ 	//vpk_system_init(argc, argv);
+ 	//vpk_logging_level_set("DEBUG");
 
-	//char* pathname = "./ipc";
-	//int proj_id = 0x10;
-	char* type = "timer";
+	char* type = "bubble";
 	//if (argc > 1)
 	//{
 	//	type = argv[1];
@@ -106,11 +100,9 @@ int timer_main(int argc, char *argv[])
 	double elapsed;
 	struct timeval result, prev, next;	
 
-	time_test();
-
 	gettimeofday(&prev, 0);
 
-	set_timer(5, 10);
+	test_sort();
 
 	gettimeofday(&next, 0);
 	vpk_timersub(&next, &prev, &result);

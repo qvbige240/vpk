@@ -40,14 +40,16 @@ TIMA_BEGIN_DELS
 
 #define TO_HEX_CHAR(c)	((c) > 9 ? (c) + 55 : (c) + 48)
 
-int vpk_hex_to_int(char c);
+VPKAPI int vpk_hex_to_int(char c);
 
 /**
  * vpk_strcntstr - Get the number of substring in a terminated string
  * @s1: The string to be searched
  * @s2: The string to search for..
  */
-int vpk_strcntstr(const char *s1, const char *s2);
+VPKAPI int vpk_strcntstr(const char *s1, const char *s2);
+
+VPKAPI char* vpk_strstrip(char* str, char c);
 
 #define VPK_HAVE_GETTIMEOFDAY
 #ifdef VPK_HAVE_GETTIMEOFDAY
