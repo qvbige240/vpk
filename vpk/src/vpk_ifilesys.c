@@ -239,6 +239,52 @@ VPKAPI void vpk_enumerate(const char* folder, vpk_enumerate_callback callback, v
 }
 
 /*
+int process_path_name_get(pid_t pid, char *path_name)
+{
+	FILE *fp;
+	int ret = -1;
+	char cmd[255] = {0};
+	sprintf(cmd, "readlink /proc/%d/exe", pid);
+
+	if ( (fp = popen(cmd, "r")) != NULL)
+	{
+		if (fgets(path_name, 254, fp) != NULL)
+		{
+			printf("process_path_name_get: %s \n", path_name);
+			ret = 0;
+		}
+	} else {
+		printf("error: popen at process_name_get()!");
+	}
+
+	pclose(fp);
+
+	return ret;
+}
+
+int process_path_name_get(pid_t pid, char *path_name)
+{
+    FILE *fp;
+    int ret = -1;
+    char cmd[255] = {0};
+    sprintf(cmd, "readlink /proc/%d/exe", pid);
+
+    if ( (fp = popen(cmd, "r")) != NULL)
+    {
+        if (fgets(path_name, 254, fp) != NULL)
+        {
+            printf("process_path_name_get: %s \n", path_name);
+            ret = 0;
+        }
+    }
+    else {
+        printf("error: popen at process_name_get()!");
+    }
+
+    pclose(fp);
+
+    return ret;
+}
 void dir_print(void *ctx, const char *predir, const char *fname)
 {
 	printf("predir: %s, file name: %s\n", predir, fname);

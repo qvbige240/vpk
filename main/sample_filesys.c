@@ -191,6 +191,44 @@ static int file_dir_test(const char *prefix)
 		LOG_I("vpk_remove \'%s\' ret = %d\n", tmpcc, ret);
 	}
 
+	printf("\r\n");
+
+	return 0;
+}
+
+typedef struct _LicenseFile
+{
+	char	guid[32];
+	char	license[256];
+} LicenseFile;
+
+static int file_mmap_test(const char *prefix)
+{
+	int ret = 0;
+	LicenseFile license = {0};
+	strcpy(license.guid, "CA41E05B50844cd5");
+	strcpy(license.license, "304402206F607AB4A937FDD8B3A0487FE741673E36FE71B50CBB1C00B7730BD0D54C137F022032A21382D85124F0548AA36AF02DA320EC1EA73708F160344A55836C83F999F6");
+
+	ret = vpk_mmap_save("./tmp/license", &license, sizeof(LicenseFile));
+	if (ret != sizeof(LicenseFile))
+		LOG_E("license save failed(ret=%d).", ret);
+
+	if (vpk_mmap_exist("./tmp/license"))
+	{
+		VpkMmap* mmap = vpk_mmap_create("./tmp/license", 0, -1);
+		LicenseFile* res = (LicenseFile*)vpk_mmap_data(mmap);
+		if (res) 
+		{
+			//strcpy(req.iotguid, res->guid);
+			//strcpy(req.iotlicense, res->license);
+			LOG_D("guid: %s license: %s", res->guid, res->license);
+		}
+		vpk_mmap_destroy(mmap);
+	} else {
+		LOG_W("license file not exists.");
+	}
+
+	printf("\r\n");
 	return 0;
 }
 
@@ -242,6 +280,8 @@ int filesys_main(int argc, char *argv[])
 	gettimeofday(&prev, 0);
 
 	file_dir_test((const char*)localpath);
+
+	file_mmap_test((const char*)localpath);
 
 	gettimeofday(&next, 0);
 	vpk_timersub(&next, &prev, &result);

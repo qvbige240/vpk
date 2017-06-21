@@ -15,7 +15,7 @@ typedef struct _PrivInfo
 {
 	vpk_nvtuctrl_t* nvtuctrl;
 	char			name[16];
-	char			action[128];
+	char			action[256];
 }PrivInfo;
 
 typedef struct _ActionInfo
@@ -80,6 +80,11 @@ static const ActionInfo action_tables[] =
 //	{VPK_NVTU_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
 	{VPK_NVTU_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -fwdownload "},
 	{VPK_NVTU_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -fwupdate "},
+
+	/* tencent iot */
+	{VPK_NVTU_IOTPIDGET,				"QQIOT",	"ucustom -getiotpid "},
+	{VPK_NVTU_IOTIDSET,					"QQIOT",	"ucustom -setiotid "},
+	{VPK_NVTU_IOTLICENCESET,			"QQIOT",	"ucustom -setiotlicence "},
 
 	{VPK_NVTU_POWER_OFF,				"POWEROFF",	"ucustom -poweroff "},
 };
@@ -230,7 +235,8 @@ int vpk_action_exec(VpkAction* thiz, VpkActionCallback callback, void *ctx)
 		return -1;
 	}
 
-	callback(ctx, (void*)thiz->recvbuf);
+	if (callback(ctx, (void*)thiz->recvbuf) < 0)
+		return -1;
 	//sleep(1);
 
 	return ret;
