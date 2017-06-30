@@ -151,7 +151,9 @@ int test_findstr(const char* str)
 void test_str(void)
 {
 	int i = 0, ret = 0;
+    char* str1 = "";
 	char str[] = ";;;sd;fdfs.adf.;;;";
+	LOG_D("str1 len: %d", strlen(str1));
 	LOG_D("before str: %s", str);
 	char* p = vpk_strstrip(str, ';');
 	LOG_D("after str: %s, p: %s", str, p);

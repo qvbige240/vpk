@@ -119,6 +119,7 @@ int vpk_tqueue_write(vpk_tqueue *queue, void *data)
 
 	vpk_tqueue_lock(queue);
 
+	// need use pthread_cond_wait
 	if (queue->curr_len >= queue->data_num)
 	{
 		vpk_tqueue_unlock(queue);

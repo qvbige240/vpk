@@ -92,6 +92,7 @@ static void help(FILE *f) {
 		"    -V --version       Show version\n"
 		"    -d --sample        Target sample demo which will be running(mqsend, \n"
 		"                       tqueue, download, md5, json, filesys, ipc, sort).\n"
+		"                       string).\n"
 		"    -t --type          Event type for keycode\n"
 		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
 		"    -u --url           Target remote url.\n"

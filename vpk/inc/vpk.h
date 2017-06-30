@@ -20,6 +20,7 @@
 #include "vpk_mmap.h"
 #include "vpk_md5.h"
 #include "vpk_ipc.h"
+#include "vpk_list.h"
 
 TIMA_BEGIN_DELS
 
