@@ -5,6 +5,11 @@
 #
 # Normal rules
 #
+*tmp
+*bak
+*.swp
+build_*
+
 .*
 *.o
 *.lo

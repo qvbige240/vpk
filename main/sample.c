@@ -7,10 +7,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <getopt.h>
 #include <pthread.h>
 
 #include "vpk.h"
 
+extern int sort_main(int argc, char *argv[]);
+extern int timer_main(int argc, char *argv[]);
+extern int ipc_main(int argc, char *argv[]);
+extern int filesys_main(int argc, char *argv[]);
+extern int mqsend_main(int argc, char *argv[]);
+extern int md5_main(int argc, char *argv[]);
 extern int string_main(int argc, char *argv[]);
 extern int download_main(int argc, char *argv[]);
 extern int json_main(int argc, char *argv[]);
@@ -55,20 +62,204 @@ int vpk_testbyte()
 	return 0;
 }
 
+/*
+static void help(FILE *f) {
+	fprintf(f,
+		"%s [options]\n"
+		"    -h --help          Show this help\n"
+		"    -D --daemonize     Daemonize after startup (implies -s)\n"
+		"    -s --syslog        Write log messages to syslog(3) instead of STDERR\n"
+		"    -k --kill          Kill a running daemon\n"
+		"    -r --reload        Request a running daemon to reload static services\n"
+		"    -c --check         Return 0 if a daemon is already running\n"
+		"    -V --version       Show version\n"
+		"    -f --file=FILE     Load the specified configuration file instead of\n"
+		"                       "AVAHI_CONFIG_FILE"\n"
+		"       --no-rlimits    Don't enforce resource limits\n"
+		"       --no-drop-root  Don't drop privileges\n"
+#ifdef ENABLE_CHROOT
+		"       --no-chroot     Don't chroot()\n"
+#endif
+		"       --no-proc-title Don't modify process title\n"
+		"       --debug         Increase verbosity\n",
+		argv0);
+}*/
+#define SAMPLE_CONFIG_FILE	"./test"
+static void help(FILE *f) {
+	fprintf(f,
+		"   [options]\n"
+		"    -h --help          Show this help\n"
+		"    -V --version       Show version\n"
+		"    -d --sample        Target sample demo which will be running(mqsend, \n"
+		"                       tqueue, download, md5, json, filesys, ipc, sort).\n"
+		"                       string).\n"
+		"    -t --type          Event type for keycode\n"
+		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
+		"    -u --url           Target remote url.\n"
+		"    -f --file=FILE     Load the specified configuration file instead of\n"
+		"                       "SAMPLE_CONFIG_FILE"\n"
+		"    -r --reload        Request a running daemon to reload static services\n"
+		"    -c --check         Return 0 if a daemon is already running\n"
+		"    -l --syslog        Write log messages to syslog(3) instead of STDERR\n"
+		"       --no-rlimits    Don't enforce resource limits\n"
+		"       --no-proc-title Don't modify process title\n"
+		"       --debug         Increase verbosity\n"
+		);
+}
+
+typedef enum {
+	SAMPLE_DEMO_STRING = 0,
+	SAMPLE_DEMO_MQSEND = 1,
+	SAMPLE_DEMO_MD5,
+	SAMPLE_DEMO_DOWNLOAD,
+	SAMPLE_DEMO_TQUEUE,
+	SAMPLE_DEMO_JSON,
+	SAMPLE_DEMO_FILESYS,
+	SAMPLE_DEMO_IPC,
+	SAMPLE_DEMO_TIMER,
+	SAMPLE_DEMO_SORT,
+} SampleDemo;
+
+typedef struct _demo_exec
+{
+	int	 index;
+
+	char* name;
+} demo_exec;
+
+static const demo_exec demo_tables[] = {
+	{SAMPLE_DEMO_STRING,	"string"},
+	{SAMPLE_DEMO_MQSEND,	"mqsend"},
+	{SAMPLE_DEMO_MD5,		"md5"},
+	{SAMPLE_DEMO_DOWNLOAD,	"download"},
+	{SAMPLE_DEMO_TQUEUE,	"tqueue"},
+	{SAMPLE_DEMO_JSON,		"json"},
+	{SAMPLE_DEMO_FILESYS,	"filesys"},
+	{SAMPLE_DEMO_IPC,		"ipc"},
+	{SAMPLE_DEMO_TIMER,		"timer"},
+	{SAMPLE_DEMO_SORT,		"sort"},
+};
+
+static int find_demo(const char* demo)
+{
+	int i = 0;
+	int count = _countof(demo_tables);
+
+	for (i = 0; i < count; i++)
+	{
+		if (strcmp(demo, demo_tables[i].name) == 0)
+			return demo_tables[i].index;
+	}
+
+	return -1;
+}
+
 int main(int argc, char *argv[])
 {
+	int o, hflag = 0, index;
+	//char myargv[6][MAX_PATH_SIZE];
+
 	vpk_system_init(argc, argv);
 	LOG_I("log level: %s\n", vpk_logging_level_get());
 	vpk_logging_level_set("DEBUG");
 
+	static const struct option long_options[] = {
+		{ "help",			no_argument,			NULL, 'h' },
+		{ "version",		no_argument,			NULL, 'V' },
+		{ "sample",			required_argument,		NULL, 'd' },
+		{ "type",			required_argument,		NULL, 't' },
+		{ "keycode",		required_argument,		NULL, 'k' },
+		{ "file",			required_argument,		NULL, 'f' },
+		{ "url",			required_argument,		NULL, 'u' },
+		{ "log",			optional_argument,		NULL, 'l' },
+		{ NULL, 0, NULL, 0 }
+	};
+
+	LOG_I("optind = %d, argc = %d", optind, argc);
+	while ((o = getopt_long(argc, argv, "hVd:t:k:f:u:l", long_options, NULL)) >= 0) {
+
+		switch(o) {
+			case 'V':
+				LOG_I("default version");
+				break;
+			case 'h':
+				hflag = 1;
+				break;
+			case 'd':
+				index = find_demo(optarg);
+				if (index < 0) {
+					fprintf(stderr, "-d --sample arguments error\n");
+					return 0;
+				}
+				break;
+			case 't':
+				//LOG_D("type: %s", optarg);
+				break;
+			case 'k':
+				//LOG_D("keycode: %s", optarg);
+				break;
+			case 'f':
+				break;
+			case 'u':
+				break;
+			case 'l':
+				break;
+			default:
+				return -1;
+		}
+	}
+
+	if (hflag || argc == 1) {
+		help(stdout);
+		return 0;
+	}
+
+	LOG_I("optind = %d, argc = %d", optind, argc);
+	if (optind < argc) {
+		//LOG_W("optind = %d, argc = %d", optind, argc);
+		fprintf(stderr, "Too many arguments\n");
+		return -1;
+	}
+
+	if (index == SAMPLE_DEMO_STRING) {
+		string_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_MQSEND) {
+		mqsend_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_MD5) {
+		md5_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_DOWNLOAD) {
+		download_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_TQUEUE) {
+		vpk_tqueue_test(argc, argv);
+	} else if (index == SAMPLE_DEMO_JSON) {
+		json_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_FILESYS) {
+		filesys_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_IPC) {
+		ipc_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_TIMER) {
+		timer_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_SORT) {
+		sort_main(argc, argv);
+	} else {
+		fprintf(stderr, "\n\n-d --sample without arguments error\n");
+		vpk_testbyte();
+		vpk_wlan0_ifcheck();
+		string_main(argc, argv);
+	}
+
 #if 0
 	vpk_testbyte();
-vpk_wlan0_ifcheck();
-#elif 1
+	vpk_wlan0_ifcheck();
+#elif 0
+	mqsend_main(argc, argv);
+#elif 0
+	md5_main(argc, argv);
+#elif 0
 	string_main(argc, argv);
-#elif 1
+#elif 0
 	download_main(argc, argv);
-#elif 1
+#elif 0
 	json_main(argc, argv);
 #elif 0
 	vpk_tqueue_test(argc, argv);

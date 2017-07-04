@@ -18,6 +18,9 @@
 #include "vpk_constants.h"
 #include "vpk_event.h"
 #include "vpk_mmap.h"
+#include "vpk_md5.h"
+#include "vpk_ipc.h"
+#include "vpk_list.h"
 
 TIMA_BEGIN_DELS
 

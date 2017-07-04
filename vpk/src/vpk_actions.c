@@ -15,7 +15,7 @@ typedef struct _PrivInfo
 {
 	vpk_nvtuctrl_t* nvtuctrl;
 	char			name[16];
-	char			action[128];
+	char			action[256];
 }PrivInfo;
 
 typedef struct _ActionInfo
@@ -35,6 +35,7 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_SNAPSHOT,					"SNAP",		"ucustom -snapshot "},
 	{VPK_NVTU_MOVIEREC,					"VIDEO",	"ucustom -movierec "},
 	{VPK_NVTU_MOVIELEN,					"VIDEO",	"ucustom -movielen "},
+	{VPK_NVTU_RECSTATE,					"VIDEO",	"ucustom -recstate "},
 	{VPK_NVTU_DEVINFO,					"DEVINFO",	"ucustom -getdevinfo "},
 
 	/* menu get */
@@ -76,9 +77,16 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_MENU_VERSIONGET_NOP,		"MENUSET", " "},		// not use
 
 	{VPK_NVTU_QRCODE,					"QRCODE",	"ucustom -qrcodeshow "},
-	{VPK_NVTU_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
-	{VPK_NVTU_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -updateisdownload "},
-	{VPK_NVTU_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -updateisupgrade "},
+//	{VPK_NVTU_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
+	{VPK_NVTU_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -fwdownload "},
+	{VPK_NVTU_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -fwupdate "},
+
+	/* tencent iot */
+	{VPK_NVTU_IOTPIDGET,				"QQIOT",	"ucustom -getiotpid "},
+	{VPK_NVTU_IOTIDSET,					"QQIOT",	"ucustom -setiotid "},
+	{VPK_NVTU_IOTLICENCESET,			"QQIOT",	"ucustom -setiotlicence "},
+
+	{VPK_NVTU_POWER_OFF,				"POWEROFF",	"ucustom -poweroff "},
 };
 
 VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint32_t recvsize) 
@@ -206,7 +214,7 @@ int vpk_action_param_set(VpkAction* thiz, VpkNvtuType type, void *param)
 		sprintf(priv->action, "%s %s", priv->action, (char*)param);
 	}
 
-	LOG_D("action[%s]: \'%s\' set successful!", priv->name, priv->action);
+	LOG_D("set action[%s]: \'%s\'", priv->name, priv->action);
 
 	return 0;
 }
@@ -220,14 +228,15 @@ int vpk_action_exec(VpkAction* thiz, VpkActionCallback callback, void *ctx)
 	memset(thiz->recvbuf, 0x00, thiz->recvsize);
 	ret = vpk_nvtuctrl_write(priv->nvtuctrl, priv->action, strlen(priv->action), thiz->recvbuf, thiz->recvsize, 0);
 	if (!strstr(priv->action, "gpsinfo"))
-	LOG_D("[%s] ret = %d, recv_buf: %s, len: %d", priv->name, ret, thiz->recvbuf, strlen(thiz->recvbuf));
+	LOG_D("action[%s] ret = %d, recv_buf: %s, len: %d", priv->name, ret, thiz->recvbuf, strlen(thiz->recvbuf));
 	if (callback == NULL)
 	{
 		LOG_E("callback is NULL!");
 		return -1;
 	}
 
-	callback(ctx, (void*)thiz->recvbuf);
+	if (callback(ctx, (void*)thiz->recvbuf) < 0)
+		return -1;
 	//sleep(1);
 
 	return ret;

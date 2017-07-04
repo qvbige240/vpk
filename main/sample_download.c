@@ -7,24 +7,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <getopt.h>
 // #include <pthread.h>
 // #include <semaphore.h>
 
 #include "vpk.h"
 #include "curl/curl.h"
-// #include "vpk_logging.h"
-// #include "vpk_system.h"
-
-// extern void *vpk_test2(void* arg);
-// // extern void *vpk_test3(void* arg);
-// 
-// typedef struct _PrivInfo
-// {
-// 	pthread_mutex_t sample_mutex;
-// 	sem_t			sample_sem;
-// }PrivInfo;
-// 
-// PrivInfo info;
 
 int cnt_w = 0;
 int total = 0;
@@ -33,23 +21,50 @@ int http_download(const char* remote_path, const char* local_path, long timout);
 
 int download_main(int argc, char *argv[])
 {
-// 	int ret = 0;
-// 	void* thread_result;
-// 	pthread_t pth_test3, pth_test2;
-// 
-// 	vpk_system_init(argc, argv);
-// 	vpk_logging_level_set("DEBUG");
 
-	//const char* remoteurl = "http://test.7xl1at.com2.z0.glb.qiniucdn.com/1493564584?e=1493568191&token=jB7K75I0zFaneS5mBfra-2hsnHU4XyxQdBL5dRuR:aCjaueUS_XywueLhp9TR4MYGFjU=";
-	
 	char* remoteurl = "http://test.7xl1at.com2.z0.glb.qiniucdn.com/1493564584";
 	//char* localpath = "./resource/123.mp4";
 	char* localpath = "./FW966X.crdownload.mp4";
-	if (argc > 2)
-	{
-		localpath = argv[1];
-		remoteurl = argv[2];
+
+	int o;
+	static const struct option long_options[] = {
+		{ "help",			no_argument,			NULL, 'h' },
+		{ "version",		no_argument,			NULL, 'V' },
+		{ "sample",			required_argument,		NULL, 'd' },
+		{ "type",			required_argument,		NULL, 't' },
+		{ "keycode",		required_argument,		NULL, 'k' },
+		{ "file",			required_argument,		NULL, 'f' },
+		{ "url",			required_argument,		NULL, 'u' },
+		{ "log",			optional_argument,		NULL, 'l' },
+		{ NULL, 0, NULL, 0 }
+	};
+
+	optind = 1;
+	//LOG_I("22 optind = %d, argc = %d", optind, argc);
+	while ((o = getopt_long(argc, argv, "hVd:t:k:f:u:l", long_options, NULL)) >= 0) {
+		//printf("opt = %c\n", o);  
+		//printf("optarg = %s\n", optarg);  
+		//printf("optind = %d\n", optind);  
+		//printf("argv[optind - 1] = %s\n",  argv[optind - 1]);
+
+		switch(o) {
+			case 'f':
+				localpath = optarg;
+				break;
+			case 'u':
+				remoteurl = optarg;
+				//LOG_D("keycode: %x", keycode);
+				break;
+			default:
+				break;
+		}
 	}
+
+	//if (argc > 2)
+	//{
+	//	localpath = argv[1];
+	//	remoteurl = argv[2];
+	//}
 
 	LOG_D("localpath = %s, remoteurl = %s", localpath, remoteurl);
 	http_download(remoteurl, localpath, 20);
@@ -85,9 +100,11 @@ size_t get_contentlength_func(void *ptr, size_t size, size_t nmemb, void *stream
 	//r = _snscanf(ptr, size * nmemb, "Content-Length: %ld\n", &len);
 	r = sscanf(ptr, "Content-Length: %ld\n", &len);
 
-    LOG_D("len: %ld\n", len);
 	if(r) /* Microsoft: we don't read the specs */
+	{
 		*((long *) stream) = len;
+		LOG_D("len: %ld\n", len);
+	}
 
 	return size * nmemb;
 }
@@ -192,7 +209,6 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	LOG_I("remote_path: %s", remote_path);
 	LOG_I("redirect_url: %s\n", redirect_url);
 
-
 	curl_easy_setopt(curl_handle, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_easy_setopt(curl_handle, CURLOPT_HEADERFUNCTION, get_contentlength_func);
 	curl_easy_setopt(curl_handle, CURLOPT_HEADERDATA, &file_size);
@@ -201,11 +217,12 @@ int http_download(const char* remote_path, const char* local_path, long timout)
  	curl_easy_setopt(curl_handle, CURLOPT_FILE, fp);
 
 	/* get progress bar */
-	curl_easy_setopt(curl_handle, CURLOPT_PROGRESSFUNCTION, my_progress_func);
+	//curl_easy_setopt(curl_handle, CURLOPT_PROGRESSFUNCTION, my_progress_func);
 	/* set bar ctx */
 	//curl_easy_setopt(curl_handle, CURLOPT_PROGRESSDATA, Bar);
 
-	curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, timout);
+	/* include the all time */
+	//curl_easy_setopt(curl_handle, CURLOPT_TIMEOUT, timout);
 
  	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
  	curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);

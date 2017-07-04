@@ -32,7 +32,7 @@ VPKAPI vpk_serial_t* vpk_serial_create(const char* tty, uint32_t baud_speed,
  *
  * @param thiz	The target serial device.
  *
- * @return 0 success, -1 fail.
+ * @return 0 on success, -1 on failure.
  */
 VPKAPI int vpk_serial_open(vpk_serial_t* thiz);
 
@@ -69,7 +69,7 @@ VPKAPI int vpk_serial_write(vpk_serial_t* thiz, void* buf, ssize_t nbytes, int t
  *
  * @param thiz	The target serial device.
  *
- * @return 0 success, -1 fail.
+ * @return 0 on success, -1 on failure.
  */
 VPKAPI int vpk_serial_close(vpk_serial_t* thiz);
 
@@ -82,7 +82,7 @@ VPKAPI int vpk_serial_close(vpk_serial_t* thiz);
  * @param parity_bit The parity bit value, 'N': no parity, 'O': odd parity, 'E': even parity
  * @param stop_bit   The stop bit: 1, 2.
  *
- * @return 0 success, -1 fail.
+ * @return 0 on success, -1 on failure.
  */
 VPKAPI int vpk_serial_opt_set(vpk_serial_t* thiz, unsigned int baud_speed, 
 							  unsigned int data_bits, unsigned char parity_bit, unsigned int stop_bit);
@@ -92,7 +92,7 @@ VPKAPI int vpk_serial_opt_set(vpk_serial_t* thiz, unsigned int baud_speed,
  *
  * @param thiz	The target serial device.
  *
- * @return 0 success, -1 fail.
+ * @return 0 on success, -1 on failure.
  */
 VPKAPI int vpk_serial_destroy(vpk_serial_t* thiz);
 

@@ -191,6 +191,145 @@ firmware_parse_end:
 	return -1;
 }
 
+int json_array_test()
+{
+	json_t* url1, *url2, *urls_array;
+	json_t* json_root = NULL;
+
+	urls_array = json_array();
+	url2 = json_object();
+	json_root = json_object();
+
+	json_object_set_new(json_root, "timestamp", json_string("20170508"));
+	json_object_set_new(json_root, "type", json_string("rtype"));
+
+	int i = 0;
+	for (i = 0; i < 2; i++)
+	{
+		char buffer[64] = {0};
+		sprintf(buffer, "www.baidu.com/%d", i);
+		url1 = json_object();
+		json_object_set_new(url1, "url", json_string(buffer));
+		json_object_set_new(url1, "cameraType", json_string("FRONT"));
+		json_object_set_new(url1, "type", json_string("Video"));
+		json_array_append(urls_array, url1);
+		json_decref(url1);
+	}
+	json_object_set_new(json_root, "urls", urls_array);
+
+	char* test_dump = json_dumps(json_root,0);
+
+	LOG_D("%s", test_dump);
+
+	json_decref(url2);
+	//json_decref(urls_array);	// don't free this, qing.zou
+	json_decref(json_root);
+	return 0;
+}
+
+int load_file_test()
+{
+#define DEVICE_RELEASE_INFO_FILE	"dev_info_pc.json"
+	vpk_mmap_exist(DEVICE_RELEASE_INFO_FILE);
+	VpkMmap* mmap = vpk_mmap_create(DEVICE_RELEASE_INFO_FILE, 0, -1);
+	char* str = vpk_mmap_data(mmap);
+
+	json_t* jobject = NULL;
+	json_t* root_object = NULL;
+	root_object = json_load_file(DEVICE_RELEASE_INFO_FILE, 0, NULL);
+	LOG_D("\ndevinfo: %s\n", str);
+	//root_object = json_loads(str, 0, NULL);
+	if (root_object)
+	{
+		// dealer
+		jobject = json_object_get(root_object, "dealer");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* dealer = (char*)json_string_value(jobject);
+		if (!dealer)
+		{
+			LOG_W("\n ======= get dealer error!!!! =======\n");
+		}
+
+		// provider
+		jobject = json_object_get(root_object, "provider");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* provider = (char*)json_string_value(jobject);
+		if (!provider)
+		{
+			LOG_W("\n ======= get provider error!!!! =======\n");
+		}
+
+		// manufacturer
+		jobject = json_object_get(root_object, "manufacturer");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* manufacturer = (char*)json_string_value(jobject);
+		if (!manufacturer)
+		{
+			LOG_W("\n ======= get manufacturer error!!!! =======\n");
+		}
+
+		// IMEI
+		jobject = json_object_get(root_object, "IMEI");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* imei = (char*)json_string_value(jobject);
+		if (!imei)
+		{
+			LOG_W("\n ======= get IMEI error!!!! =======\n");
+			goto DEVINFO_PARSE_ERROR;
+		}
+
+		// IMSI
+		jobject = json_object_get(root_object, "IMSI");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* imsi = (char*)json_string_value(jobject);
+		if (!imsi)
+		{
+			LOG_W("\n ======= get IMSI error!!!! =======\n");
+			goto DEVINFO_PARSE_ERROR;
+		}
+
+		// version
+		jobject = json_object_get(root_object, "version");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* version = (char*)json_string_value(jobject);
+		if (!version)
+		{
+			LOG_W("\n ======= get version error!!!! =======\n");
+			goto DEVINFO_PARSE_ERROR;
+		}
+
+		// icchip
+		jobject = json_object_get(root_object, "icchip");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* icchip = (char*)json_string_value(jobject);
+		if (!icchip)
+		{
+			LOG_W("\n ======= get icchip error!!!! =======\n");
+			goto DEVINFO_PARSE_ERROR;
+		}
+
+		// firmware bin
+		jobject = json_object_get(root_object, "bin_name");
+		if (!jobject) goto DEVINFO_PARSE_ERROR;
+		char* fwname = (char*)json_string_value(jobject);
+		if (!fwname)
+		{
+			LOG_W("\n ======= get bin name error!!!! =======\n");
+			goto DEVINFO_PARSE_ERROR;
+		}
+
+		LOG_D("dealer: %s, provider: %s, manufacturer: %s, imei: %s, version: %s, fwname: %s", 
+			dealer, provider, manufacturer, imei, version, fwname);
+
+		json_decref(root_object);
+		//return 0;
+DEVINFO_PARSE_ERROR:
+		json_decref(root_object);
+	}
+	vpk_mmap_destroy(mmap);
+	return -1;
+}
+
 int json_main(int argc, char *argv[])
 {
 // 	int ret = 0;
@@ -214,6 +353,11 @@ int json_main(int argc, char *argv[])
 	//vpk_gps_parse();
 	firmware_json_parse(data, 0);
 
+	LOG_D("test array:\n");
+	json_array_test();
+
+	LOG_D("test load file:\n");
+	load_file_test();
 // 	ret = pthread_create(&pth_test3, NULL, vpk_test3, (void*)NULL);
 // 	if (ret != 0)
 // 		LOG_E("create thread \'vpk_test3\' failed");

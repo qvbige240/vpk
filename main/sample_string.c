@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <limits.h>
 #include <stdarg.h>
 // #include <pthread.h>
 
@@ -134,7 +135,7 @@ int test_findstr(const char* str)
 				p = p + strlen("MENUMOCK");
 				int value = atoi(p);
 
-				LOG_D("p = %s, value(atoi) = %d\n", p, value);
+				LOG_D("p = %s, value(atoi) = %d", p, value);
 			}
 		}
 
@@ -142,7 +143,97 @@ int test_findstr(const char* str)
 
 	}
 
+	printf("\n");
+
 	return 0;
+}
+
+void test_str(void)
+{
+	int i = 0, ret = 0;
+    char* str1 = "";
+	char str[] = ";;;sd;fdfs.adf.;;;";
+	LOG_D("str1 len: %d", strlen(str1));
+	LOG_D("before str: %s", str);
+	char* p = vpk_strstrip(str, ';');
+	LOG_D("after str: %s, p: %s", str, p);
+
+	i = atoi(" 2");
+	LOG_D("i(atoi) = %d\n", i);
+	{
+		char cur_ver[] = "K40.20170612.01";
+		char new_ver[] = "K40.20170612.01";
+		ret = strncmp(new_ver, "K40", strlen("K40"));
+		LOG_D("ret = %d\n", ret);
+
+		char* p = strstr(new_ver, ".");
+		LOG_D("p: %s", p);
+		p = p + 1;
+		i = atoi(p);
+		LOG_D("p: %s, i(atoi) = %d\n", p, i);
+
+		ret = strcasecmp(new_ver, cur_ver);
+		LOG_D("new_ver cmp cur_ver, ret = %d", ret);
+
+
+		#define TIMA_PROJECT	    "K40"
+		char p1[16] = {0}, p2[16] = {0};
+		//int p1, p2;
+		sscanf(cur_ver, TIMA_PROJECT".%[0-9].%[0-9]", p1, p2);
+		LOG_D("cur_ver: %s", cur_ver);
+		LOG_D("p1(len=%d): %s, p2(len=%d): %s", strlen(p1), p1, strlen(p2), p2);
+	}
+
+	printf("\n");
+}
+
+void test_null(void)
+{
+	//char buffer[64] = {0};
+	char* str = NULL;
+	int ret = -1;
+	if (str && strlen(str))
+	 	ret = strlen(str);
+	//memcpy(buffer, NULL, 0);
+
+	LOG_D("ret len: %d", ret);
+	ret = strcasecmp("1", "");
+	LOG_D("ret cmp: %d", ret);
+	//const char* desc = "hello";
+	const char* desc = NULL;
+	if (!desc) desc = "Device Exception Parse Error!";
+	LOG_D("desc: %s", desc);
+	printf("\n");
+}
+
+typedef struct _MediaListTest 
+{
+	char		file[NAME_MAX+1];
+} MediaListTest ;
+
+typedef struct _MediaResTest 
+{
+	int			count;
+	MediaListTest	media[4];
+} MediaResTest;
+
+void test_struct(void)
+{
+	MediaResTest res = {0};
+	int size = sizeof(res.media);
+	LOG_D("struct size = %d", size);
+	printf("\n");
+#define HELLOWORLD
+#if defined(HELLOWORLD)
+	LOG_D("if defined(HELLOWORLD)");
+#else
+#endif
+
+#ifdef HELLOWORLD
+	LOG_D("ifdef HELLOWORLD");
+#else
+#endif
+	printf("\n");
 }
 
 int string_main(int argc, char *argv[])
@@ -152,24 +243,18 @@ int string_main(int argc, char *argv[])
 // 	vpk_system_init(argc, argv);
 // 	vpk_logging_level_set("DEBUG");
 
-	//char* data = "{\"returnSuccess\": true,\"returnErrCode\": null,\"returnErrMsg\": null,\"appUpgraderInfoDto\": {		\
-				\"version\": \"3.03.100\",			\
-				\"url\": \"http://7xl1at.com2.z0.glb.qiniucdn.com/121.mp4\",		\
-				\"appName\": \"升级固件包\",		\
-				\"deployDesc\": \"升级固件包\",		\
-				\"md5\": \"asdfewfd\",						\
-				\"pkgSize\": 43333333}}";
-
 	char* menus = "{\"photo_resolution\": 0, \"video_resolution\": 0, \"video_time\": 0, \"vibration_sensor\": 0, \"parking_mode\": 0, \"off_voltage\": 0, \"record_sound\": 0, \"HDR\": 0, \"time_watermark\": 0, \"upgrade\": 0, \"switch_machine\": 0, \"car_warning\": 0, \"driving\": 0, \"abnormal_equipment\": 0, \"format_tf\": 0, \"factory_reset\": 0, \"version\": \"0\"}";
 	char* data = malloc(strlen(menus)+1);
 	strcpy(data, menus);
 	//LOG_D("data: %s\n", data);
-	int i = atoi(" 2");
-	LOG_D("i(atoi) = %d\n", i);
+	test_struct();
+	test_str();
+	test_null();
 	test_findstr(NULL);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 1);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 2);
-	//json_item_set(data, "photo_resolution", 1);
+	
+	json_item_set(data, "photo_resolution", 1);
 
 	return 0;
 }

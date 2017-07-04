@@ -27,6 +27,7 @@ void*		vpk_mmap_data(VpkMmap* thiz);
 size_t		vpk_mmap_length(VpkMmap* thiz);
 void		vpk_mmap_destroy(VpkMmap* thiz);
 int			vpk_mmap_exist(const char* filename);
+int			vpk_mmap_save(const char* filename, void* data, size_t size);
 
 TIMA_END_DELS
 

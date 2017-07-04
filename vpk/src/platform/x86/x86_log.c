@@ -28,7 +28,7 @@ static vpk_logger_t* x86_logger_init(void)
 static int x86_logger_write(vpk_logger_t* logger, int level, const char* file, int line, const char* message)
 {
 	logger = logger;
-	printf("%s[%d]: %s: %s\n", file, line, FORMAT_LEVELS[level], message);
+	printf("%s[%d] %s: %s\n", file, line, FORMAT_LEVELS[level], message);
 	//dzlog(__FILE__, sizeof(__FILE__)-1, __func__, sizeof(__func__)-1, __LINE__, ZLOG_LEVEL_WARN, format, ##args)
 
 	return 0;

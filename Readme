@@ -1,0 +1,9 @@
+compile
+nt966x:
+    make clean
+    ./execute.sh mips
+
+x86:
+    make clean
+    ./execute.sh x86
+

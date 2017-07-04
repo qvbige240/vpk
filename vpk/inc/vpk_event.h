@@ -61,7 +61,7 @@ VPKAPI vpk_eventq_t* vpk_eventq_open(const char* name, const char* mode);
  * @param queue		The event queue object.
  * @param e			an event
  *
- * @return The receive message len, -1 failed.
+ * @return The receive message len, -1 on failure.
  */
 VPKAPI int vpk_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e);
 
@@ -71,7 +71,7 @@ VPKAPI int vpk_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e);
  * @param queue		The event queue object.
  * @param e			an event
  *
- * @return 0 success, -1 failed.
+ * @return 0 on success, -1 on failure.
  */
 VPKAPI int vpk_eventq_post(vpk_eventq_t *queue, vpk_event_t* e);
 
@@ -80,7 +80,7 @@ VPKAPI int vpk_eventq_post(vpk_eventq_t *queue, vpk_event_t* e);
  *
  * @param queue		The event queue object.
  *
- * @return 0 success.
+ * @return 0 on success.
  */
 VPKAPI int vpk_eventq_close(vpk_eventq_t *queue);
 
@@ -89,7 +89,7 @@ VPKAPI int vpk_eventq_close(vpk_eventq_t *queue);
  *
  * @param queue		The event queue object.
  *
- * @return 0 success.
+ * @return 0 on success.
  */
 VPKAPI int vpk_eventq_destroy(vpk_eventq_t *queue);
 
