@@ -191,11 +191,23 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\vpk\inc\vpk_ipc.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\vpk\inc\vpk_libc.h"
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\vpk\inc\vpk_list.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\vpk\inc\vpk_logging.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\inc\vpk_md5.h"
 							>
 						</File>
 						<File
@@ -259,6 +271,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\vpk\src\vpk_ipc.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_ipc_msg.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_ipc_msg.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_ipc_sem.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_ipc_sem.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_ipc_shm.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_ipc_shm.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\vpk\src\vpk_libc.c"
 							>
 						</File>
@@ -268,6 +308,10 @@
 						</File>
 						<File
 							RelativePath="..\..\..\vpk\src\vpk_logger.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_md5.c"
 							>
 						</File>
 						<File
@@ -440,6 +484,14 @@
 					Name="main"
 					>
 					<File
+						RelativePath="Y:\work\project\vpk\main\curl_md5.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\md5.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\main\sample.c"
 						>
 					</File>
@@ -448,11 +500,23 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\main\sample_consumer.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\main\sample_download.c"
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\main\sample_filesys.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\main\sample_jasson.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_md5.c"
 						>
 					</File>
 					<File
@@ -472,11 +536,23 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\main\sample_sort.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\main\sample_string.c"
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\main\sample_timer.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\main\tqueue_demo.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\vpk_md5_test.h"
 						>
 					</File>
 				</Filter>
@@ -551,12 +627,24 @@
 						RelativePath="..\..\..\..\app\main.c"
 						>
 					</File>
+					<File
+						RelativePath="..\..\..\..\app\tima-daemon.c"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="bll"
 					>
 					<File
 						RelativePath="..\..\..\..\bll\bll.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\bll\bll_collision.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\bll\bll_collision.h"
 						>
 					</File>
 					<File
@@ -1903,6 +1991,194 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="zlog"
+						>
+						<Filter
+							Name="src"
+							>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\buf.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\buf.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\category.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\category.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\category_table.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\category_table.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\conf.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\conf.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\event.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\event.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\fmacros.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\format.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\format.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\level.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\level.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\level_list.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\level_list.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\mdc.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\mdc.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\record.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\record.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\record_table.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\record_table.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\rotater.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\rotater.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\rule.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\rule.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\spec.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\spec.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\thread.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\thread.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\version.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_arraylist.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_arraylist.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_defs.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_hashtable.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_hashtable.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_profile.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_profile.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_util.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_util.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zc_xplatform.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zlog-chk-conf.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zlog.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\common\zlog-1.2.7\src\zlog.h"
+								>
+							</File>
+						</Filter>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="mw"
@@ -1936,6 +2212,10 @@
 						</File>
 						<File
 							RelativePath="..\..\..\..\mw\platform\plat_gps_gcc.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\platform\plat_media.h"
 							>
 						</File>
 						<File
@@ -2002,6 +2282,14 @@
 					<Filter
 						Name="qiniu"
 						>
+						<File
+							RelativePath="..\..\..\..\mw\qiniu\cloud_upload.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\qiniu\cloud_upload.h"
+							>
+						</File>
 						<File
 							RelativePath="..\..\..\..\mw\qiniu\qiniu.c"
 							>
@@ -2179,15 +2467,15 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\..\include\tima\tima.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\mw\tima\tima_buffer.c"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\..\include\tima\tima_buffer.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\tima\tima_config.h"
 							>
 						</File>
 						<File
@@ -2207,11 +2495,31 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\..\mw\tima\tima_iotlicense.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_iotlicense.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_network.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\mw\tima\tima_socket.c"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\..\mw\tima\tima_uploadgps.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\tima\tima_uploadlist.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\tima\tima_uploadlist.h"
 							>
 						</File>
 						<File
@@ -2235,6 +2543,18 @@
 				<Filter
 					Name="include"
 					>
+					<File
+						RelativePath="..\..\..\..\include\tima_config.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\version.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\zlog.h"
+						>
+					</File>
 					<Filter
 						Name="bll"
 						>
@@ -2899,10 +3219,6 @@
 						Name="tima"
 						>
 						<File
-							RelativePath="..\..\..\..\include\tima\tima.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\include\tima\tima_define.h"
 							>
 						</File>
@@ -2923,6 +3239,34 @@
 							>
 						</File>
 					</Filter>
+				</Filter>
+				<Filter
+					Name="util"
+					>
+					<File
+						RelativePath="..\..\..\..\util\tima_process.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\tima_process.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\util\tima_shared.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\tima_shared.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\util\tima_util.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\include\tima_util.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>
@@ -4215,15 +4559,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\inotify.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\inotify.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\inotify.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\inotify.h"
 					>
 				</File>
 				<File
@@ -4267,15 +4611,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\ioctls.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm\ioctls.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\ioctls.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\ioctls.h"
 					>
 				</File>
 				<File
@@ -4367,15 +4711,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\ipc.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\ipc.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\ipc.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\ipc.h"
 					>
 				</File>
 				<File
@@ -4727,15 +5071,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\mqueue.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\mqueue.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\mqueue.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\mqueue.h"
 					>
 				</File>
 				<File
@@ -5587,15 +5931,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\siginfo.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\siginfo.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\siginfo.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\siginfo.h"
 					>
 				</File>
 				<File
@@ -5623,15 +5967,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\signalfd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\signalfd.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\signalfd.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\signalfd.h"
 					>
 				</File>
 				<File
@@ -5835,15 +6179,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm\swab.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\swab.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\swab.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm\swab.h"
 					>
 				</File>
 				<File
@@ -5863,15 +6207,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\syscall.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\syscall.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\nfsd\syscall.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\syscall.h"
 					>
 				</File>
 				<File
@@ -6003,14 +6347,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\termios.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\termios.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\termios.h"
 					>
 				</File>
@@ -6024,6 +6360,14 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm\termios.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\termios.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\termios.h"
 					>
 				</File>
 				<File
@@ -6195,15 +6539,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\sys\ucontext.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\ucontext.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm-generic\ucontext.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\sys\ucontext.h"
 					>
 				</File>
 				<File
@@ -6223,15 +6567,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\bits\uio.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\uio.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\linux\uio.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\bits\uio.h"
 					>
 				</File>
 				<File
@@ -6303,15 +6647,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\utsname.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\utsname.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\utsname.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\utsname.h"
 					>
 				</File>
 				<File
