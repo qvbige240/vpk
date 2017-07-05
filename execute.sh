@@ -18,9 +18,9 @@ else
     platform=mips
 fi
 if [ "$platform" == mips ]; then
-    ./configure --host=mipsel-24kec-linux-uclibc enable_x86=no
+    ./configure --host=mipsel-24kec-linux-uclibc enable_x86=no enable_sqlite3=yes
 else
-    ./configure --host=x86_64-unknown-linux-gnu enable_x86=yes
+    ./configure --host=x86_64-unknown-linux-gnu enable_x86=yes enable_sqlite3=yes
 fi
 make
 

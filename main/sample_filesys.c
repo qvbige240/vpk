@@ -205,7 +205,8 @@ typedef struct _LicenseFile
 static int file_mmap_test(const char *prefix)
 {
 	int ret = 0;
-	LicenseFile license = {0};
+	LicenseFile license;
+	memset(&license, 0x00, sizeof(LicenseFile));
 	strcpy(license.guid, "CA41E05B50844cd5");
 	strcpy(license.license, "304402206F607AB4A937FDD8B3A0487FE741673E36FE71B50CBB1C00B7730BD0D54C137F022032A21382D85124F0548AA36AF02DA320EC1EA73708F160344A55836C83F999F6");
 

@@ -25,24 +25,45 @@ project_dir=$PWD
 echo "project dir: $project_dir"
 AC_SUBST(project_dir)
 
+if test x$enable_sqlite3 = xyes; then
+	SQLITE3_LIB='libsqlite3.a'
+    AC_DEFINE(USE_SQLITE3, 1, [if sqlite3 is enabled])
+    DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_SQLITE3"
+else
+    SQLITE3_LIB=''
+fi
+DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_TESTDEF"
+echo "DEFINE_CFLAGS: $DEFINE_CFLAGS"
+echo "sqlite lib: $SQLITE3_LIB"
+
 if test x$enable_x86 = xyes; then
     PLATFORMS="_X86_"
     GBASE_INCLUDE="/usr/include"
     GBASE_LIB="/usr/lib"
     echo "use gcc to compile"
     #AM_CFLAGS="-Wall -Wextra -Wdeclaration-after-statement"
-	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
+	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
 	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
 	GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
 	AC_SUBST(GOLBAL_CFLAGS)
+
+    LIB_PATH='$(project_dir)/x86/lib'
 	
-	#JANSSON_LIB='$(project_dir)/nvt/lib/x86/libjansson.a'
 	JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
 	CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
-    AC_SUBST(CURL_LIB)
-	AC_SUBST(JANSSON_LIB)
+	#SQLITE3_LIB='$(project_dir)/x86/lib/libsqlite3.a'
+    #AC_SUBST(CURL_LIB)
+	#AC_SUBST(JANSSON_LIB)
+
+    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
+
+    if test X"$SQLITE3_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
+    fi
+    echo "STATIC_LIBS: $STATIC_LIBS"
+	AC_SUBST(STATIC_LIBS)
 	
-	DYNAMIC_LIBS="-lpthread -lrt -lz"
+	DYNAMIC_LIBS="-ldl -lpthread -lrt -lz"
 	AC_SUBST(DYNAMIC_LIBS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS)'
@@ -51,18 +72,30 @@ else
     PLATFORMS="_NT966X_"
 	GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/usr/include"
 	GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/lib"
-	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
+	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
 	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
 	GOLBAL_LDFLAGS="-L${GBASE_LIB}"
 	AC_SUBST(GOLBAL_CFLAGS)
+
+    LIB_PATH='$(project_dir)/mips/lib'
 	
 	JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
 	#CURL_LIB='$(project_dir)/mips/lib/libcurl.a'
 	CURL_LIB=''
-	AC_SUBST(JANSSON_LIB)
-    AC_SUBST(CURL_LIB)
+	#SQLITE3_LIB='$(project_dir)/mips/lib/libsqlite3.a'
+    #AC_SUBST(SQLITE3_LIB)
+	#AC_SUBST(JANSSON_LIB)
+    #AC_SUBST(CURL_LIB)
+    
+	STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
 
-	DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -lpthread -lrt -lm"
+    if test X"$SQLITE3_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
+    fi
+    echo "STATIC_LIBS: $STATIC_LIBS"
+	AC_SUBST(STATIC_LIBS)
+
+	DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
 	#DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
 	AC_SUBST(DYNAMIC_LIBS)
 	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib'

@@ -8,6 +8,7 @@
 *tmp
 *bak
 *.swp
+*.db
 build_*
 
 .*
