@@ -32,6 +32,15 @@ if test x$enable_sqlite3 = xyes; then
 else
     SQLITE3_LIB=''
 fi
+
+if test x$enable_zlog = xyes; then
+	ZLOG_LIB='libzlog.a'
+    AC_DEFINE(USE_ZLOG, 1, [if zlog is enabled])
+    DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_ZLOG"
+else
+    ZLOG_LIB=''
+fi
+
 DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_TESTDEF"
 echo "DEFINE_CFLAGS: $DEFINE_CFLAGS"
 echo "sqlite lib: $SQLITE3_LIB"
@@ -60,6 +69,11 @@ if test x$enable_x86 = xyes; then
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
     fi
+
+    if test X"$ZLOG_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
+    fi
+
     echo "STATIC_LIBS: $STATIC_LIBS"
 	AC_SUBST(STATIC_LIBS)
 	
@@ -92,6 +106,11 @@ else
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
     fi
+
+    if test X"$ZLOG_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
+    fi
+
     echo "STATIC_LIBS: $STATIC_LIBS"
 	AC_SUBST(STATIC_LIBS)
 

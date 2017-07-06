@@ -157,10 +157,58 @@ static int find_demo(const char* demo)
 	return -1;
 }
 
+#ifdef USE_ZLOG
+#define SAMPLE_ZLOG_FILE_PATH		"."
+#define SAMPLE_ZLOG_CONF_FILE		"./zlog.conf"
+int sample_zlog_init(int procname)
+{
+	int rc;
+	//zlog_category_t *c;
+
+	if (!vpk_exists(SAMPLE_ZLOG_FILE_PATH)) {
+		int ret = 0;
+		char tmp[256] = {0};
+		vpk_pathname_get(SAMPLE_ZLOG_FILE_PATH, tmp);
+		printf("full: %s, pathname: %s", SAMPLE_ZLOG_FILE_PATH, tmp);
+		ret = vpk_mkdir_mult(SAMPLE_ZLOG_FILE_PATH);
+		printf("vpk_mkdir_mult \'%s\' ret = %d\n", SAMPLE_ZLOG_FILE_PATH, ret);
+	}
+
+	//if (procname == PROCESS_APP)
+	//	rc = dzlog_init(ZLOG_CONF_FILE, "app");
+	//else if (procname == PROCESS_DAEMON)
+	//	rc = dzlog_init(ZLOG_CONF_FILE, "timad");
+	//else
+	//	rc = dzlog_init(ZLOG_CONF_FILE, "app");
+
+	rc = dzlog_init(SAMPLE_ZLOG_CONF_FILE, "sample");
+	if (rc)	{
+		printf("zlog init failed\n");
+		return -1;
+	}
+
+	//c = zlog_get_category("my_cat");
+	//if (!c) {
+	//	printf("get cat fail\n");
+	//	zlog_fini();
+	//	return -2;
+	//}
+	//zlog_info(c, "hello, zlog");
+
+	LOG_D("hello, zlog");
+
+	return 0;
+}
+#endif
+
 int main(int argc, char *argv[])
 {
 	int o, hflag = 0, index;
 	//char myargv[6][MAX_PATH_SIZE];
+
+#ifdef USE_ZLOG
+	sample_zlog_init(0);
+#endif // USE_ZLOG
 
 	vpk_system_init(argc, argv);
 	LOG_I("log level: %s\n", vpk_logging_level_get());

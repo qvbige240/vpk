@@ -9,6 +9,7 @@
 *bak
 *.swp
 *.db
+*.log
 build_*
 
 .*

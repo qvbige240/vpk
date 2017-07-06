@@ -67,7 +67,7 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_MENU_AUDIOSET,			"MENUSET", "ucustom -audioset "},
 	{VPK_NVTU_MENU_HDRSET,				"MENUSET", "ucustom -hdrset "},
 	{VPK_NVTU_MENU_TIMESTAMPSET,		"MENUSET", "ucustom -timestampset "},
-	{VPK_NVTU_MENU_UPDATEGET,			"MENUSET", "ucustom -updateset "},
+	{VPK_NVTU_MENU_UPDATESET,			"MENUSET", "ucustom -updateset "},
 	{VPK_NVTU_MENU_POWERSTATESET,		"MENUSET", "ucustom -powerstateset "},
 	{VPK_NVTU_MENU_CRASHSTATSET,		"MENUSET", "ucustom -crashstatset "},
 	{VPK_NVTU_MENU_DRIVEBEHAVIORSET,	"MENUSET", "ucustom -drivebehaviorset "},
