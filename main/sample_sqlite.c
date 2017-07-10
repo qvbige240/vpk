@@ -26,12 +26,17 @@
 // primary key is integer means it auto-increment
 // const char* sql01 = "create table carnet_t(ID integer primary key autoincrement, name nvarchar(32), value text, priority INTEGER)";
 
-const char* sql01 = "create table carnet_t1(ID INTEGER PRIMARY KEY, name nvarchar(32), value text, priority INTEGER)";
-const char* sql02 = "insert into carnet_t1 values(NULL, 'king', 'kvalue', 12)";
-const char* sql03 = "insert into carnet_t1 values(NULL, 'time1', 'tvalue', 13)";
-const char* sql04 = "insert into carnet_t1 values(NULL, 'time2', 'tvalue', 13)";
-const char* sql05 = "update carnet_t1 set value = 'tvalue1' where name='time2'";
-const char* sql_select = "select * from carnet_t1";
+const char* sql01 = "create table carnet_t2(id INTEGER, name nvarchar(32) PRIMARY KEY, value text)";
+const char* sql02 = "insert into carnet_t2 values(NULL, 'king', 'kvalue')";
+const char* sql03 = "insert into carnet_t2 values(NULL, 'time1', 'tvalue')";
+//const char* sql04 = "insert into carnet_t2 values(NULL, 'time2', 'tvalue')";
+const char* sql04 = "select count(*) from carnet_t2 where name='time1'";
+const char* sql05 = "update carnet_t2 set value = 'tvalue1' where name='time1'";
+const char* sql06 = "select value from carnet_t2 where name='time2'";
+const char* sql07 = "select * from sqlite_master where name='carnet_t1' and sql like '%time1%'";
+
+const char* sql_select = "select * from carnet_t2";
+const char* sql_tables01 = "select name from sqlite_master where name='carnet_t1'";
 const char* sql_tables = "select name from sqlite_master where type='table' order by name";
 
 static int callback(void *notused, int argc, char **argv, char **colname) {
@@ -39,7 +44,9 @@ static int callback(void *notused, int argc, char **argv, char **colname) {
 	for (i = 0; i < argc; i++) {
 		LOG_D("%s = %s", colname[i], argv[i] ? argv[i] : "NULL");
 	}
-	printf("\n");
+	if (notused)
+		strcpy(notused, "1");
+	printf("--------------\n");
 	return 0;
 }
 
@@ -47,7 +54,9 @@ int sqlite_test(char* filename)
 {
 	sqlite3 *db;
 	char *errmsg = NULL;
+	char **result;
 	int rc;
+	int nrow, ncol;
 
 	rc = sqlite3_open(filename, &db);
 	if (rc) {
@@ -55,6 +64,15 @@ int sqlite_test(char* filename)
 		sqlite3_close(db);
 		return -1;
 	}
+
+	rc = sqlite3_exec(db, sql04, callback, 0, &errmsg);
+	if (rc != SQLITE_OK) {
+		LOG_E("SQL error: %s", errmsg);
+		sqlite3_free(errmsg);
+	}
+
+
+#if 0
 	rc = sqlite3_exec(db, sql01, callback, 0, &errmsg);
 	if (rc != SQLITE_OK) {
 		LOG_E("SQL error: %s", errmsg);
@@ -91,11 +109,49 @@ int sqlite_test(char* filename)
 		sqlite3_free(errmsg);
 	}
 
+#endif
+
+#if 0
+
+	char* zsql = sqlite3_mprintf("CREATE TABLE %s(id INTEGER,"
+		"name nvarchar(32) PRIMARY KEY,"
+		"value text);", "carnet_t2");
+
+	char values[32] = {0};
+	rc = sqlite3_exec(db, zsql, callback, values, &errmsg);
+	if (rc != SQLITE_OK) {
+		LOG_E("SQL error: %s", errmsg);
+		sqlite3_free(zsql);
+		sqlite3_free(errmsg);
+	}
+	sqlite3_free(zsql);
+	LOG_D("values: %s", values);
+
+	rc = sqlite3_get_table(db, sql_select, &result, &nrow, &ncol, &errmsg);
+	if (rc == SQLITE_OK)
+	{
+		int i, j;
+		int index = ncol;
+		LOG_I("total %d", nrow);
+		for (i = 0; i < nrow; i++)
+		{
+			LOG_I("data index %d", i);
+			for (j = 0; j < ncol; j++)
+			{
+				LOG_I("field key/value: %s ===>> %s", result[j], result[index]);
+				index++;
+			}
+			LOG_I("--------------");
+		}
+		
+	}
+
 	rc = sqlite3_exec(db, sql_select, callback, 0, &errmsg);
 	if (rc != SQLITE_OK) {
 		LOG_E("SQL error: %s", errmsg);
 		sqlite3_free(errmsg);
 	}
+#endif
 
 	sqlite3_close(db);
 	return 0;
@@ -159,7 +215,7 @@ int sqlite_main(int argc, char *argv[])
 		}
 	}
 
-	LOG_D("db name = %s", pathname);
+	LOG_D("db name = %s\n", pathname);
 
 	double elapsed;
 	struct timeval result, prev, next;	
