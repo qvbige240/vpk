@@ -54,9 +54,7 @@ int sqlite_test(char* filename)
 {
 	sqlite3 *db;
 	char *errmsg = NULL;
-	char **result;
 	int rc;
-	int nrow, ncol;
 
 	rc = sqlite3_open(filename, &db);
 	if (rc) {
@@ -127,6 +125,8 @@ int sqlite_test(char* filename)
 	sqlite3_free(zsql);
 	LOG_D("values: %s", values);
 
+	char **result;
+	int nrow, ncol;
 	rc = sqlite3_get_table(db, sql_select, &result, &nrow, &ncol, &errmsg);
 	if (rc == SQLITE_OK)
 	{
@@ -180,6 +180,7 @@ int sqlite_main(int argc, char *argv[])
 // 	vpk_system_init(argc, argv);
 // 	vpk_logging_level_set("DEBUG");
 
+	unsigned long size = 0;
 	char* pathname = "./mytest.db";
 	//if (argc > 1)
 	//{
@@ -210,6 +211,9 @@ int sqlite_main(int argc, char *argv[])
 			case 'f':
 				pathname = optarg;
 				break;
+			case 'k':
+				size = atoi(optarg);
+				break;
 			default:
 				break;
 		}
@@ -229,6 +233,19 @@ int sqlite_main(int argc, char *argv[])
 	//time_sub(&result, &prev, &next);
 	elapsed = result.tv_sec + (result.tv_usec / 1.0e6);
 	LOG_D("vpk time elapsed: %.6f, %d(s) %d(us) \n", elapsed, result.tv_sec, result.tv_usec);
+
+	if (size > 0)
+	{
+		LOG_D("malloc size: %ld", size);
+		char* malloc_test = malloc(size);
+		if (!malloc_test) {
+			LOG_E("malloc error!");
+		} 
+		while(1) {
+			sleep(10);
+		}
+	}
+	
 
 	return 0;
 }

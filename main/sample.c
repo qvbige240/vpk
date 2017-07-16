@@ -22,7 +22,8 @@ extern int md5_main(int argc, char *argv[]);
 extern int string_main(int argc, char *argv[]);
 extern int download_main(int argc, char *argv[]);
 extern int json_main(int argc, char *argv[]);
-extern int vpk_tqueue_test(int argc, char *argv[]);
+//extern int vpk_tqueue_test(int argc, char *argv[]);
+extern int queue_main(int argc, char *argv[]);
 
 // #define LOG_D(...)	do {printf(__VA_ARGS__); printf("\n");}while(0)
 // #define LOG_I(...)	do {printf(__VA_ARGS__); printf("\n");}while(0)
@@ -92,8 +93,8 @@ static void help(FILE *f) {
 		"    -h --help          Show this help\n"
 		"    -V --version       Show version\n"
 		"    -d --sample        Target sample demo which will be running(mqsend, \n"
-		"                       tqueue, download, md5, json, filesys, ipc, sort).\n"
-		"                       string, sqlite3).\n"
+		"                       queue, download, md5, json, filesys, ipc, sort).\n"
+		"                       timer, string, sqlite3).\n"
 		"    -t --type          Event type for keycode\n"
 		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
 		"    -u --url           Target remote url.\n"
@@ -134,7 +135,7 @@ static const demo_exec demo_tables[] = {
 	{SAMPLE_DEMO_MQSEND,	"mqsend"},
 	{SAMPLE_DEMO_MD5,		"md5"},
 	{SAMPLE_DEMO_DOWNLOAD,	"download"},
-	{SAMPLE_DEMO_TQUEUE,	"tqueue"},
+	{SAMPLE_DEMO_TQUEUE,	"queue"},
 	{SAMPLE_DEMO_JSON,		"json"},
 	{SAMPLE_DEMO_FILESYS,	"filesys"},
 	{SAMPLE_DEMO_IPC,		"ipc"},
@@ -228,7 +229,6 @@ int main(int argc, char *argv[])
 
 	LOG_I("optind = %d, argc = %d", optind, argc);
 	while ((o = getopt_long(argc, argv, "hVd:t:k:f:u:l", long_options, NULL)) >= 0) {
-
 		switch(o) {
 			case 'V':
 				LOG_I("default version");
@@ -281,7 +281,8 @@ int main(int argc, char *argv[])
 	} else if (index == SAMPLE_DEMO_DOWNLOAD) {
 		download_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_TQUEUE) {
-		vpk_tqueue_test(argc, argv);
+		//vpk_tqueue_test(argc, argv);
+		queue_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_JSON) {
 		json_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_FILESYS) {

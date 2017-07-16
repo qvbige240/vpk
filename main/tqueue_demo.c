@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <getopt.h>
 #include <pthread.h>
 
 #include "vpk.h"
@@ -74,4 +75,51 @@ void *vpk_mycsq_write_thread(void *arg)
 		csq.data++;
 		sleep(1);
 	}
+}
+
+int queue_main(int argc, char *argv[])
+{
+	char* type = "tqueue";
+	int o;
+	static const struct option long_options[] = {
+		{ "help",			no_argument,			NULL, 'h' },
+		{ "version",		no_argument,			NULL, 'V' },
+		{ "sample",			required_argument,		NULL, 'd' },
+		{ "type",			required_argument,		NULL, 't' },
+		{ "keycode",		required_argument,		NULL, 'k' },
+		{ "file",			required_argument,		NULL, 'f' },
+		{ "url",			required_argument,		NULL, 'u' },
+		{ "log",			optional_argument,		NULL, 'l' },
+		{ NULL, 0, NULL, 0 }
+	};
+
+	optind = 1;
+	//LOG_I("22 optind = %d, argc = %d", optind, argc);
+	while ((o = getopt_long(argc, argv, "hVd:t:k:f:u:l", long_options, NULL)) >= 0) {
+		switch(o) {
+		case 't':
+			type = optarg;
+			break;
+		default:break;
+		}
+	}
+
+	LOG_D("queue type = %s", type);
+
+
+	double elapsed;
+	struct timeval result, prev, next;	
+
+	gettimeofday(&prev, 0);
+
+	vpk_tqueue_test(argc, argv);
+
+	gettimeofday(&next, 0);
+	vpk_timersub(&next, &prev, &result);
+	//time_sub(&result, &prev, &next);
+	elapsed = result.tv_sec + (result.tv_usec / 1.0e6);
+	LOG_D("vpk time elapsed: %.6f, %d(s) %d(us) \n", elapsed, result.tv_sec, result.tv_usec);
+
+
+	return 0;
 }
