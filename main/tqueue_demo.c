@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <pthread.h>
+#include <sys/time.h>
 
 #include "vpk.h"
 
@@ -77,6 +78,97 @@ void *vpk_mycsq_write_thread(void *arg)
 	}
 }
 
+/* tailq */
+#include <sys/queue.h>
+
+struct task_event {
+	TAILQ_ENTRY(task_event) next;
+	TAILQ_ENTRY(task_event) active_next;
+
+	//struct {								
+	//	struct task_event *tqe_next;	/* next element */			
+	//	struct task_event **tqe_prev;	/* address of previous next element */	
+	//} next;
+
+	const char *name;
+};
+
+TAILQ_HEAD(task_event_queue, task_event);
+//struct task_event_queue {								
+//	struct task_event *tqh_first;	/* first element */			
+//	struct task_event **tqh_last;	/* addr of last next element */		
+//};
+
+struct task_info {
+	struct task_event_queue activequeue;
+
+	int event_active_cnt;
+};
+
+static struct task_info tinfo;
+
+static void task_queue_insert(struct task_info* tasks, struct task_event* ev)
+{
+	struct task_event_queue* activeq = &tasks->activequeue;
+	tasks->event_active_cnt++;
+	TAILQ_INSERT_TAIL(activeq, ev, active_next);
+}
+
+static void task_queue_remove(struct task_info* tasks, struct task_event* ev)
+{
+	struct task_event_queue* activeq = &tasks->activequeue;
+	tasks->event_active_cnt--;
+	TAILQ_REMOVE(activeq, ev, active_next);
+}
+
+static int task_queue_foreach(struct task_info* tasks)
+{
+	struct task_event* ev;
+	struct task_event_queue* activeq = &tasks->activequeue;
+
+	TAILQ_FOREACH(ev, activeq, active_next)
+	{
+		LOG_D("name: %s", ev->name);
+	}
+
+	return 0;
+}
+
+void tailq_test(void)
+{
+	TAILQ_INIT(&tinfo.activequeue);
+
+	char* name1 = "data1";
+	char* name2 = "king";
+	char* name3 = "qing";
+
+	struct task_event* ev1 = malloc(sizeof(struct task_event));
+	ev1->name = name1;
+
+	struct task_event* ev2 = malloc(sizeof(struct task_event));
+	ev2->name = name2;
+
+	struct task_event* ev3 = malloc(sizeof(struct task_event));
+	ev3->name = name3;
+
+	task_queue_insert(&tinfo, ev1);
+	task_queue_insert(&tinfo, ev2);
+	task_queue_insert(&tinfo, ev3);
+
+	LOG_D("foreach tail queue: size(%d)", tinfo.event_active_cnt);
+	task_queue_foreach(&tinfo);
+
+	struct task_event *entry;
+
+	while ((entry = TAILQ_FIRST(&tinfo.activequeue)) != NULL) {
+		//TAILQ_REMOVE(&tinfo.activequeue, entry, active_next);
+		task_queue_remove(&tinfo, entry);
+	}
+
+	LOG_D("foreach tail queue: size(%d)", tinfo.event_active_cnt);
+	task_queue_foreach(&tinfo);
+}
+
 int queue_main(int argc, char *argv[])
 {
 	char* type = "tqueue";
@@ -112,7 +204,11 @@ int queue_main(int argc, char *argv[])
 
 	gettimeofday(&prev, 0);
 
-	vpk_tqueue_test(argc, argv);
+	if (strcasecmp(type, "tqueue") == 0) {
+		vpk_tqueue_test(argc, argv);
+	} else if (strcasecmp(type, "tailq") == 0) {
+		tailq_test();
+	}
 
 	gettimeofday(&next, 0);
 	vpk_timersub(&next, &prev, &result);

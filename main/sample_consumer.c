@@ -726,8 +726,7 @@ int ipc_main(int argc, char *argv[])
 		LOG_D("consumer start...");
 		//consumer(key);
 		watch_dog(key, keysem);
-	}
-	else {
+	} else {
 		LOG_D("producer start...");
 		//producer(key);
 		vpk_feed_dog(key, keysem);
