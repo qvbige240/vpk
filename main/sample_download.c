@@ -67,7 +67,7 @@ int download_main(int argc, char *argv[])
 	//}
 
 	LOG_D("localpath = %s, remoteurl = %s", localpath, remoteurl);
-	http_download(remoteurl, localpath, 20);
+	http_download(remoteurl, localpath, 60);
 
 // 	ret = pthread_create(&pth_test3, NULL, vpk_test3, (void*)NULL);
 // 	if (ret != 0)
@@ -137,7 +137,9 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	CURL* curl_handle = NULL;
 	char* redirect_url = NULL;
 	long response_code;
-	long file_size;
+	long file_size = 0;
+	long have_size = 0;
+	int use_resume = 0;
 
 	return_val_if_fail(remote_path && local_path, -1);
 
@@ -148,6 +150,12 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	{
 		curl_global_cleanup();
 		return -1;
+	}
+
+	if (vpk_exists(local_path))
+	{
+		have_size = vpk_file_length(local_path);
+		use_resume = 1;
 	}
 
 	if((fp = fopen(local_path, "a+")) == NULL)
@@ -212,7 +220,7 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	curl_easy_setopt(curl_handle, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_easy_setopt(curl_handle, CURLOPT_HEADERFUNCTION, get_contentlength_func);
 	curl_easy_setopt(curl_handle, CURLOPT_HEADERDATA, &file_size);
-	//curl_easy_setopt(curl_handle, CURLOPT_RESUME_FROM_LARGE, use_resume ? have_size: 0);
+	curl_easy_setopt(curl_handle, CURLOPT_RESUME_FROM_LARGE, use_resume ? have_size: 0);
  	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
  	curl_easy_setopt(curl_handle, CURLOPT_FILE, fp);
 

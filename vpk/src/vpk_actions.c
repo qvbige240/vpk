@@ -37,6 +37,7 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_MOVIELEN,					"VIDEO",	"ucustom -movielen "},
 	{VPK_NVTU_RECSTATE,					"VIDEO",	"ucustom -recstate "},
 	{VPK_NVTU_DEVINFO,					"DEVINFO",	"ucustom -getdevinfo "},
+	{VPK_NVTU_VIDEOREC,					"VIDEO",	"ucustom -getvideo "},
 
 	/* menu get */
 	{VPK_NVTU_MENU_PICSIZEGET,			"MENUGET",	"ucustom -picsizeget "},

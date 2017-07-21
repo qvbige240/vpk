@@ -7,6 +7,8 @@
 #ifndef VPK_LIST_H
 #define VPK_LIST_H
 
+//#include <stddef.h>	/* offsetof require */
+
 #ifdef __cplusplus
 extern "C" {
 #endif

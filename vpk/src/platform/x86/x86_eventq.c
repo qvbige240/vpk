@@ -58,6 +58,9 @@ const vpk_constants_t vpk = {
 		VPK_KEY_EVENT_QRCODE_GEN,
 		VPK_KEY_EVENT_FIRMWARE_DOWNLOAD,
 		VPK_KEY_EVENT_UPDATE_SYSTEM,
+
+		VPK_KEY_EVENT_GET_CUR_VIDEO_SUCCESS,
+		VPK_KEY_EVENT_GET_CUR_VIDEO_FAILED,
 		// ALERT
 		VPK_KEY_EVENT_CAR_CRASH_WARNING,
 		VPK_KEY_EVENT_PARKING_CRASH_WARNING,
@@ -271,6 +274,8 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 	case VPK_KEY_EVENT_FIRMWARE_DOWNLOAD:
 	case VPK_KEY_EVENT_UPDATE_SYSTEM:
 	case VPK_KEY_EVENT_UPDATE_SYS_TIME:
+	case VPK_KEY_EVENT_GET_CUR_VIDEO_SUCCESS:
+	case VPK_KEY_EVENT_GET_CUR_VIDEO_FAILED:
 		e->type = vpk.events.NOTICE;
 		e->notice.keycode = keycode;
 		LOG_I("vpk.events.NOTICE = %d", vpk.events.NOTICE);

@@ -123,7 +123,7 @@ int vpk_tqueue_write(vpk_tqueue *queue, void *data)
 	if (queue->curr_len >= queue->data_num)
 	{
 		vpk_tqueue_unlock(queue);
-		LOG_E("tqueue is full!");
+		LOG_E("tqueue is full[%d]!", queue->curr_len);
 		return -1;
 	}
 
