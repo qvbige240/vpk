@@ -250,7 +250,7 @@ int test_event_post(const char* name, void* args)
 void *vpk_test3(void* arg)
 {
 	LOG_D("start test3 thread!");
-	sleep(2);
+	sleep(1);
 	while(1)
 	{
 		//LOG_D("test3 thread run.\n");

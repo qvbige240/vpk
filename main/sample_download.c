@@ -103,7 +103,7 @@ size_t get_contentlength_func(void *ptr, size_t size, size_t nmemb, void *stream
 	if(r) /* Microsoft: we don't read the specs */
 	{
 		*((long *) stream) = len;
-		LOG_D("len: %ld\n", len);
+		LOG_D("len: %ld, size: %ld, nmemb: %ld\n", len, size, nmemb);
 	}
 
 	return size * nmemb;
@@ -170,7 +170,8 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	curl_easy_setopt(curl_handle, CURLOPT_URL, remote_path);
 
 	/* tell libcurl to don't follow redirection */
-	curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 0L);
+	//curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 0L);
+	curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
 
 	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
 
@@ -181,10 +182,10 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 1L);
 
 	/* send all data to this function  */
-	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
+	//curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
 
     /* write the data to this file handle. CURLOPT_FILE is also known as CURLOPT_WRITEDATA*/
-    curl_easy_setopt(curl_handle, CURLOPT_FILE, fp);
+    //curl_easy_setopt(curl_handle, CURLOPT_FILE, fp);
 
 
     /* get it! */
@@ -213,14 +214,16 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	{
 		LOG_E("curl_easy_perform error : %s\n",curl_easy_strerror(res));
 	}
+	LOG_I("redirect_url: %s\n", redirect_url);
 #endif	
 	LOG_I("remote_path: %s", remote_path);
-	LOG_I("redirect_url: %s\n", redirect_url);
 
 	curl_easy_setopt(curl_handle, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_easy_setopt(curl_handle, CURLOPT_HEADERFUNCTION, get_contentlength_func);
 	curl_easy_setopt(curl_handle, CURLOPT_HEADERDATA, &file_size);
-	curl_easy_setopt(curl_handle, CURLOPT_RESUME_FROM_LARGE, use_resume ? have_size: 0);
+	//curl_easy_setopt(curl_handle, CURLOPT_RESUME_FROM_LARGE, use_resume ? have_size: 0);
+	if (use_resume)
+		curl_easy_setopt(curl_handle, CURLOPT_RESUME_FROM, use_resume ? have_size: 0);
  	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
  	curl_easy_setopt(curl_handle, CURLOPT_FILE, fp);
 
@@ -272,10 +275,12 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 		res = curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
 		if (res != CURLE_OK) {
 			LOG_E("CURLINFO_RESPONSE_CODE error : %s\n", curl_easy_strerror(res));
+			goto error_end;
 		}
 
 		if (response_code == 404) {
 			LOG_E("http download file not exsit!!!\n");
+			goto error_end;
 		}
 
 		if((res == CURLE_OK) /*&& ((response_code / 100) != 3)*/) {
@@ -285,7 +290,8 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	}
 	else
 	{
-		LOG_E("curl_easy_perform error : %s\n",curl_easy_strerror(res));
+		LOG_E("curl_easy_perform error: network some error! (%s)\n", curl_easy_strerror(res));
+		goto error_end;
 	}
 
 	LOG_D("write times(%d) count = %d", cnt_w, total);
@@ -297,4 +303,12 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	curl_global_cleanup();
 
 	return 0;
+
+error_end:
+	/* cleanup curl stuff */
+	curl_easy_cleanup(curl_handle);
+	fclose(fp);
+
+	curl_global_cleanup();
+	return -1;
 }
