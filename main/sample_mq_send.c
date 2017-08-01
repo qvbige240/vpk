@@ -164,7 +164,7 @@ int test_event_post(const char* name, void* args)
 		ret = vpk_eventq_post(eventq, &evt);
 		LOG_I("[%s] ret = %d, post key = 0x%x\n", name, ret, evt.alert.keycode);
 
-		sleep(10);
+		sleep(16);
 	}
 
 	vpk_eventq_close(eventq);

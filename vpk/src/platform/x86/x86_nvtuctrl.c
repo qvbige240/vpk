@@ -224,6 +224,16 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 		{
 			return 0;
 		}
+		p = strstr(buf, "-setiotid");
+		if (p != NULL)
+		{
+			return 0;
+		}
+		p = strstr(buf, "-setiotlicence");
+		if (p != NULL)
+		{
+			return 0;
+		}
 		p = strstr(buf, "-updateconditionget");
 		if (p != NULL)
 		{

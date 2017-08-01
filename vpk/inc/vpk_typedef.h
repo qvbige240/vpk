@@ -77,6 +77,12 @@ typedef enum _ret
 #define	TIMA_MEMSET		memset
 #define	TIMA_MEMCPY		memcpy
 
+#define	VPK_MALLOC		malloc
+#define	VPK_FREE		free
+#define	VPK_MEMSET		memset
+#define	VPK_MEMCPY		memcpy
+#define	VPK_REALLOC		realloc
+
 #define VPKAPI			extern	
 
 #endif //VPK_TYPEDEF_H

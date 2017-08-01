@@ -38,6 +38,16 @@ TIMA_BEGIN_DELS
 	} while (0)
 #endif /* !VPK_HAVE_TIMERADD */
 
+/** 
+ * Return true if the tvp is related to uvp according to the relational
+ * operator cmp.  Recognized values for cmp are ==, <=, <, >=, and >. 
+ */
+#define	vpk_timercmp(tvp, uvp, cmp)					\
+	(((tvp)->tv_sec == (uvp)->tv_sec) ?				\
+	 ((tvp)->tv_usec cmp (uvp)->tv_usec) :				\
+	 ((tvp)->tv_sec cmp (uvp)->tv_sec))
+
+
 #define TO_HEX_CHAR(c)	((c) > 9 ? (c) + 55 : (c) + 48)
 
 VPKAPI int vpk_hex_to_int(char c);
