@@ -218,11 +218,12 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 			LOG_I("vpk.events.NOTICE = %d", vpk.events.NOTICE);
 			break;
 		default:
-			LOG_W("event keycode unrecognized, value = %d(0x%x)", keycode, keycode);
+			if (keycode != 0x9999)
+				LOG_W("event keycode unrecognized, value = %d(0x%x)", keycode, keycode);
 			break;
 		}
 
-		LOG_W("Alert message keycode(type:%x): 0x%x, string: %s, len: %d\n", e->type, keycode, thiz->recv_buff, len);
+		LOG_I("Alert message keycode(type:%x): 0x%x, string: %s, len: %d\n", e->type, keycode, thiz->recv_buff, len);
 	}
 
 	return len;
