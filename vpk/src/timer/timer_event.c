@@ -47,10 +47,10 @@ static int vpk_gettime(vpk_timer_t* timer, struct timeval *tp)
 			vpk_gettimeofday(&tv,NULL);
 			vpk_timersub(&tv, tp, &timer->tv_clock_diff);
 			timer->last_updated_clock_diff = ts.tv_sec;
-			TIMER_LOGD(("real time: %d %d, clock mono: %d %ld, diff: %d %d",
-				tv.tv_sec, tv.tv_usec, 
-				ts.tv_sec, ts.tv_nsec, 
-				timer->tv_clock_diff.tv_sec, timer->tv_clock_diff.tv_usec));
+			//TIMER_LOGD(("real time: %d %d, clock mono: %d %ld, diff: %d %d",
+			//	tv.tv_sec, tv.tv_usec, 
+			//	ts.tv_sec, ts.tv_nsec, 
+			//	timer->tv_clock_diff.tv_sec, timer->tv_clock_diff.tv_usec));
 		}
 
 		return (0);
@@ -207,8 +207,8 @@ static int event_add_internal(vpk_events* ev, const struct timeval* tv, int tv_i
 		else
 			vpk_timeradd(&now, tv, &ev->ev_timeout);
 
-		TIMER_LOGD(("event_add: timeout in %d(%d) seconds, call %p",
-			(int)tv->tv_sec, ev->ev_timeout.tv_sec, ev->event_callback));
+		TIMER_LOGD(("event_add: timeout in %d(%d) seconds, (now: %d %d)call %p",
+			(int)tv->tv_sec, ev->ev_timeout.tv_sec, now.tv_sec, now.tv_usec, ev->event_callback));
 
 		event_queue_insert(thiz, ev, VPK_EVLIST_TIMEOUT);
 
@@ -252,6 +252,7 @@ static int timeout_next(vpk_timer_t* thiz, struct timeval **tv_p)
 
 	ev = minheap_top(&thiz->timeheap);
 	if (ev == NULL) {
+		TIMER_LOGI("min heap don't have events");
 		*tv_p = NULL;
 		return 0;
 	}
@@ -260,7 +261,7 @@ static int timeout_next(vpk_timer_t* thiz, struct timeval **tv_p)
 		return -1;
 
 	if (vpk_timercmp(&ev->ev_timeout, &now, <=)) {
-		TIMER_LOGW("ev_timeout <= tv!");
+		TIMER_LOGW("ev_timeout <= now!");
 		vpk_timerclear(tv);
 		return 0;
 	}
@@ -271,7 +272,8 @@ static int timeout_next(vpk_timer_t* thiz, struct timeval **tv_p)
 		tv->tv_sec = 0;
 	}
 
-	TIMER_LOGD(("timeout_next: in %d seconds", (int)tv->tv_sec));
+	TIMER_LOGD(("timeout_next: in %d(%d %d) seconds", 
+		(int)tv->tv_sec, ev->ev_timeout.tv_sec, ev->ev_timeout.tv_usec));
 
 	return 0;
 }
@@ -289,7 +291,7 @@ static void timeout_process(vpk_timer_t *thiz)
 
 	while((ev = minheap_top(&thiz->timeheap))) {
 
-		TIMER_LOGD(("ev_timeout: %d %d, now: %d %d\n",
+		TIMER_LOGD(("ev_timeout: %d %d, now: %d %d",
 			ev->ev_timeout.tv_sec, ev->ev_timeout.tv_usec,
 			now.tv_sec, now.tv_usec));
 
@@ -299,7 +301,7 @@ static void timeout_process(vpk_timer_t *thiz)
 		/* delete this event from the queues */
 		event_del_internal(ev);
 		event_active_nolock(ev, VPK_EV_TIMEOUT);
-		TIMER_LOGD(("timeout_process: call %p", ev->event_callback));
+		//TIMER_LOGD(("timeout_process: call %p", ev->event_callback));
 	}
 }
 
@@ -321,10 +323,11 @@ static void event_persist_closure(vpk_timer_t *thiz, vpk_events *ev)
 			relative_to = now;
 		}
 		vpk_timeradd(&relative_to, &delay, &run_at);
-		TIMER_LOGD(("ev_timeout: %d %d, delay: %d %d, run_at: %d %d\n",
+		TIMER_LOGD(("ev_timeout: %d %d, delay: %d %d, run_at: %d %d, now: %d %d",
 			ev->ev_timeout.tv_sec, ev->ev_timeout.tv_usec,
 			delay.tv_sec, delay.tv_usec,
-			run_at.tv_sec, run_at.tv_usec));
+			run_at.tv_sec, run_at.tv_usec,
+			now.tv_sec, now.tv_usec));
 		
 		if (vpk_timercmp(&run_at, &now, <)) {
 			/* Looks like we missed at least one invocation due to
@@ -452,6 +455,21 @@ int vpk_timer_event_add(vpk_events *ev, const struct timeval *tv)
 	return ret;
 }
 
+int vpk_timer_event_del(vpk_events *ev)
+{
+	int ret = 0;
+	if (!ev->ev_base) {
+		TIMER_LOGE("event has no base timer set.");
+		return -1;
+	}
+
+	// lock ...
+	ret = event_del_internal(ev);
+	// release lock ...
+
+	return ret;
+}
+
 vpk_timer_t* vpk_timer_create(void)
 {
 	vpk_timer_t* timer;
@@ -492,11 +510,17 @@ int vpk_timer_loop(vpk_timer_t* thiz, int flags)
 	while (!done) {
 		tv_p = &tv;
 
-		TIMER_LOGD(("=========111event_count_active %d", thiz->event_count_active));
+		//TIMER_LOGD(("=========111event_count_active %d event cnt %d", thiz->event_count_active, thiz->event_count));
 		if (!thiz->event_count_active) {
 			timeout_next(thiz, &tv_p);
 		} else {
 			vpk_timerclear(&tv);
+		}
+		//TIMER_LOGD(("=========222event_count_active %d event cnt %d", thiz->event_count_active, thiz->event_count));
+
+		if (!thiz->event_count_active && !(thiz->event_count > 0)) {
+			TIMER_LOGI("no events registered.");
+			sleep(5);
 		}
 
 		vpk_gettime(thiz, &thiz->timer_tv);
@@ -511,11 +535,11 @@ int vpk_timer_loop(vpk_timer_t* thiz, int flags)
 
 		timeout_process(thiz);
 
-		TIMER_LOGD(("=========22event_count_active %d, %d seconds", thiz->event_count_active, (int)tv.tv_sec));
+		//TIMER_LOGD(("=========333event_count_active %d event cnt %d", thiz->event_count_active, thiz->event_count));
 		if (thiz->event_count_active) {
 			event_process_active(thiz);
 		}
-		TIMER_LOGD(("=========333event_count_active %d, %d seconds", thiz->event_count_active, (int)tv.tv_sec));
+		//TIMER_LOGD(("=========444event_count_active %d, %d seconds", thiz->event_count_active, (int)tv.tv_sec));
 	}
 
 	return 0;
@@ -523,8 +547,34 @@ int vpk_timer_loop(vpk_timer_t* thiz, int flags)
 
 void vpk_timer_destroy(vpk_timer_t* thiz)
 {
+	int i, n_deleted = 0;
 	vpk_events* ev;
-	if (thiz == NULL)
+	if (thiz == NULL) {
+		TIMER_LOGW("no timer to free");
 		return;
+	}
 
+	while((ev = minheap_top(&thiz->timeheap))) {
+		vpk_timer_event_del(ev);
+		n_deleted++;
+	}
+	minheap_dtor(&thiz->timeheap);
+
+	for (i = 0; i < thiz->nactivequeues; ++i) {
+		for (ev = TAILQ_FIRST(&thiz->activequeues[i]); ev; ) {
+			vpk_events *next = TAILQ_NEXT(ev, ev_active_next);
+			if (!(ev->ev_flags & VPK_EVLIST_INTERNAL)) {
+				vpk_timer_event_del(ev);
+				++n_deleted;
+			}
+			ev = next;
+		}
+	}
+
+	if (n_deleted) {
+		TIMER_LOGD(("%d events were still set in timer"));
+	}
+
+	VPK_FREE(thiz->activequeues);
+	VPK_FREE(thiz);
 }

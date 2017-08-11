@@ -20,12 +20,19 @@ TIMA_BEGIN_DELS
 //#define TIMER_LOGW  LOG_W
 //#define TIMER_LOGE  LOG_E
 //#define TIMER_LOGF  LOG_F
-
+#if 1
 #define TIMER_LOGD(x)  LOG_D x
 #define TIMER_LOGI  LOG_I
 #define TIMER_LOGW  LOG_W
 #define TIMER_LOGE  LOG_E
 #define TIMER_LOGF  LOG_F
+#else
+#define TIMER_LOGD(x)
+#define TIMER_LOGI(x)
+#define TIMER_LOGW  LOG_W
+#define TIMER_LOGE  LOG_E
+#define TIMER_LOGF  LOG_F
+#endif
 
 //#define TIMER_LOGD(format, args...) LOG_D(format, ##args)
 //#define TIMER_LOGI(format, args...) LOG_I(format, ##args)

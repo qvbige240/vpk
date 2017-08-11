@@ -88,6 +88,7 @@ typedef struct vpk_timer_t
 
 int vpk_event_assign(vpk_events *ev, vpk_timer_t *base, int fd, short events, vpk_event_callback callback, void *arg);
 int vpk_timer_event_add(vpk_events *ev, const struct timeval *tv);
+int vpk_timer_event_del(vpk_events *ev);
 vpk_timer_t* vpk_timer_create(void);
 int vpk_timer_loop(vpk_timer_t* thiz, int flags);
 void vpk_timer_destroy(vpk_timer_t* thiz);
