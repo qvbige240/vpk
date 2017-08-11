@@ -21,6 +21,7 @@
 #include "vpk_md5.h"
 #include "vpk_ipc.h"
 #include "vpk_list.h"
+#include "vpk_heap.h"
 
 TIMA_BEGIN_DELS
 

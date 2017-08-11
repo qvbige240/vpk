@@ -74,22 +74,24 @@ int minheap_test(void)
 	int array[] = {11, 40, 7, 3, 88, 1, 19, 5, 20, 5, 23, 20}; 
 	vpk_minheap_t timeheap;
 
-	minheap_ctor_(&timeheap);
+	minheap_ctor(&timeheap);
 
 	int i = 0;
 	int n = _countof(array);
+	//int s = sizeof(vpk_events);
 	vpk_events* start = calloc(n, sizeof(vpk_events));
 	for (i = 0; i < n; i++)
 	{
-		vpk_events* e = (vpk_events*)(start + i * sizeof(vpk_events));
-		minheap_elem_init_(e);
+		//vpk_events* e = (vpk_events*)(start + i * sizeof(vpk_events));
+		vpk_events* e = (vpk_events*)((char*)start + i * sizeof(vpk_events));
+		minheap_elem_init(e);
 		e->ev_timeout.tv_sec = array[i];
-		minheap_push_(&timeheap, e);
+		minheap_push(&timeheap, e);
 		printf("added events %2ld(%d:%d)\n", e->ev_timeout.tv_sec, n, i);
 	}
 
 	vpk_events* ev;
-	int size = minheap_size_(&timeheap);
+	int size = minheap_size(&timeheap);
 	printf("[%d]index: \n", size);
 	for (i = 0; i < size; i++)
 		printf(" %2d", timeheap.p[i]->ev_timeout_pos.min_heap_idx);
@@ -97,23 +99,23 @@ int minheap_test(void)
 
 	printf("[%d]value: \n", size);
 #if 1
-	while ( (ev = minheap_top_(&timeheap)) != NULL)
+	while ( (ev = minheap_top(&timeheap)) != NULL)
 	{
 		//LOG_D(" %d", ev->ev_timeout);
 
 		if (ev->ev_timeout.tv_sec == 5) {
 			printf(" (%ld)", ev->ev_timeout.tv_sec);
 			ev->ev_timeout.tv_sec = 100;
-			minheap_adjust_(&timeheap, ev);
+			minheap_adjust(&timeheap, ev);
 		} else {
 			printf(" %2ld", ev->ev_timeout.tv_sec);
-			minheap_erase_(&timeheap, ev);
+			minheap_erase(&timeheap, ev);
 		}
 	}
 #else
-	while(minheap_size_(&timeheap) > 0)
+	while(minheap_size(&timeheap) > 0)
 	{
-		ev = minheap_pop_(&timeheap);
+		ev = minheap_pop(&timeheap);
 		printf(" %2ld", ev->ev_timeout.tv_sec);
 	}
 #endif
@@ -122,12 +124,94 @@ int minheap_test(void)
 	if (start)
 		free(start);
 
-	if (!minheap_empty_(&timeheap)) {
+	if (!minheap_empty(&timeheap)) {
 		LOG_W("min heap not empty!");
 		return -1;
 	}
 
-	minheap_dtor_(&timeheap);
+	minheap_dtor(&timeheap);
+	return 0;
+}
+
+#include "vpk_heap.h"
+typedef struct test_element
+{
+	elem_object();
+
+	time_t		ctime;
+	char		name[256];
+} test_element_t;
+
+int element_compare(void *a, void *b)
+{
+	test_element_t *e1 = (test_element_t*)a;
+	test_element_t *e2 = (test_element_t*)b;
+	if (e1->ctime > e2->ctime)
+		return 1;
+	else
+		return 0;
+}
+
+int heap_test(void)
+{
+	int array[] = {11, 40, 7, 3, 88, 1, 19, 5, 20, 5, 23, 20}; 
+	vpk_heap_t timeheap;
+
+	vpk_heap_ctor(&timeheap, element_compare);
+
+	int i = 0;
+	int n = _countof(array);
+	//int s = sizeof(test_element_t);
+	test_element_t* start = calloc(n, sizeof(test_element_t));
+	for (i = 0; i < n; i++)
+	{
+		test_element_t* e = (test_element_t*)((char*)start + i * sizeof(test_element_t));
+		vpk_heap_elem_init((heap_elem_t*)e);
+		e->ctime = array[i];
+		vpk_heap_push(&timeheap, (heap_elem_t*)e);
+		printf("added element %2ld(%d:%d)\n", e->ctime, n, i);
+	}
+
+	test_element_t* e;
+	int size = vpk_heap_size(&timeheap);
+	printf("[%d]index: \n", size);
+	for (i = 0; i < size; i++)
+		printf(" %2d", timeheap.p[i]->heap_idx);
+	printf("\n");
+
+	printf("[%d]value: \n", size);
+#if 1
+	while ( (e = (test_element_t*)vpk_heap_top(&timeheap)) != NULL)
+	{
+		//LOG_D(" %d", ev->ev_timeout);
+
+		if (e->ctime == 5) {
+			printf(" (%ld)", e->ctime);
+			e->ctime = 100;
+			vpk_heap_adjust(&timeheap, (heap_elem_t*)e);
+		} else {
+			printf(" %2ld", e->ctime);
+			vpk_heap_erase(&timeheap, (heap_elem_t*)e);
+		}
+	}
+#else
+	while(vpk_heap_size(&timeheap) > 0)
+	{
+		e = (test_element_t*)vpk_heap_pop(&timeheap);
+		printf(" %2ld", e->ctime);
+	}
+#endif
+	printf("\n");
+
+	if (start)
+		free(start);
+
+	if (!vpk_heap_empty(&timeheap)) {
+		LOG_W("min heap not empty!");
+		return -1;
+	}
+
+	vpk_heap_dtor(&timeheap);
 	return 0;
 }
 
@@ -180,14 +264,30 @@ int minheap_main(int argc, char *argv[])
 	double elapsed;
 	struct timeval result, prev, next;	
 
-	detect_monotonic();
-	struct timeval now;
-	gettime(&now);
-	LOG_D("now: %d %d\n", now.tv_sec, now.tv_usec);
-
 	gettimeofday(&prev, 0);
 
-	minheap_test();
+	if (strcasecmp(type, "minheap") == 0) {
+		minheap_test();
+	} else if (strcasecmp(type, "heap") == 0) {
+		heap_test();
+	} else {
+		detect_monotonic();
+		struct timeval now;
+		gettime(&now);
+		LOG_D("now: %d %d\n", now.tv_sec, now.tv_usec);
+
+		int n = 6, i = 1;
+		int s = sizeof(struct timeval);
+		struct timeval *start = calloc(n, sizeof(struct timeval ));
+		struct timeval* e = (struct timeval*)((char*)start + i * sizeof(struct timeval));
+		printf("start: %p, add: 0x%x(%d), pos: %p	(char*)+\n", start, s, s, e);
+		e = (struct timeval*)((void*)start + i * sizeof(struct timeval));
+		printf("start: %p, add: 0x%x(%d), pos: %p	(void*)+\n", start, s, s, e);
+		e = (struct timeval*)((struct timeval*)start + i * sizeof(struct timeval));
+		printf("start: %p, add: 0x%x(%d), pos: %p	(struct timeval*)+\n", start, s, s, e);
+		e = (struct timeval*)(start + i * sizeof(struct timeval));
+		printf("start: %p, add: 0x%x(%d), pos: %p	+\n", start, s, s, e);
+	}
 
 	gettimeofday(&next, 0);
 	vpk_timersub(&next, &prev, &result);		//time_sub(&result, &prev, &next);

@@ -54,6 +54,9 @@ const vpk_constants_t vpk = {
 
 		VPK_KEY_EVENT_GET_CUR_VIDEO_SUCCESS,
 		VPK_KEY_EVENT_GET_CUR_VIDEO_FAILED,
+
+		VPK_KEY_EVENT_CAR_CRASH_NOTICE,
+		VPK_KEY_EVENT_PARKING_CRASH_NOTICE,	
 		// ALERT
 		VPK_KEY_EVENT_CAR_CRASH_WARNING,
 		VPK_KEY_EVENT_PARKING_CRASH_WARNING,
@@ -213,6 +216,8 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 		case VPK_KEY_EVENT_UPDATE_SYS_TIME:
 		case VPK_KEY_EVENT_GET_CUR_VIDEO_SUCCESS:
 		case VPK_KEY_EVENT_GET_CUR_VIDEO_FAILED:
+		case VPK_KEY_EVENT_CAR_CRASH_NOTICE:
+		case VPK_KEY_EVENT_PARKING_CRASH_NOTICE:
 			e->type = vpk.events.NOTICE;
 			e->notice.keycode = keycode;
 			LOG_I("vpk.events.NOTICE = %d", vpk.events.NOTICE);

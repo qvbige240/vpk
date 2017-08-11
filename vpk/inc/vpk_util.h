@@ -17,6 +17,7 @@ TIMA_BEGIN_DELS
 #ifdef VPK_HAVE_TIMERADD
 #define vpk_timeradd(tvp, uvp, vvp) timeradd((tvp), (uvp), (vvp))
 #define vpk_timersub(tvp, uvp, vvp) timersub((tvp), (uvp), (vvp))
+#define vpk_timerclear(tvp) timerclear(tvp)
 #else
 #define vpk_timeradd(tvp, uvp, vvp)					\
 	do {								\
@@ -36,6 +37,7 @@ TIMA_BEGIN_DELS
 			(vvp)->tv_usec += 1000000;			\
 		}							\
 	} while (0)
+#define	vpk_timerclear(tvp)	(tvp)->tv_sec = (tvp)->tv_usec = 0
 #endif /* !VPK_HAVE_TIMERADD */
 
 /** 

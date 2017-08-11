@@ -44,6 +44,7 @@ inc/vpk_mmap.h \
 inc/vpk_nvtuctrlc.h \
 inc/vpk_queues.h \
 inc/vpk_serialc.h \
+inc/vpk_timer.h \
 inc/vpk_typedef.h \
 inc/vpk_util.h \
 src/vpk_actions.c \
@@ -77,6 +78,10 @@ src/vpk_system.h \
 src/vpk_tqueue.c \
 src/vpk_tqueue.h \
 src/vpk_util.c \
+src/timer/timer_event.h \
+src/timer/timer_event.c \
+src/timer/timer_epoll.h \
+src/timer/timer_epoll.c \
 $(platform_sources)
 noinst_LIBRARIES=libvpk.a
 libvpk_a_SOURCES=$(vpk_all_sources)

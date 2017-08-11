@@ -40,6 +40,8 @@ typedef struct vpk_keycodes_t
 	unsigned int EVENT_UPDATE_SYSTEM;
 	unsigned int EVENT_GET_CUR_VIDEO_SUCCESS;
 	unsigned int EVENT_GET_CUR_VIDEO_FAILED;
+	unsigned int EVENT_CAR_CRASH_NOTICE;		// for car crash notice
+	unsigned int EVENT_PARKING_CRASH_NOTICE;	// for warning notice
 	// ALERT
 	unsigned int EVENT_CAR_CRASH_WARNING;
 	unsigned int EVENT_PARKING_CRASH_WARNING;
