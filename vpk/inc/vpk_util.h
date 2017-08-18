@@ -61,6 +61,8 @@ VPKAPI int vpk_hex_to_int(char c);
  */
 VPKAPI int vpk_strcntstr(const char *s1, const char *s2);
 
+VPKAPI void vpk_snprintf(char *buf, unsigned int *pos, int len, const char *format, ...);
+
 VPKAPI char* vpk_strstrip(char* str, char c);
 
 #define VPK_HAVE_GETTIMEOFDAY

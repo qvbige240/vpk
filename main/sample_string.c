@@ -217,6 +217,12 @@ typedef struct _MediaResTest
 	MediaListTest	media[4];
 } MediaResTest;
 
+#define SAMPLE_ROOTCFG		"/etc/sample/"
+#define SAMPLE_SUBCFG		"/media/ro/"
+//#define MEDIA_GROUP_DIR		SAMPLE_ROOTCFG""(res.media->file)""SAMPLE_SUBCFG
+#define DPRINTSTR(x)		#x
+#define MEDIA_GROUP_DIR		SAMPLE_ROOTCFG""DPRINTSTR(res.media->file)""SAMPLE_SUBCFG
+
 void test_struct(void)
 {
 	MediaResTest res = {0};
@@ -233,6 +239,11 @@ void test_struct(void)
 	LOG_D("ifdef HELLOWORLD");
 #else
 #endif
+
+	strcpy(res.media->file, "DIRDVR");
+
+	LOG_D("make up dir: %s", MEDIA_GROUP_DIR);
+
 	printf("\n");
 }
 

@@ -7,3 +7,11 @@ x86:
     make clean
     ./execute.sh x86
 
+
+build out path:  build_x86/,  build_mips/
+
+sample use
+$ ./test -d mqsend -k 2001
+$ ./test -h
+
+
