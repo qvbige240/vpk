@@ -18,7 +18,7 @@ test_SOURCES =\
 sample.c tqueue_demo.c sample_jasson.c sample_download.c \
 sample_string.c sample_md5.c md5.c sample_mq_send.c \
 sample_filesys.c sample_consumer.c sample_timer.c sample_sort.c \
-sample_sqlite.c sample_minheap.c
+sample_sqlite.c sample_minheap.c sample_socket.c
 #sample_download.c
 #sample_semaphore.c
 #sample_mq_recv.c

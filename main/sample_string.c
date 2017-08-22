@@ -247,6 +247,41 @@ void test_struct(void)
 	printf("\n");
 }
 
+int test_snprintf()
+{
+	char param[32] = {0};
+	char action[128] = {0};
+	char action_2[128] = {0};
+	char action_3[128] = {0};
+	int pos = 0;
+	strncpy(action, "ucustom -gpsinfo ", strlen("ucustom -gpsinfo "));
+	printf("prev action: %s\n", action);
+	snprintf(action, sizeof(action), "%s %s", action, "open");
+	printf("next action: %s\n", action);
+
+	strncpy(action_2, "ucustom -gpsinfo ", strlen("ucustom -gpsinfo "));
+	printf("prev action_2: %s\n", action_2);
+	sprintf(action_2, "%s %s", action_2, "open");
+	printf("next action_2: %s\n", action_2);
+	sprintf(action_2, "%s", "open");
+	printf("next action_2: %s\n", action_2);
+	sprintf(action_2, "%s %s", action_2, param);
+	printf("next action_2 param: %s\n", action_2);
+
+	strncpy(action_3, "ucustom -gpsinfo ", strlen("ucustom -gpsinfo "));
+	printf("prev action_3: %s\n", action_3);
+	//ige_str_snprintf(action_3, &pos, sizeof(action_3), "%s %s", action_3, "open");
+	pos = strlen(action_3);
+	vpk_snprintf(action_3, &pos, sizeof(action_3), " %s", "open");
+	printf("next action_3: %s\n", action_3);
+
+	char param1[32] = {0};
+	printf("sprintf test string\n\n");
+	//sprintf(param1, "%s", NULL);		// 'Segmentation fault' will happen
+
+	return 0;
+}
+
 int string_main(int argc, char *argv[])
 {
 // 	int ret = 0;
@@ -258,6 +293,7 @@ int string_main(int argc, char *argv[])
 	char* data = malloc(strlen(menus)+1);
 	strcpy(data, menus);
 	//LOG_D("data: %s\n", data);
+	test_snprintf();
 	test_struct();
 	test_str();
 	test_null();
