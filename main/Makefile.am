@@ -26,3 +26,13 @@ sample_sqlite.c sample_minheap.c sample_socket.c
 #sample_mq.c
 #sample_jasson.c
 #sample_00.c
+
+bin_PROGRAMS += mqrecv
+mqrecv_LDADD =\
+$(project_dir)/vpk/libvpk.a \
+$(STATIC_LIBS)
+LIBS=$(DYNAMIC_LIBS)
+mqrecv_LDFLAGS=$(EXTRA_LDFLAGS)
+mqrecv_SOURCES =\
+sample_mq_recv.c
+

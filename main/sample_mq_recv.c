@@ -15,6 +15,34 @@ extern void *vpk_test2(void* arg);
 extern void *vpk_test3(void* arg);
 
 
+#ifdef USE_ZLOG
+#define SAMPLE_ZLOG_FILE_PATH		"."
+#define SAMPLE_ZLOG_CONF_FILE		"./zlog.conf"
+int sample_zlog_init(int procname)
+{
+	int rc;
+	//zlog_category_t *c;
+
+	if (!vpk_exists(SAMPLE_ZLOG_FILE_PATH)) {
+		int ret = 0;
+		char tmp[256] = {0};
+		vpk_pathname_get(SAMPLE_ZLOG_FILE_PATH, tmp);
+		printf("full: %s, pathname: %s", SAMPLE_ZLOG_FILE_PATH, tmp);
+		ret = vpk_mkdir_mult(SAMPLE_ZLOG_FILE_PATH);
+		printf("vpk_mkdir_mult \'%s\' ret = %d\n", SAMPLE_ZLOG_FILE_PATH, ret);
+	}
+
+	rc = dzlog_init(SAMPLE_ZLOG_CONF_FILE, "sample");
+	if (rc)	{
+		printf("zlog init failed\n");
+		return -1;
+	}
+
+	LOG_D("hello, zlog");
+
+	return 0;
+}
+#endif
 //vpk_eventq_t* eventq = NULL;
 
 int main(int argc, char *argv[])
@@ -23,8 +51,12 @@ int main(int argc, char *argv[])
 	void* thread_result;
 	pthread_t pth_test3, pth_test2;
 
+#ifdef USE_ZLOG
+		sample_zlog_init(0);
+#endif // USE_ZLOG
+
 	vpk_system_init(argc, argv);
-// 	vpk_logging_level_set("DEBUG");
+ 	vpk_logging_level_set("DEBUG");
 
 	//eventq = vpk_eventq_open();
 
