@@ -35,6 +35,7 @@ typedef struct vpk_keycodes_t
 	unsigned int EVENT_SYS_POWER_OFF_ACC;
 	unsigned int EVENT_SYS_POWER_OFF_GSENSOR;
 	unsigned int EVENT_SYS_POWER_OFF_TIMA;
+	unsigned int EVENT_SYS_POWER_OFF_VOLTAGE_LOW;
 	unsigned int EVENT_QRCODE_GEN;
 	unsigned int EVENT_FIRMWARE_DOWNLOAD;
 	unsigned int EVENT_UPDATE_SYSTEM;
