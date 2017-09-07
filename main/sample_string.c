@@ -240,6 +240,12 @@ void test_struct(void)
 #else
 #endif
 
+#ifdef MACRODEF_TEST
+	LOG_D("ifdef MACRODEF_TEST");
+#else
+	LOG_D("not ifdef MACRODEF_TEST");
+#endif
+
 	strcpy(res.media->file, "DIRDVR");
 
 	LOG_D("make up dir: %s", MEDIA_GROUP_DIR);

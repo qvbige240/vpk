@@ -28,6 +28,7 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_MENU_RECSIZEGET,		// video_resolution
 	VPK_NVTU_MENU_CYCRECGET,		// video_time
 	VPK_NVTU_MENU_GSENSORGET,		// vibration_sensor
+	VPK_NVTU_MENU_PARKGSENSORGET,	// park_sensor
 	VPK_NVTU_MENU_PARKMONITORGET,	// parking_mode
 	VPK_NVTU_MENU_POWEROFFVOLTGET,	// off_voltage
 	VPK_NVTU_MENU_AUDIOGET,			// record_sound
@@ -41,11 +42,13 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_MENU_FORMATSD_NOP,		// format_tf		//
 	VPK_NVTU_MENU_FACTORYSET_NOP,	// factory_reset	//
 	VPK_NVTU_MENU_VERSIONGET,		// version			//
+	VPK_NVTU_MENU_WIFIPHRASEGET,	// wifiphrase
 	// menu set
 	VPK_NVTU_MENU_PICSIZESET,		// photo_resolution	
 	VPK_NVTU_MENU_RECSIZESET,		// video_resolution
 	VPK_NVTU_MENU_CYCRECSET,		// video_time
 	VPK_NVTU_MENU_GSENSORSET,		// vibration_sensor
+	VPK_NVTU_MENU_PARKGSENSORSET,	// park_sensor
 	VPK_NVTU_MENU_PARKMONITORSET,	// parking_mode
 	VPK_NVTU_MENU_POWEROFFVOLTSET,	// off_voltage
 	VPK_NVTU_MENU_AUDIOSET,			// record_sound
@@ -59,6 +62,7 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_MENU_FORMATSD,			// format_tf		//
 	VPK_NVTU_MENU_FACTORYSET,		// factory_reset	//
 	VPK_NVTU_MENU_VERSIONGET_NOP,	// version			//
+	VPK_NVTU_MENU_WIFIPHRASESET,	// wifiphrase
 
 	VPK_NVTU_QRCODE,
 //	VPK_NVTU_UPDATE_FREQGET,
