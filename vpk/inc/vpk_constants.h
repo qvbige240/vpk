@@ -39,6 +39,7 @@ typedef struct vpk_keycodes_t
 	unsigned int EVENT_QRCODE_GEN;
 	unsigned int EVENT_FIRMWARE_DOWNLOAD;
 	unsigned int EVENT_UPDATE_SYSTEM;
+	unsigned int EVENT_DEVICE_UNBIND;
 	unsigned int EVENT_GET_CUR_VIDEO_SUCCESS;
 	unsigned int EVENT_GET_CUR_VIDEO_FAILED;
 	unsigned int EVENT_CAR_CRASH_NOTICE;		// for car crash notice

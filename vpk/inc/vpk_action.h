@@ -22,6 +22,8 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_RECSTATE,
 	VPK_NVTU_DEVINFO,
 	VPK_NVTU_VIDEOREC,
+	VPK_NVTU_GETFILENAME,
+	VPK_NVTU_UNBINDEVICE,
 
 	// menu get
 	VPK_NVTU_MENU_PICSIZEGET,		// photo_resolution	

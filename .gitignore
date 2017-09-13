@@ -11,6 +11,7 @@
 *.db
 *.log
 build_*
+main/mqrecv
 
 .*
 *.o
