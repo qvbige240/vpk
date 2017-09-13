@@ -187,6 +187,36 @@ void test_str(void)
 	printf("\n");
 }
 
+void test_split_comma(void)
+{
+	char buff[256] = {0};
+	char srcstrip[256] = {0};
+	char *src = "2017_0912_000009_050A.TS, 2017_0912_000009_050B.TS, 2017_0912_000009_050C.TS";
+	char *p, *ptr = src;
+
+	strcpy(srcstrip, src);
+	vpk_strstrip(srcstrip, ' ');
+	ptr = srcstrip;
+
+	if (!src || strlen(src) == 0)
+		return;
+
+	while (ptr)
+	{
+		p = strstr(ptr, ",");
+		if (p == NULL) {
+			strcpy(buff, ptr);
+			LOG_D("buff: %s", buff);
+			break;
+		}
+
+		strncpy(buff, ptr, p - ptr);
+		LOG_D("buff: %s", buff);
+		ptr = p + 1;
+	}
+
+}
+
 void test_null(void)
 {
 	//char buffer[64] = {0};
@@ -248,7 +278,7 @@ void test_struct(void)
 
 	strcpy(res.media->file, "DIRDVR");
 
-	LOG_D("make up dir: %s", MEDIA_GROUP_DIR);
+	LOG_D("dir: %s", MEDIA_GROUP_DIR);
 
 	printf("\n");
 }
@@ -299,6 +329,7 @@ int string_main(int argc, char *argv[])
 	char* data = malloc(strlen(menus)+1);
 	strcpy(data, menus);
 	//LOG_D("data: %s\n", data);
+	test_split_comma();
 	test_snprintf();
 	test_struct();
 	test_str();
