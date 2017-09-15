@@ -19,12 +19,13 @@ else
 fi
 if [ "$platform" == mips ]; then
     ./configure --host=mipsel-24kec-linux-uclibc enable_x86=no enable_sqlite3=yes \
-        enable_zlog=yes
+        enable_zlog=yes --prefix=$WORKDIR/build_nt966x/install
 else
     ./configure --host=x86_64-unknown-linux-gnu enable_x86=yes enable_sqlite3=yes \
-        enable_zlog=yes
+        enable_zlog=yes --prefix=$WORKDIR/build_x86/install
 fi
 make
+#make install
 
 outdir=${WORKDIR}/build_$platform
 if [ -d $outdir ]; then
@@ -36,3 +37,4 @@ if [ -d $outdir ]; then
     cp ${WORKDIR}/vpk/*.a $outdir
 fi
 
+make install

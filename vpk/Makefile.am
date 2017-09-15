@@ -105,3 +105,20 @@ src/vpk_libc.c
 #libvpk_a_SOURCES=
 #lib_LTLIBRARIES=libvpk.la
 #libvpk_la_SOURCES=
+include_HEADERS =\
+inc/vpk_action.h \
+inc/vpk_constants.h \
+inc/vpk_event.h \
+inc/vpk_filesys.h \
+inc/vpk.h \
+inc/vpk_ipc.h \
+inc/vpk_libc.h \
+inc/vpk_logging.h \
+inc/vpk_md5.h \
+inc/vpk_mmap.h \
+inc/vpk_nvtuctrlc.h \
+inc/vpk_queues.h \
+inc/vpk_serialc.h \
+inc/vpk_timer.h \
+inc/vpk_typedef.h \
+inc/vpk_util.h
