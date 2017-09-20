@@ -189,7 +189,7 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 		p = strstr(buf, "-snapshot");
 		if (p != NULL)
 		{
-			char *str = "resources/test_2017_0409_171946_RE.JPG";
+			char *str = "{\"rcode\":\"0\",\"file\":\"resources/test_2017_0409_171946_RE.JPG\"}";
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}
@@ -268,7 +268,7 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 		p = strstr(buf, "-getvideo");
 		if (p != NULL)
 		{
-			char *str = "1";
+			char *str = "0";
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}
