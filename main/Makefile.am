@@ -4,7 +4,7 @@ bin_PROGRAMS = test
 #test_LDFLAGS=-static
 test_LDADD =\
 $(STATIC_LIBS) \
-$(project_dir)/vpk/libvpk.a
+$(project_dir)/vpk/.libs/libvpk.a
 
 #$(JANSSON_LIB) $(CURL_LIB) \
 #$(project_dir)/vpk/libvpk.a
@@ -29,7 +29,7 @@ sample_sqlite.c sample_minheap.c sample_socket.c
 
 bin_PROGRAMS += mqrecv
 mqrecv_LDADD =\
-$(project_dir)/vpk/libvpk.a \
+$(project_dir)/vpk/.libs/libvpk.a \
 $(STATIC_LIBS)
 LIBS=$(DYNAMIC_LIBS)
 mqrecv_LDFLAGS=$(EXTRA_LDFLAGS)

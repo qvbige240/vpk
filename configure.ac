@@ -25,6 +25,13 @@ project_dir=$PWD
 echo "project dir: $project_dir"
 AC_SUBST(project_dir)
 
+#if test x$enable_shared = xyes; then
+#    #VPK_LIB='-lvpk'
+#    #VPK_LIB='$(project_dir)/vpk/.libs/libvpk.so'
+#else
+#    VPK_LIB=''
+#fi
+
 if test x$enable_sqlite3 = xyes; then
 	SQLITE3_LIB='libsqlite3.a'
     AC_DEFINE(USE_SQLITE3, 1, [if sqlite3 is enabled])
@@ -80,7 +87,7 @@ if test x$enable_x86 = xyes; then
 	DYNAMIC_LIBS="-ldl -lpthread -lrt -lz"
 	AC_SUBST(DYNAMIC_LIBS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
-	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS)'
+	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
 else
     PLATFORMS="_NT966X_"
@@ -117,7 +124,7 @@ else
 	DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
 	#DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
 	AC_SUBST(DYNAMIC_LIBS)
-	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib'
+	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/mips/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 fi
@@ -126,6 +133,8 @@ echo "platform11111: ${PLATFORMS}"
 echo 'platform222222: $(PLATFORMS)'
 AM_CONDITIONAL(X8666, test "${PLATFORMS}" = "_X86_")
 AM_CONDITIONAL(NT966X, test "${PLATFORMS}" = "_NT966X_")
+#AM_CONDITIONAL(USE_SHARED, test x$enable_shared = xyes)
+
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T
