@@ -31,10 +31,10 @@ outdir=${WORKDIR}/build_$platform
 if [ -d $outdir ]; then
     rm $outdir -rf
 fi
-mkdir $outdir
-if [ -d $outdir ]; then
-    cp ${WORKDIR}/main/test $outdir
-    cp ${WORKDIR}/vpk/*.a $outdir
-fi
+#mkdir $outdir
+#if [ -d $outdir ]; then
+#    cp ${WORKDIR}/main/test $outdir
+#    cp ${WORKDIR}/vpk/*.a $outdir
+#fi
 
 make install

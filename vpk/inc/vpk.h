@@ -31,6 +31,8 @@ TIMA_BEGIN_DELS
  */
 VPKAPI int vpk_system_init(int argc, char* argv[]);
 
+VPKAPI const char* vpk_chip_architecture(void);
+
 TIMA_END_DELS
 
 #endif/*VPK_H*/

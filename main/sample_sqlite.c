@@ -29,8 +29,8 @@
 const char* sql01 = "create table carnet_t2(id INTEGER, name nvarchar(32) PRIMARY KEY, value text)";
 const char* sql02 = "insert into carnet_t2 values(NULL, 'king', 'kvalue')";
 const char* sql03 = "insert into carnet_t2 values(NULL, 'time1', 'tvalue')";
-//const char* sql04 = "insert into carnet_t2 values(NULL, 'time2', 'tvalue')";
-const char* sql04 = "select count(*) from carnet_t2 where name='time1'";
+const char* sql04 = "insert into carnet_t2 values(NULL, 'time2', 'tvalue')";
+//const char* sql04 = "select count(*) from carnet_t2 where name='time1'";
 const char* sql05 = "update carnet_t2 set value = 'tvalue1' where name='time1'";
 const char* sql06 = "select value from carnet_t2 where name='time2'";
 const char* sql07 = "select * from sqlite_master where name='carnet_t1' and sql like '%time1%'";
@@ -69,7 +69,11 @@ int sqlite_test(char* filename)
 		sqlite3_free(errmsg);
 	}
 
-
+	rc = sqlite3_exec(db, sql_select, callback, 0, &errmsg);
+	if (rc != SQLITE_OK) {
+		LOG_E("SQL error: %s", errmsg);
+		sqlite3_free(errmsg);
+	}
 #if 0
 	rc = sqlite3_exec(db, sql01, callback, 0, &errmsg);
 	if (rc != SQLITE_OK) {

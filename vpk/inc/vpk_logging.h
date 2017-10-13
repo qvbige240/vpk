@@ -31,6 +31,28 @@ VPKAPI void vpk_logging_printf(const char* level, const char* file, int line, co
 #ifdef USE_ZLOG
 #include "zlog.h"
 /* use zlog */
+#ifndef TIMA_LOGI
+/* tima log macros */
+#define TIMA_LOGF(format, args...) \
+	dzlog(__FILE__, sizeof(__FILE__)-1, __func__, sizeof(__func__)-1, __LINE__, \
+	ZLOG_LEVEL_FATAL, format, ##args)
+#define TIMA_LOGE(format, args...) \
+	dzlog(__FILE__, sizeof(__FILE__)-1, __func__, sizeof(__func__)-1, __LINE__, \
+	ZLOG_LEVEL_ERROR, format, ##args)
+#define TIMA_LOGW(format, args...) \
+	dzlog(__FILE__, sizeof(__FILE__)-1, __func__, sizeof(__func__)-1, __LINE__, \
+	ZLOG_LEVEL_WARN, format, ##args)
+#define TIMA_LOGN(format, args...) \
+	dzlog(__FILE__, sizeof(__FILE__)-1, __func__, sizeof(__func__)-1, __LINE__, \
+	ZLOG_LEVEL_NOTICE, format, ##args)
+#define TIMA_LOGI(format, args...) \
+	dzlog(__FILE__, sizeof(__FILE__)-1, __func__, sizeof(__func__)-1, __LINE__, \
+	ZLOG_LEVEL_INFO, format, ##args)
+#define TIMA_LOGD(format, args...) \
+	dzlog(__FILE__, sizeof(__FILE__)-1, __func__, sizeof(__func__)-1, __LINE__, \
+	ZLOG_LEVEL_DEBUG, format, ##args)
+#endif
+
 //#define LOG_D(format, args...) vpk_logging_printf("DEBUG", __FILE__, __LINE__, __VA_ARGS__)
 //#define LOG_D(format, args...) TIMA_LOGD(format"\n", ##args)
 #define LOG_D(format, args...) TIMA_LOGD(format, ##args)
