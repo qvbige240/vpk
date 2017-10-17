@@ -148,10 +148,40 @@ int test_findstr(const char* str)
 	return 0;
 }
 
+void test_sscanf_sprintf(void)
+{
+	double a = 0.0;
+	double lat = 1.123456;
+	char string[16] = {0};
+
+	LOG_D("lat: %lf, a: %lf", lat, a);
+	sprintf(string, "%lf", lat);
+	LOG_D("string: %s", string);
+	sscanf(string, "%s", a);
+	LOG_D("lat: %lf, a: %lf", lat, a);
+	a = atof(string);
+	LOG_D("lat: %lf, a: %lf", lat, a);
+	a = atof("1");
+	LOG_D("lat: %lf, a: %lf \n", lat, a);
+}
+static const char* const tele_keyword[][4] = 
+{
+	{"MOBILE", "CMCC", "46000", "1"},
+	{"UNICOM", "CUCC", "46001", "2"},
+	{"MOBILE", "CMCC", "46002", "1"},
+	{"TELECOM", "CTC", "46003", "3"},
+	{"MOBILE", "CMCC", "46004", "1"},
+	{"TELECOM", "CTC", "46005", "3"},
+	{"UNICOM", "CUCC", "46006", "2"},
+	{"MOBILE", "CMCC", "46007", "1"},
+	{"UNICOM", "CUCC", "46009", "2"},
+	{"TELECOM", "CTC", "46011", "3"},
+	{"TIETONG","CTTC", "46020", "0"},
+};
 void test_str(void)
 {
 	int i = 0, ret = 0;
-    char* str1 = "";
+	char* str1 = "";
 	char str[] = ";;;sd;fdfs.adf.;;;";
 	LOG_D("str1 len: %d", strlen(str1));
 	LOG_D("before str: %s", str);
@@ -186,24 +216,37 @@ void test_str(void)
 		LOG_D("p1(len=%d): %s, p2(len=%d): %s", strlen(p1), p1, strlen(p2), p2);
 	}
 
+	const char* const_str = "1111111111";
+
+	const_str = "const string test";
+	LOG_D("const_str: %s", const_str);
+	
+	i = _countof(tele_keyword);
+	LOG_D("_countof i: %d", i);
+
+	const char* architecture = vpk_chip_architecture();
+	LOG_D("architecture: %s", architecture);
+
 	printf("\n");
 }
 
 void test_split_comma(void)
 {
+	int len = 0;
 	char buff[256] = {0};
 	char srcstrip[256] = {0};
-	char *src = "2017_0912_000009_050A.TS, 2017_0912_000009_050B.TS, 2017_0912_000009_050C.TS";
+	char *src = "2017_0912_000009_050A.TS, 2017_0912_000009_050B.TS,";
 	char *p, *ptr = src;
 
 	strcpy(srcstrip, src);
 	vpk_strstrip(srcstrip, ' ');
 	ptr = srcstrip;
+	len = strlen(srcstrip);
 
 	if (!src || strlen(src) == 0)
 		return;
 
-	while (ptr)
+	while (ptr < srcstrip + len)
 	{
 		p = strstr(ptr, ",");
 		if (p == NULL) {
@@ -227,6 +270,7 @@ void test_null(void)
 	if (str && strlen(str))
 	 	ret = strlen(str);
 	//memcpy(buffer, NULL, 0);
+	//strcpy(buffer, NULL);
 
 	LOG_D("ret len: %d", ret);
 	ret = strcasecmp("1", "");
@@ -336,6 +380,7 @@ int string_main(int argc, char *argv[])
 	test_struct();
 	test_str();
 	test_null();
+	test_sscanf_sprintf();
 	test_findstr(NULL);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 1);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 2);

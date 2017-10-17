@@ -35,6 +35,23 @@ const system_kset* const systems[] =
 	NULL,
 };
 
+const char* archs[] = {"X86", "MIPS", "ARM", "Other"};
+const char* vpk_chip_architecture(void) {
+	char* arch = archs[3];
+
+#if defined(_X86_)
+	arch = archs[0];
+#elif defined(_NT966X_)
+	arch = archs[1];
+#elif defined(_HI35XX_)
+	arch = archs[2];
+#else
+	arch = archs[3];
+#endif
+
+	return arch;
+}
+
 static vpk_system_t* sys = NULL;
 
 void init_subsystem(int argc, char* argv[])
