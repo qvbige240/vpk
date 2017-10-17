@@ -20,7 +20,23 @@ AC_CHECK_LIB([vpk], [main])
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h inttypes.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h])
+
+
 # project_dir=/media/zouqing/9d0165e6-5910-46c0-9389-cb9a7e7b899b/zouqing/work/project/vpk
+WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )"
+echo "======WORKDIR: $WORKDIR "
+echo "======DIR_PREMAKE: $DIR_PREMAKE"
+echo "========BUILD_PATH: $BUILD_PATH "
+echo "========FINAL_PATH: $FINAL_PATH"
+echo "========GBASE_INCLUDE: $GBASE_INCLUDE"
+echo "========GBASE_LIB: $GBASE_LIB"
+echo "========GOLBAL_CFLAGS: $GOLBAL_CFLAGS"
+echo "========GOLBAL_CPPFLAGS: $GOLBAL_CPPFLAGS"
+echo "========GOLBAL_LDFLAGS: $GOLBAL_LDFLAGS"
+echo "========PLATFORMS: $PLATFORMS"
+
+includedir="$includedir/vpk"
+echo "====== includedir: $includedir"
 project_dir=$PWD
 echo "project dir: $project_dir"
 AC_SUBST(project_dir)
@@ -48,30 +64,38 @@ else
     ZLOG_LIB=''
 fi
 
+CURL_LIB='libcurl.a'
+JANSSON_LIB='libjansson.a'
+    
+LIB_PATH='${FINAL_PATH}/lib'
+
 DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_TESTDEF"
 echo "DEFINE_CFLAGS: $DEFINE_CFLAGS"
 echo "sqlite lib: $SQLITE3_LIB"
 
-if test x$enable_x86 = xyes; then
+if test x$platform = xx86; then
     PLATFORMS="_X86_"
-    GBASE_INCLUDE="/usr/include"
-    GBASE_LIB="/usr/lib"
-    echo "use gcc to compile"
-    #AM_CFLAGS="-Wall -Wextra -Wdeclaration-after-statement"
-	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
-	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
-	GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
-	AC_SUBST(GOLBAL_CFLAGS)
+    echo "====== x86 ======== use gcc to compile"
+#    GBASE_INCLUDE="/usr/include"
+#    GBASE_LIB="/usr/lib"
+#    #AM_CFLAGS="-Wall -Wextra -Wdeclaration-after-statement"
+#	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
+#	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
+#	GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
+#	AC_SUBST(GOLBAL_CFLAGS)
 
-    LIB_PATH='$(project_dir)/x86/lib'
+    VPK_CFLAGS="-g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
+	AC_SUBST(VPK_CFLAGS)
+
+    #LIB_PATH='$(project_dir)/x86/lib'
 	
-	JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
-	CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
+	#JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
+	#CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
 	#SQLITE3_LIB='$(project_dir)/x86/lib/libsqlite3.a'
     #AC_SUBST(CURL_LIB)
 	#AC_SUBST(JANSSON_LIB)
 
-    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB"
 
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
@@ -86,29 +110,35 @@ if test x$enable_x86 = xyes; then
 	
 	DYNAMIC_LIBS="-ldl -lpthread -lrt -lz"
 	AC_SUBST(DYNAMIC_LIBS)
-	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	#CFLAGS='-Wall $(VPK_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
-else
+elif test x$platform = xnt966x; then
     PLATFORMS="_NT966X_"
-	GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/usr/include"
-	GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/lib"
-	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
-	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
-	GOLBAL_LDFLAGS="-L${GBASE_LIB}"
-	AC_SUBST(GOLBAL_CFLAGS)
+    echo '=========  nt966x ======='
+#	GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/usr/include"
+#	GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/lib"
+#	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
+#	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
+#	GOLBAL_LDFLAGS="-L${GBASE_LIB}"
+#	AC_SUBST(GOLBAL_CFLAGS)
+#
+#    LIB_PATH='$(project_dir)/mips/lib'
 
-    LIB_PATH='$(project_dir)/mips/lib'
+    VPK_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
+	AC_SUBST(VPK_CFLAGS)
 	
-	JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
+	#JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
 	#CURL_LIB='$(project_dir)/mips/lib/libcurl.a'
-	CURL_LIB=''
+	#CURL_LIB=''
 	#SQLITE3_LIB='$(project_dir)/mips/lib/libsqlite3.a'
     #AC_SUBST(SQLITE3_LIB)
 	#AC_SUBST(JANSSON_LIB)
     #AC_SUBST(CURL_LIB)
     
-	STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
+	#STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
 
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
@@ -124,17 +154,21 @@ else
 	DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
 	#DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
 	AC_SUBST(DYNAMIC_LIBS)
-	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib -L$(project_dir)/vpk/.libs'
+	#EXTRA_LDFLAGS='-L$(project_dir)/mips/lib -L$(project_dir)/vpk/.libs'
+	#CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/mips/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
-	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/mips/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+else 
+    echo '=========  unknown platform  ========'
 fi
+
 echo "platform: $PLATFORMS"
 echo "platform11111: ${PLATFORMS}"
-echo 'platform222222: $(PLATFORMS)'
+echo 'platform22222: $(PLATFORMS)'
 AM_CONDITIONAL(X8666, test "${PLATFORMS}" = "_X86_")
 AM_CONDITIONAL(NT966X, test "${PLATFORMS}" = "_NT966X_")
 #AM_CONDITIONAL(USE_SHARED, test x$enable_shared = xyes)
-
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T

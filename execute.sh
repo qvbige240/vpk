@@ -24,7 +24,7 @@ else
     ./configure --host=x86_64-unknown-linux-gnu enable_shared=yes enable_x86=yes enable_sqlite3=yes \
         enable_zlog=yes --prefix=$WORKDIR/build_x86/install
 fi
-make
+#make
 #make install
 
 outdir=${WORKDIR}/build_$platform
@@ -37,4 +37,4 @@ if [ -d $outdir ]; then
     cp ${WORKDIR}/vpk/*.a $outdir
 fi
 
-make install
+#make install

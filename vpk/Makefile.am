@@ -115,6 +115,8 @@ libipc_la_SOURCES=$(ipc_all_sources)
 #libipc_a_SOURCES=$(ipc_all_sources)
 #endif
 
+#includedir=includedir/vpk
+
 include_HEADERS =\
 inc/vpk_action.h \
 inc/vpk_constants.h \
