@@ -18,6 +18,8 @@ function proj_path_get()
 {
     if [ -d "${WORKDIR}/../$1" ]; then
         echo "${WORKDIR}/../$1"
+    elif [ -d "${WORKDIR}/../../$1/workspace" ]; then
+        echo "${WORKDIR}/../../$1/workspace"
     else
         echo "$1 not exist"
         exit -1
