@@ -63,13 +63,3 @@ function project_compile()
 project_config
 project_compile
 
-#make
-
-#mkdir $outdir
-#if [ -d $outdir ]; then
-#    cp ${WORKDIR}/main/test $outdir
-#    cp ${WORKDIR}/vpk/*.a $outdir
-#fi
-
-#make install
-

@@ -26,6 +26,13 @@ function proj_path_get()
     fi
 }
 
+function prepare()
+{
+    if [ -f ${WORKDIR}/prepare.sh ]; then
+        ${WORKDIR}/prepare.sh
+    fi
+}
+
 function premake_init()
 {
     #DIR_PREMAKE=$(proj_path_get premake)
@@ -44,6 +51,11 @@ function start()
     if [ ! -n "$1" ]; then
         usage_exit
     fi
+
+    if [ "$2" == 1 ]; then
+        prepare
+    fi
+
     premake_init $1
     premake_make ${WORKDIR} 1 true
 }
