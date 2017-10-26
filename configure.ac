@@ -108,7 +108,7 @@ if test x$platform = xx86; then
     echo "STATIC_LIBS: $STATIC_LIBS"
 	AC_SUBST(STATIC_LIBS)
 	
-	DYNAMIC_LIBS="-ldl -lpthread -lrt -lz"
+	DYNAMIC_LIBS="-ldl -lpthread -lrt"
 	AC_SUBST(DYNAMIC_LIBS)
 	#CFLAGS='-Wall $(VPK_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
