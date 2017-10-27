@@ -4,7 +4,7 @@ aclocal
 autoconf
 autoheader
 automake --add-missing
-sleep 5
+#sleep 5
 #./configure --host=arm-hismall-linux
 #./configure --host=mipsel-24kec-linux-uclibc
 platform=
@@ -88,11 +88,8 @@ function project_env()
 {
     if [ "${platform}" == nt966x ]; then
         nt966x_env
-        echo "==============================nt966x"
-            #--prefix=$WORKDIR/build_nt966x/install
     elif [ "$platform" == x86 ]; then
         x86_env
-           #--prefix=$WORKDIR/build_x86/install
     else
         echo -e "\033[32m    platform unknown for configure   \033[0m"
         exit -1
@@ -140,15 +137,9 @@ function project_compile()
     make install
 }
 
-echo "============================start find_premake"
 find_premake
-echo "============================end find_premake"
 project_env
-echo "============================end project_env"
-
-echo "============================ start project_config"
 #automake --add-missing
 project_config
-echo "============================ end project_config"
 project_compile
 
