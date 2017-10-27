@@ -12,7 +12,11 @@ WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )"
 echo "WORKDIR: $WORKDIR "
 echo "========FINAL_PATH: $FINAL_PATH"
 
-if [ ! "$1"x == x ]; then 
+if [  "$1"x == cleanx ]; then 
+    make clean
+    rm -r autom4te.cache/ compile config.guess config.h config.h.in config.log config.status config.sub configure depcomp install-sh libtool ltmain.sh Makefile Makefile.in missing stamp-h1 aclocal.m4
+    exit 0
+elif [ ! "$1"x == x ]; then 
     echo "$1"
     platform=$1
 else
