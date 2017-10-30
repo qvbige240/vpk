@@ -82,6 +82,7 @@ typedef enum _ret
 #define	VPK_MEMSET		memset
 #define	VPK_MEMCPY		memcpy
 #define	VPK_REALLOC		realloc
+#define	VPK_CALLOC		calloc
 
 #define VPKAPI			extern	
 

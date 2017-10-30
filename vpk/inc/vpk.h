@@ -21,6 +21,7 @@
 #include "vpk_md5.h"
 #include "vpk_ipc.h"
 #include "vpk_list.h"
+#include "vpk_heap.h"
 
 TIMA_BEGIN_DELS
 
@@ -29,6 +30,8 @@ TIMA_BEGIN_DELS
  * 
  */
 VPKAPI int vpk_system_init(int argc, char* argv[]);
+
+VPKAPI const char* vpk_chip_architecture(void);
 
 TIMA_END_DELS
 

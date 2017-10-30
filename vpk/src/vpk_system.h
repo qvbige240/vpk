@@ -31,6 +31,7 @@ struct vpk_system_t
 vpk_system_t* vpk_system(void);
 int vpk_system_init(int argc, char* argv[]);
 void vpk_system_destruct(vpk_system_t* thiz);
+const char* vpk_chip_architecture(void);
 
 TIMA_END_DELS
 

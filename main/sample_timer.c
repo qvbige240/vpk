@@ -204,12 +204,47 @@ static void set_timer(int seconds, int mseconds)
 
 	return ;
 }
-
 #elif 0
-
 #elif 0
-
 #endif
+
+#include "vpk_timer.h"
+
+static struct timeval prev;
+static void task_heart_beat(int fd, short event, void *arg)
+{
+	//int value = HEART_BEAT_MESSAGE_VALUE;
+	double elapsed;
+	struct timeval nowtime, difference;
+
+	vpk_gettimeofday(&nowtime, NULL);
+	vpk_timersub(&nowtime, &prev, &difference);
+	elapsed = difference.tv_sec + (difference.tv_usec / 1.0e6);
+	prev = nowtime;
+
+	LOG_D("task_heart_beat, at %d: %.6f seconds elapsed.", nowtime.tv_sec, elapsed);
+}
+
+static int timer_test(void)
+{
+	vpk_events task_event;
+	vpk_timer_t* base = vpk_timer_create();
+
+	int flags = VPK_EV_PERSIST;
+	//flags = 0;
+
+	vpk_event_assign(&task_event, base, 0, flags, task_heart_beat, NULL);
+
+	struct timeval tv;
+	vpk_timerclear(&tv);
+	tv.tv_sec = 5;
+	vpk_gettimeofday(&prev, NULL);
+	vpk_timer_event_add(&task_event, &tv);
+
+	vpk_timer_loop(base, 0);
+
+	return 0;
+}
 
 int timer_main(int argc, char *argv[])
 {
@@ -276,6 +311,8 @@ int timer_main(int argc, char *argv[])
 		tv.tv_sec = 5;
 		tv.tv_usec = 500000;
 		epoll_test(&tv);
+	} else {
+		timer_test();
 	}
 
 	gettimeofday(&next, 0);

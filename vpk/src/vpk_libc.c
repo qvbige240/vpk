@@ -28,8 +28,10 @@ static int SystemEx(const char *cmdstring, unsigned int timeout);
 		} while (--__size > 0);						      \
 	} while (0)
 
-/* Sort NMEMB elements of BASE, of SIZE bytes each,
-   using COMPARE to perform the comparisons.  */
+/* 
+ * Sort NMEMB elements of BASE, of SIZE bytes each,
+ * using COMPARE to perform the comparisons.
+ */
 void selection_sort(void *base, size_t nsize, size_t el_size, compare_func_t cmp)
 {
 	char *start_i = NULL, *start_j = NULL;
@@ -46,8 +48,10 @@ void selection_sort(void *base, size_t nsize, size_t el_size, compare_func_t cmp
 	}
 }
 
-/* Do a binary search for KEY in BASE, which consists of NMEMB elements
-   of SIZE bytes each, using COMPAR to perform the comparisons.  */
+/* 
+ * Do a binary search for KEY in BASE, which consists of NMEMB elements
+ * of SIZE bytes each, using COMPAR to perform the comparisons.
+ */
 void *vpk_bsearch(const void *key, const void *base, size_t nmemb, size_t size, compare_func_t cmp)
 {
 	size_t l, u, idx;

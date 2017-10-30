@@ -148,10 +148,40 @@ int test_findstr(const char* str)
 	return 0;
 }
 
+void test_sscanf_sprintf(void)
+{
+	double a = 0.0;
+	double lat = 1.123456;
+	char string[16] = {0};
+
+	LOG_D("lat: %lf, a: %lf", lat, a);
+	sprintf(string, "%lf", lat);
+	LOG_D("string: %s", string);
+	sscanf(string, "%s", a);
+	LOG_D("lat: %lf, a: %lf", lat, a);
+	a = atof(string);
+	LOG_D("lat: %lf, a: %lf", lat, a);
+	a = atof("1");
+	LOG_D("lat: %lf, a: %lf \n", lat, a);
+}
+static const char* const tele_keyword[][4] = 
+{
+	{"MOBILE", "CMCC", "46000", "1"},
+	{"UNICOM", "CUCC", "46001", "2"},
+	{"MOBILE", "CMCC", "46002", "1"},
+	{"TELECOM", "CTC", "46003", "3"},
+	{"MOBILE", "CMCC", "46004", "1"},
+	{"TELECOM", "CTC", "46005", "3"},
+	{"UNICOM", "CUCC", "46006", "2"},
+	{"MOBILE", "CMCC", "46007", "1"},
+	{"UNICOM", "CUCC", "46009", "2"},
+	{"TELECOM", "CTC", "46011", "3"},
+	{"TIETONG","CTTC", "46020", "0"},
+};
 void test_str(void)
 {
 	int i = 0, ret = 0;
-    char* str1 = "";
+	char* str1 = "";
 	char str[] = ";;;sd;fdfs.adf.;;;";
 	LOG_D("str1 len: %d", strlen(str1));
 	LOG_D("before str: %s", str);
@@ -179,12 +209,57 @@ void test_str(void)
 		#define TIMA_PROJECT	    "K40"
 		char p1[16] = {0}, p2[16] = {0};
 		//int p1, p2;
-		sscanf(cur_ver, TIMA_PROJECT".%[0-9].%[0-9]", p1, p2);
+		//sscanf(cur_ver, TIMA_PROJECT".%[0-9].%[0-9]", p1, p2);
+		char tmp[16];
+		sscanf(cur_ver, "%[^.].%[0-9].%[0-9]", tmp, p1, p2);
 		LOG_D("cur_ver: %s", cur_ver);
 		LOG_D("p1(len=%d): %s, p2(len=%d): %s", strlen(p1), p1, strlen(p2), p2);
 	}
 
+	const char* const_str = "1111111111";
+
+	const_str = "const string test";
+	LOG_D("const_str: %s", const_str);
+	
+	i = _countof(tele_keyword);
+	LOG_D("_countof i: %d", i);
+
+	const char* architecture = vpk_chip_architecture();
+	LOG_D("architecture: %s", architecture);
+
 	printf("\n");
+}
+
+void test_split_comma(void)
+{
+	int len = 0;
+	char buff[256] = {0};
+	char srcstrip[256] = {0};
+	char *src = "2017_0912_000009_050A.TS, 2017_0912_000009_050B.TS,";
+	char *p, *ptr = src;
+
+	strcpy(srcstrip, src);
+	vpk_strstrip(srcstrip, ' ');
+	ptr = srcstrip;
+	len = strlen(srcstrip);
+
+	if (!src || strlen(src) == 0)
+		return;
+
+	while (ptr < srcstrip + len)
+	{
+		p = strstr(ptr, ",");
+		if (p == NULL) {
+			strcpy(buff, ptr);
+			LOG_D("buff: %s", buff);
+			break;
+		}
+
+		strncpy(buff, ptr, p - ptr);
+		LOG_D("buff: %s", buff);
+		ptr = p + 1;
+	}
+
 }
 
 void test_null(void)
@@ -195,6 +270,7 @@ void test_null(void)
 	if (str && strlen(str))
 	 	ret = strlen(str);
 	//memcpy(buffer, NULL, 0);
+	//strcpy(buffer, NULL);
 
 	LOG_D("ret len: %d", ret);
 	ret = strcasecmp("1", "");
@@ -217,6 +293,12 @@ typedef struct _MediaResTest
 	MediaListTest	media[4];
 } MediaResTest;
 
+#define SAMPLE_ROOTCFG		"/etc/sample/"
+#define SAMPLE_SUBCFG		"/media/ro/"
+//#define MEDIA_GROUP_DIR		SAMPLE_ROOTCFG""(res.media->file)""SAMPLE_SUBCFG
+#define DPRINTSTR(x)		#x
+#define MEDIA_GROUP_DIR		SAMPLE_ROOTCFG""DPRINTSTR(res.media->file)""SAMPLE_SUBCFG
+
 void test_struct(void)
 {
 	MediaResTest res = {0};
@@ -233,7 +315,53 @@ void test_struct(void)
 	LOG_D("ifdef HELLOWORLD");
 #else
 #endif
+
+#ifdef MACRODEF_TEST
+	LOG_D("ifdef MACRODEF_TEST");
+#else
+	LOG_D("not ifdef MACRODEF_TEST");
+#endif
+
+	strcpy(res.media->file, "DIRDVR");
+
+	LOG_D("dir: %s", MEDIA_GROUP_DIR);
+
 	printf("\n");
+}
+
+int test_snprintf()
+{
+	char param[32] = {0};
+	char action[128] = {0};
+	char action_2[128] = {0};
+	char action_3[128] = {0};
+	int pos = 0;
+	strncpy(action, "ucustom -gpsinfo ", strlen("ucustom -gpsinfo "));
+	printf("prev action: %s\n", action);
+	snprintf(action, sizeof(action), "%s %s", action, "open");
+	printf("next action: %s\n", action);
+
+	strncpy(action_2, "ucustom -gpsinfo ", strlen("ucustom -gpsinfo "));
+	printf("prev action_2: %s\n", action_2);
+	sprintf(action_2, "%s %s", action_2, "open");
+	printf("next action_2: %s\n", action_2);
+	sprintf(action_2, "%s", "open");
+	printf("next action_2: %s\n", action_2);
+	sprintf(action_2, "%s %s", action_2, param);
+	printf("next action_2 param: %s\n", action_2);
+
+	strncpy(action_3, "ucustom -gpsinfo ", strlen("ucustom -gpsinfo "));
+	printf("prev action_3: %s\n", action_3);
+	//ige_str_snprintf(action_3, &pos, sizeof(action_3), "%s %s", action_3, "open");
+	pos = strlen(action_3);
+	vpk_snprintf(action_3, &pos, sizeof(action_3), " %s", "open");
+	printf("next action_3: %s\n", action_3);
+
+	char param1[32] = {0};
+	printf("sprintf test string\n\n");
+	//sprintf(param1, "%s", NULL);		// 'Segmentation fault' will happen
+
+	return 0;
 }
 
 int string_main(int argc, char *argv[])
@@ -247,9 +375,12 @@ int string_main(int argc, char *argv[])
 	char* data = malloc(strlen(menus)+1);
 	strcpy(data, menus);
 	//LOG_D("data: %s\n", data);
+	test_split_comma();
+	test_snprintf();
 	test_struct();
 	test_str();
 	test_null();
+	test_sscanf_sprintf();
 	test_findstr(NULL);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 1);
 	jsonf_item_set("./setting_pc.json", "photo_resolution", 2);

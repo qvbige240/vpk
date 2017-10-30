@@ -44,6 +44,7 @@ inc/vpk_mmap.h \
 inc/vpk_nvtuctrlc.h \
 inc/vpk_queues.h \
 inc/vpk_serialc.h \
+inc/vpk_timer.h \
 inc/vpk_typedef.h \
 inc/vpk_util.h \
 src/vpk_actions.c \
@@ -77,11 +78,12 @@ src/vpk_system.h \
 src/vpk_tqueue.c \
 src/vpk_tqueue.h \
 src/vpk_util.c \
+src/timer/timer_event.h \
+src/timer/timer_event.c \
+src/timer/timer_epoll.h \
+src/timer/timer_epoll.c \
 $(platform_sources)
-noinst_LIBRARIES=libvpk.a
-libvpk_a_SOURCES=$(vpk_all_sources)
-noinst_LIBRARIES += libipc.a
-libipc_a_SOURCES=\
+ipc_all_sources =\
 inc/vpk_filesys.h \
 inc/vpk_ipc.h \
 src/vpk_ifilesys.c \
@@ -92,11 +94,41 @@ src/vpk_ipc_sem.h \
 src/vpk_ipc_shm.c \
 src/vpk_ipc_shm.h \
 src/vpk_libc.c
+
+lib_LTLIBRARIES=libvpk.la
+libvpk_la_LDFLAGS = -fPIC
+#libvpk_la_LIBADD =\
+#$(project_dir)/x86/lib/libjansson.a
+libvpk_la_SOURCES=$(vpk_all_sources)
+lib_LTLIBRARIES += libipc.la
+libipc_la_SOURCES=$(ipc_all_sources)
+
+#if USE_SHARED
 #lib_LTLIBRARIES=libvpk.la
 #libvpk_la_SOURCES=$(vpk_all_sources)
+#lib_LTLIBRARIES += libipc.la
+#libipc_la_SOURCES=$(ipc_all_sources)
+#else
 #noinst_LIBRARIES=libvpk.a
 #libvpk_a_SOURCES=$(vpk_all_sources)
-#noinst_LIBRARIES=libvpk.a
-#libvpk_a_SOURCES=
-#lib_LTLIBRARIES=libvpk.la
-#libvpk_la_SOURCES=
+#noinst_LIBRARIES += libipc.a
+#libipc_a_SOURCES=$(ipc_all_sources)
+#endif
+
+include_HEADERS =\
+inc/vpk_action.h \
+inc/vpk_constants.h \
+inc/vpk_event.h \
+inc/vpk_filesys.h \
+inc/vpk.h \
+inc/vpk_ipc.h \
+inc/vpk_libc.h \
+inc/vpk_logging.h \
+inc/vpk_md5.h \
+inc/vpk_mmap.h \
+inc/vpk_nvtuctrlc.h \
+inc/vpk_queues.h \
+inc/vpk_serialc.h \
+inc/vpk_timer.h \
+inc/vpk_typedef.h \
+inc/vpk_util.h
