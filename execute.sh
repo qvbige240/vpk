@@ -1,9 +1,10 @@
 #!/bin/bash
-libtoolize
-aclocal
-autoconf
-autoheader
-automake --add-missing
+#libtoolize
+#aclocal
+#autoconf
+#autoheader
+#automake --add-missing
+
 #sleep 5
 #./configure --host=arm-hismall-linux
 #./configure --host=mipsel-24kec-linux-uclibc
@@ -100,19 +101,25 @@ function project_env()
     fi
 }
 
-outdir=${WORKDIR}/build_$platform
-if [ -d $outdir ]; then
-    rm $outdir -rf
-fi
-
 function project_clean()
 {
     make clean
 }
 
-if [ $2 == 1 ]; then
+if [ "$2" == 1 ]; then
+    libtoolize
+    aclocal
+    autoconf
+    autoheader
+    automake --add-missing
+
     project_clean
     echo -e " \033[32m   project clean, param: $2    \033[0m"
+else
+    project_env
+
+    make
+    exit 0
 fi
 
 function project_config()
