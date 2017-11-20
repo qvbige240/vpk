@@ -57,6 +57,7 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_MENU_CRASHSTATGET,		"MENUGET",	"ucustom -crashstatget "},
 	{VPK_NVTU_MENU_DRIVEBEHAVIORGET,	"MENUGET",	"ucustom -drivebehaviorget "},
 	{VPK_NVTU_MENU_DEVSTATGET,			"MENUGET",	"ucustom -devstatget "},
+	{VPK_NVTU_MENU_HOTSPOTGET,			"MENUGET",	"ucustom -hotspotget "},
 	{VPK_NVTU_MENU_FORMATSD_NOP,		"MENUGET",	" "},	// be careful
 	{VPK_NVTU_MENU_FACTORYSET_NOP,		"MENUGET",	" "},	// be careful
 	{VPK_NVTU_MENU_VERSIONGET,			"MENUGET",	"ucustom -versionget "},
@@ -78,6 +79,7 @@ static const ActionInfo action_tables[] =
 	{VPK_NVTU_MENU_CRASHSTATSET,		"MENUSET",  "ucustom -crashstatset "},
 	{VPK_NVTU_MENU_DRIVEBEHAVIORSET,	"MENUSET",  "ucustom -drivebehaviorset "},
 	{VPK_NVTU_MENU_DEVSTATSET,			"MENUSET",  "ucustom -devstatset "},
+	{VPK_NVTU_MENU_HOTSPOTSET,			"MENUSET",  "ucustom -hotspotset "},
 	{VPK_NVTU_MENU_FORMATSD,			"MENUSET",  "ucustom -formatsd "},
 	{VPK_NVTU_MENU_FACTORYSET,			"MENUSET",  "ucustom -factoryset "},
 	{VPK_NVTU_MENU_VERSIONGET_NOP,		"MENUSET",  " "},		// not use

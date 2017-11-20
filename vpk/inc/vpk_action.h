@@ -41,6 +41,7 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_MENU_CRASHSTATGET,		// car_warning
 	VPK_NVTU_MENU_DRIVEBEHAVIORGET, // driving
 	VPK_NVTU_MENU_DEVSTATGET,		// abnormal_equipment
+	VPK_NVTU_MENU_HOTSPOTGET,		// hotspot
 	VPK_NVTU_MENU_FORMATSD_NOP,		// format_tf		//
 	VPK_NVTU_MENU_FACTORYSET_NOP,	// factory_reset	//
 	VPK_NVTU_MENU_VERSIONGET,		// version			//
@@ -61,6 +62,7 @@ typedef enum _VpkNvtuType
 	VPK_NVTU_MENU_CRASHSTATSET,		// car_warning
 	VPK_NVTU_MENU_DRIVEBEHAVIORSET, // driving
 	VPK_NVTU_MENU_DEVSTATSET,		// abnormal_equipment
+	VPK_NVTU_MENU_HOTSPOTSET,		// hotspot
 	VPK_NVTU_MENU_FORMATSD,			// format_tf		//
 	VPK_NVTU_MENU_FACTORYSET,		// factory_reset	//
 	VPK_NVTU_MENU_VERSIONGET_NOP,	// version			//
