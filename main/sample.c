@@ -12,6 +12,7 @@
 
 #include "vpk.h"
 
+extern int epoll_main(int argc, char *argv[]);
 extern int socket_main(int argc, char *argv[]);
 extern int minheap_main(int argc, char *argv[]);
 extern int sqlite_main(int argc, char *argv[]);
@@ -96,7 +97,7 @@ static void help(FILE *f) {
 		"    -V --version       Show version\n"
 		"    -d --sample        Target sample demo which will be running(mqsend, \n"
 		"                       queue, download, md5, json, filesys, ipc, sort).\n"
-		"                       timer, string, sqlite3, minheap, socket).\n"
+		"                       timer, string, sqlite3, minheap, socket, epoll).\n"
 		"    -t --type          Event type for keycode\n"
 		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
 		"    -u --url           Target remote url.\n"
@@ -125,6 +126,7 @@ typedef enum {
 	SAMPLE_DEMO_SQLITE,
 	SAMPLE_DEMO_MINHEAP,
 	SAMPLE_DEMO_SOCKET,
+	SAMPLE_DEMO_EPOLL,
 } SampleDemo;
 
 typedef struct _demo_exec
@@ -148,6 +150,7 @@ static const demo_exec demo_tables[] = {
 	{SAMPLE_DEMO_SQLITE,	"sqlite3"},
 	{SAMPLE_DEMO_MINHEAP,	"minheap"},
 	{SAMPLE_DEMO_SOCKET,	"socket"},
+	{SAMPLE_DEMO_EPOLL,		"epoll"},
 };
 
 static int find_demo(const char* demo)
@@ -305,6 +308,8 @@ int main(int argc, char *argv[])
 		minheap_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_SOCKET) {
 		socket_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_EPOLL) {
+		epoll_main(argc, argv);
 	} else {
 		fprintf(stderr, "\n\n-d --sample without arguments error\n");
 		vpk_testbyte();

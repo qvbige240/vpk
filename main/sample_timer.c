@@ -84,7 +84,7 @@ static int gettime(struct timeval *tp)
 #define MAX_SECONDS_IN_MSEC_LONG \
 	(((LONG_MAX) - 999) / 1000)
 
-long tv_to_msec(const struct timeval *tv)
+static long tv_to_msec(const struct timeval *tv)
 {
 	if (tv->tv_usec > 1000000 || tv->tv_sec > MAX_SECONDS_IN_MSEC_LONG)
 		return -1;
@@ -92,7 +92,7 @@ long tv_to_msec(const struct timeval *tv)
 	return (tv->tv_sec * 1000) + ((tv->tv_usec + 999) / 1000);
 }
 
-int make_socket_closeonexec(int fd)
+static int make_socket_closeonexec(int fd)
 {
 	int flags;
 	if ((flags = fcntl(fd, F_GETFD, NULL)) < 0) {

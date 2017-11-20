@@ -157,7 +157,7 @@ void test_sscanf_sprintf(void)
 	LOG_D("lat: %lf, a: %lf", lat, a);
 	sprintf(string, "%lf", lat);
 	LOG_D("string: %s", string);
-	sscanf(string, "%s", a);
+	sscanf(string, "%s", (char*)&a);
 	LOG_D("lat: %lf, a: %lf", lat, a);
 	a = atof(string);
 	LOG_D("lat: %lf, a: %lf", lat, a);
@@ -354,10 +354,10 @@ int test_snprintf()
 	printf("prev action_3: %s\n", action_3);
 	//ige_str_snprintf(action_3, &pos, sizeof(action_3), "%s %s", action_3, "open");
 	pos = strlen(action_3);
-	vpk_snprintf(action_3, &pos, sizeof(action_3), " %s", "open");
+	vpk_snprintf(action_3, (unsigned int *)&pos, sizeof(action_3), " %s", "open");
 	printf("next action_3: %s\n", action_3);
 
-	char param1[32] = {0};
+	//char param1[32] = {0};
 	printf("sprintf test string\n\n");
 	//sprintf(param1, "%s", NULL);		// 'Segmentation fault' will happen
 
