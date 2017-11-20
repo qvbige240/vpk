@@ -4,15 +4,35 @@
  * 2017-08-03 qing.zou created
  *
  */
-#ifndef VPK_TIMER_H
-#define VPK_TIMER_H
+#ifndef TIMER_EVENT_H
+#define TIMER_EVENT_H
 
-#include <sys/queue.h>		/* tailq */
+//#include <sys/queue.h>		/* tailq */
 
 #include "vpk_typedef.h"
-#include "vpk_minheap.h"
+#include "vpk_logging.h"
+//#include "vpk_minheap.h"
 
 TIMA_BEGIN_DELS
+
+//#define TIMER_LOGD  LOG_D
+//#define TIMER_LOGI  LOG_I
+//#define TIMER_LOGW  LOG_W
+//#define TIMER_LOGE  LOG_E
+//#define TIMER_LOGF  LOG_F
+#if 1
+#define TIMER_LOGD(x)  LOG_D x
+#define TIMER_LOGI  LOG_I
+#define TIMER_LOGW  LOG_W
+#define TIMER_LOGE  LOG_E
+#define TIMER_LOGF  LOG_F
+#else
+#define TIMER_LOGD(x)
+#define TIMER_LOGI(x)
+#define TIMER_LOGW  LOG_W
+#define TIMER_LOGE  LOG_E
+#define TIMER_LOGF  LOG_F
+#endif
 
 //#define TIMER_LOGD(format, args...) LOG_D(format, ##args)
 //#define TIMER_LOGI(format, args...) LOG_I(format, ##args)
@@ -20,8 +40,9 @@ TIMA_BEGIN_DELS
 //#define TIMER_LOGE(format, args...) LOG_E(format, ##args)
 //#define TIMER_LOGF(format, args...) LOG_F(format, ##args)
 
+#if 0
 #define VPK_HAVE_CLOCK_GETTIME
-//#define CLOCK_MONOTONIC
+#define CLOCK_MONOTONIC
 
 /** Indicates that a timeout has occurred. */
 #define VPK_EV_TIMEOUT			0x01
@@ -59,7 +80,9 @@ typedef void (*vpk_event_callback)(int fd, short events, void *args);
 
 TAILQ_HEAD(vpk_event_queue, vpk_events);
 
-typedef struct vpk_timer_t
+
+
+typedef struct vpk_evbase_t
 {
 	/** Number of total events added to this timer */
 	int event_count;
@@ -83,16 +106,10 @@ typedef struct vpk_timer_t
 	/** Second in which we last updated tv_clock_diff, in monotonic time. **/
 	time_t					last_updated_clock_diff;
 #endif
-} vpk_timer_t;
+} vpk_evbase_t;
 
-
-int vpk_event_assign(vpk_events *ev, vpk_timer_t *base, int fd, short events, vpk_event_callback callback, void *arg);
-int vpk_timer_event_add(vpk_events *ev, const struct timeval *tv);
-int vpk_timer_event_del(vpk_events *ev);
-vpk_timer_t* vpk_timer_create(void);
-int vpk_timer_loop(vpk_timer_t* thiz, int flags);
-void vpk_timer_destroy(vpk_timer_t* thiz);
+#endif
 
 TIMA_END_DELS
 
-#endif // VPK_TIMER_H
+#endif // TIMER_EVENT_H

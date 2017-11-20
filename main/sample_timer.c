@@ -208,7 +208,7 @@ static void set_timer(int seconds, int mseconds)
 #elif 0
 #endif
 
-#include "vpk_timer.h"
+#include "vpk_events.h"
 
 static struct timeval prev;
 static void task_heart_beat(int fd, short event, void *arg)
@@ -228,7 +228,7 @@ static void task_heart_beat(int fd, short event, void *arg)
 static int timer_test(void)
 {
 	vpk_events task_event;
-	vpk_timer_t* base = vpk_timer_create();
+	vpk_evbase_t* base = vpk_evbase_create();
 
 	int flags = VPK_EV_PERSIST;
 	//flags = 0;
@@ -239,9 +239,9 @@ static int timer_test(void)
 	vpk_timerclear(&tv);
 	tv.tv_sec = 5;
 	vpk_gettimeofday(&prev, NULL);
-	vpk_timer_event_add(&task_event, &tv);
+	vpk_event_add(&task_event, &tv);
 
-	vpk_timer_loop(base, 0);
+	vpk_evbase_loop(base, 0);
 
 	return 0;
 }

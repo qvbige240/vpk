@@ -16,8 +16,8 @@
 
 TIMA_BEGIN_DELS
 
-struct vpk_timer_t;
-typedef struct vpk_timer_t vpk_timer_t;
+struct vpk_evbase_t;
+typedef struct vpk_evbase_t vpk_evbase_t;
 
 typedef struct vpk_events
 {
@@ -31,7 +31,7 @@ typedef struct vpk_events
 	} ev_timeout_pos;
 	int				ev_fd;
 
-	vpk_timer_t*	ev_base;
+	vpk_evbase_t*	ev_base;
 
 	union {
 		struct {
