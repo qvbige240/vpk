@@ -78,9 +78,13 @@ src/vpk_system.h \
 src/vpk_tqueue.c \
 src/vpk_tqueue.h \
 src/vpk_util.c \
-src/events/event.h \
-src/events/event.c \
 src/events/epoll.c \
+src/events/event.c \
+src/events/event.h \
+src/events/event_map.c \
+src/events/event_map.h \
+src/events/event_thread.c \
+src/events/event_thread.h \
 $(platform_sources)
 ipc_all_sources =\
 inc/vpk_filesys.h \

@@ -14,12 +14,6 @@
 
 TIMA_BEGIN_DELS
 
-//#define TIMER_LOGD(format, args...) LOG_D(format, ##args)
-//#define TIMER_LOGI(format, args...) LOG_I(format, ##args)
-//#define TIMER_LOGW(format, args...) LOG_W(format, ##args)
-//#define TIMER_LOGE(format, args...) LOG_E(format, ##args)
-//#define TIMER_LOGF(format, args...) LOG_F(format, ##args)
-
 #define VPK_HAVE_CLOCK_GETTIME
 //#define CLOCK_MONOTONIC
 
@@ -31,6 +25,8 @@ TIMA_BEGIN_DELS
 #define VPK_EV_WRITE			0x04
 /** Wait for a POSIX signal to be raised */
 #define VPK_EV_SIGNAL			0x08
+/** Wait for a custom notice to be raised */
+#define VPK_EV_NOTICE			0x40
 /**
  * Persistent event: won't get removed automatically when activated.
  *
@@ -43,6 +39,7 @@ TIMA_BEGIN_DELS
 
 typedef void (*vpk_event_callback)(int fd, short events, void *args);
 
+#define ev_io_next	_ev.ev_io.ev_io_next
 #define ev_io_timeout	_ev.ev_io.ev_timeout
 
 #define VPK_EVLIST_TIMEOUT		0x01
@@ -50,6 +47,7 @@ typedef void (*vpk_event_callback)(int fd, short events, void *args);
 #define VPK_EVLIST_SIGNAL		0x04
 #define VPK_EVLIST_ACTIVE		0x08
 #define VPK_EVLIST_INTERNAL		0x10
+#define VPK_EVLIST_NOTICE		0x40		// notice
 #define VPK_EVLIST_INIT			0x80
 
 /* Possible values for ev_closure in struct event. */
@@ -59,36 +57,15 @@ typedef void (*vpk_event_callback)(int fd, short events, void *args);
 
 TAILQ_HEAD(vpk_event_queue, vpk_events);
 
-typedef struct vpk_evbase_t
-{
-	/** Number of total events added to this base */
-	int event_count;
-	/** Number of total events active in this base */
-	int event_count_active;
-
-	int running_loop;
-
-	struct vpk_event_queue *activequeues;
-	int						nactivequeues;
-
-	struct timeval			timer_tv;
-	vpk_minheap_t			timeheap;
-
-#if defined(VPK_HAVE_CLOCK_GETTIME) && defined(CLOCK_MONOTONIC)
-	/** 
-	 * Difference between internal time (maybe from clock_gettime) and
-	 * gettimeofday. 
-	 */
-	struct timeval			tv_clock_diff;
-	/** Second in which we last updated tv_clock_diff, in monotonic time. **/
-	time_t					last_updated_clock_diff;
-#endif
-} vpk_evbase_t;
+struct vpk_evbase_t;
+typedef struct vpk_evbase_t vpk_evbase_t;
 
 
 int vpk_event_assign(vpk_events *ev, vpk_evbase_t *base, int fd, short events, vpk_event_callback callback, void *arg);
 int vpk_event_add(vpk_events *ev, const struct timeval *tv);
 int vpk_event_del(vpk_events *ev);
+vpk_events *vpk_event_new(vpk_evbase_t *base, int fd, short events, vpk_event_callback callback, void *arg);
+void vpk_event_free(vpk_events *ev);
 vpk_evbase_t* vpk_evbase_create(void);
 int vpk_evbase_loop(vpk_evbase_t* thiz, int flags);
 void vpk_evbase_destroy(vpk_evbase_t* thiz);

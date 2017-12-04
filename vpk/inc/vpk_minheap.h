@@ -34,7 +34,9 @@ typedef struct vpk_events
 	vpk_evbase_t*	ev_base;
 
 	union {
+		/* used for io events */
 		struct {
+			TAILQ_ENTRY(vpk_events)  ev_io_next;
 			struct timeval ev_timeout;		/** relative time **/
 		} ev_io;
 	} _ev;

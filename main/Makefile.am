@@ -36,3 +36,12 @@ mqrecv_LDFLAGS=$(EXTRA_LDFLAGS)
 mqrecv_SOURCES =\
 sample_mq_recv.c
 
+bin_PROGRAMS += ioevent
+ioevent_LDADD =\
+$(project_dir)/vpk/.libs/libvpk.a \
+$(STATIC_LIBS)
+LIBS=$(DYNAMIC_LIBS)
+ioevent_LDFLAGS=$(EXTRA_LDFLAGS)
+ioevent_SOURCES =\
+sample_ioevent.c
+

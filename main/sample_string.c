@@ -259,7 +259,6 @@ void test_split_comma(void)
 		LOG_D("buff: %s", buff);
 		ptr = p + 1;
 	}
-
 }
 
 void test_null(void)
@@ -279,6 +278,22 @@ void test_null(void)
 	const char* desc = NULL;
 	if (!desc) desc = "Device Exception Parse Error!";
 	LOG_D("desc: %s", desc);
+
+	{
+		str = malloc(20);
+		strcpy(str, "hello world");
+		LOG_D("str: %s", str);
+		free(str);
+		LOG_D("first free str, str[%p] = %s", str, str);
+		// cann't multi-free
+		// *** Error in `./test': double free or corruption (fasttop): 0x00000000016978d0 ***
+		//free(str);
+		//LOG_D("second free str, str[%p] = %s", str, str);
+		//free(str);
+		//str = NULL;
+		//LOG_D("third free str, str[%p] = %s", str, str);
+	}
+
 	printf("\n");
 }
 

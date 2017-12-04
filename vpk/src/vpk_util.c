@@ -5,6 +5,7 @@
  *
  */
 #include <stdarg.h>
+#include <fcntl.h>
 #include "vpk_util.h"
 
 int vpk_hex_to_int(char c)
@@ -179,6 +180,36 @@ int vpk_gettimeofday(struct timeval *tv, struct timezone *tz)
 	return 0;
 }
 #endif
+
+int vpk_socket_closeonexec(int fd)
+{
+	int flags;
+	if ((flags = fcntl(fd, F_GETFD, NULL)) < 0) {
+		printf("fcntl(%d, F_GETFD)", fd);
+		return -1;
+	}
+	if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1) {
+		printf("fcntl(%d, F_SETFD)", fd);
+		return -1;
+	}
+
+	return 0;
+}
+
+int vpk_socket_nonblocking(int fd)
+{
+	int flags;
+	if ((flags = fcntl(fd, F_GETFL, NULL)) < 0) {
+		printf("fcntl(%d, F_GETFL)", fd);
+		return -1;
+	}
+	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
+		printf("fcntl(%d, F_GETFL)", fd);
+		return -1;
+	}
+
+	return 0;
+}
 
 #if 0
 int main(int argc, char* argv[])

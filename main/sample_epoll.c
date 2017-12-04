@@ -146,7 +146,7 @@ static int epwait_test(struct epoll_priv *priv, struct timeval *tv)
 			continue;
 
 		//evmap_io_active(base, events[i].data.fd, ev | EV_ET);
-		LOG_I("fd = %d, ev = 0x%2x", events[i].data.fd, ev);
+		LOG_I("fd = %d, ev = 0x%02x", events[i].data.fd, ev);
 		notify_read_test_eventfd(events[i].data.fd, ev, NULL);
 	}
 
@@ -241,6 +241,7 @@ static void *epoll_event_test(void* arg)
 	//struct event_evbase* eb = base;
 	if (eb)
 	{
+		LOG_D("[r]thread id = %lu", pthread_self());
 		evthread_event_notifiable(eb);
 		wait_test(eb->th_notify_fd[0]);	//read fd
 	}
@@ -254,6 +255,7 @@ static void *evthread_notify_test(void *arg)
 	scanf("%c", &ch);
 	LOG_D("ch = %c", ch);
 
+	LOG_D("[w]thread id = %lu", pthread_self());
 	notify_write_test_eventfd(arg);
 	return 0;
 }
