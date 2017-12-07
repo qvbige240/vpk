@@ -139,7 +139,7 @@ void event_active_nolock(vpk_events *ev, int flag, short ncalls)
 	EVENT_LOGD(("event_active: %p (fd %d), flag 0x%02x, callback %p", ev, (ev->ev_fd), (int)flag, ev->event_callback));
 
 	if (ev->ev_flags & VPK_EVLIST_ACTIVE) {
-		//ev->ev_result |= flag;
+		ev->ev_result |= flag;
 		EVENT_LOGW("event already be in active!");
 		return;
 	}
@@ -156,8 +156,8 @@ void event_active_nolock(vpk_events *ev, int flag, short ncalls)
 			++thiz->current_event_waiters;
 			EVTHREAD_COND_WAIT(thiz->current_event_cond, thiz->th_base_lock);
 		}
-		//ev->ev_ncalls = ncalls;	//...
-		//ev->ev_pncalls = NULL;
+		ev->ev_ncalls = ncalls;
+		//ev->ev_pncalls = NULL;	//...
 	}
 
 	event_queue_insert(thiz, ev, VPK_EVLIST_ACTIVE);
@@ -196,7 +196,7 @@ static int event_priority_init(vpk_evbase_t* base, int npriorities)
 
 static int event_add_internal(vpk_events* ev, const struct timeval* tv, int tv_is_absolute)
 {
-	int notify = 0, res = 0;
+	int notify = 0, ret = 0;
 	vpk_evbase_t* thiz = ev->ev_base;
 
 	EVENT_LOGD(("event_add: event: %p (fd %d), %s%s%s call %p",
@@ -216,31 +216,33 @@ static int event_add_internal(vpk_events* ev, const struct timeval* tv, int tv_i
 			return (-1);
 	}
 
+#ifndef VPK_EVENT_DISABLE_THREAD_SUPPORT
 	if (thiz->current_event == ev && (ev->ev_events & (VPK_EV_NOTICE|VPK_EV_SIGNAL))
 		&& !EVBASE_IN_THREAD(thiz)) {
 			++thiz->current_event_waiters;
 			EVTHREAD_COND_WAIT(thiz->current_event_cond, thiz->th_base_lock);
 	}
+#endif
 
 	if ((ev->ev_events & (VPK_EV_READ|VPK_EV_WRITE|VPK_EV_SIGNAL|VPK_EV_NOTICE))
 		&& !(ev->ev_flags & (VPK_EVLIST_INSERTED|VPK_EVLIST_ACTIVE))) 
 	{
 		if (ev->ev_events & (VPK_EV_READ|VPK_EV_WRITE))
-			res = evmap_io_add(thiz, ev->ev_fd, ev);
+			ret = evmap_io_add(thiz, ev->ev_fd, ev);
 		else if (ev->ev_events & (VPK_EV_SIGNAL))
-			;
+			;	//...
 		else if (ev->ev_events & (VPK_EV_NOTICE))
-			;
+			evmap_notice_add(thiz, ev->ev_fd, ev);
 
-		if (res != -1)		//... res = 0 ?
+		if (ret != -1)		//... ret = 0 ?
 			event_queue_insert(thiz, ev, VPK_EVLIST_INSERTED);	//...
-		if (res == 1) {
+		if (ret == 1) {
 			notify = 1;
-			res = 0;
+			ret = 0;
 		}
 	}
 
-	if (res != -1 && tv != NULL) {
+	if (ret != -1 && tv != NULL) {
 		struct timeval now;
 		
 		/*
@@ -273,10 +275,10 @@ static int event_add_internal(vpk_events* ev, const struct timeval* tv, int tv_i
 
 	}
 
-	if (res != -1 && notify && EVBASE_NEED_NOTIFY(thiz))
+	if (ret != -1 && notify && EVBASE_NEED_NOTIFY(thiz))
 		event_thread_notify(thiz);
 
-	return res;
+	return ret;
 }
 
 static int event_del_internal(vpk_events* ev)
@@ -314,7 +316,7 @@ static int event_del_internal(vpk_events* ev)
 		else if (ev->ev_events & (VPK_EV_SIGNAL))
 			;
 		else if (ev->ev_events & (VPK_EV_NOTICE))
-			;
+			evmap_notice_del(thiz, ev->ev_fd, ev);
 
 		if (ret == 1) {
 			notify = 1;
@@ -387,6 +389,23 @@ static void timeout_process(vpk_evbase_t *thiz)
 		event_del_internal(ev);
 		event_active_nolock(ev, VPK_EV_TIMEOUT, 1);
 		//EVENT_LOGD(("timeout_process: call %p", ev->event_callback));
+	}
+}
+
+static INLINE void event_notice_closure(vpk_evbase_t *thiz, vpk_events *ev)
+{
+	short ncalls = ev->ev_ncalls;
+
+	EVBASE_RELEASE_LOCK(thiz, th_base_lock);
+	while (ncalls) {
+		ncalls--;
+		ev->ev_ncalls = ncalls;
+
+		(*ev->event_callback)(ev->ev_fd, ev->ev_result, ev->ev_arg);
+
+		//EVBASE_ACQUIRE_LOCK(base, th_base_lock);
+		//should_break = base->event_break;
+		//EVBASE_RELEASE_LOCK(base, th_base_lock);
 	}
 }
 
@@ -468,11 +487,13 @@ static int event_process_active_single_queue(vpk_evbase_t *thiz, struct vpk_even
 		switch (ev->ev_closure) {
 			case VPK_EV_CLOSURE_SIGNAL:
 				break;
+			case VPK_EV_CLOSURE_NOTICE:
+				event_notice_closure(thiz, ev);
+				break;
 			case VPK_EV_CLOSURE_PERSIST:
 				event_persist_closure(thiz, ev);
 				break;
 			case VPK_EV_CLOSURE_NONE:
-				//break;
 			default:
 				EVBASE_RELEASE_LOCK(thiz, th_base_lock);
 				(*ev->event_callback)(ev->ev_fd, ev->ev_result, ev->ev_arg);
@@ -521,12 +542,27 @@ int vpk_event_assign(vpk_events *ev, vpk_evbase_t *base, int fd, short events, v
 	ev->ev_events		= events;
 	ev->ev_result		= 0;
 	ev->ev_flags		= VPK_EVLIST_INIT;
+	ev->ev_ncalls		= 0;
 
-	if (events & VPK_EV_PERSIST) {
-		vpk_timerclear(&ev->ev_io_timeout);
-		ev->ev_closure = VPK_EV_CLOSURE_PERSIST;
+	if (events & VPK_EV_SIGNAL) {
+		if (events & (VPK_EV_READ | VPK_EV_WRITE)) {
+			EVENT_LOGW("VPK_EV_SIGNAL is not compatible with read/write");
+			return -1;
+		}
+		ev->ev_closure = VPK_EV_CLOSURE_SIGNAL;
+	} else if (events & VPK_EV_NOTICE) {
+		if (events & (VPK_EV_READ | VPK_EV_WRITE)) {
+			EVENT_LOGW("VPK_EV_NOTICE is not compatible with read/write");
+			return -1;
+		}
+		ev->ev_closure = VPK_EV_CLOSURE_NOTICE;
 	} else {
-		ev->ev_closure = VPK_EV_CLOSURE_NONE;
+		if (events & VPK_EV_PERSIST) {
+			vpk_timerclear(&ev->ev_io_timeout);
+			ev->ev_closure = VPK_EV_CLOSURE_PERSIST;
+		} else {
+			ev->ev_closure = VPK_EV_CLOSURE_NONE;
+		}
 	}
 
 	minheap_elem_init(ev);
@@ -592,6 +628,15 @@ int vpk_event_del(vpk_events *ev)
 	return ret;
 }
 
+//#ifndef VPK_EVENT_DISABLE_THREAD_SUPPORT
+//int event_global_setup_locks(const int enable_locks)
+//{
+//	if (evmsg_global_setup_locks(enable_locks) < 0)
+//		return -1;
+//	return 0;
+//}
+//#endif
+
 vpk_evbase_t* vpk_evbase_create(void)
 {
 	vpk_evbase_t *base;
@@ -611,6 +656,7 @@ vpk_evbase_t* vpk_evbase_create(void)
 	base->th_notify_fd[1] = -1;
 
 	evmap_iomap_init(&base->iomap);
+	evmap_noticemap_init(&base->noticemap);
 
 	base->evsel = eventops[0];
 	base->priv = base->evsel->init(base);
@@ -627,6 +673,7 @@ vpk_evbase_t* vpk_evbase_create(void)
 	}
 
 	// thread
+#ifndef VPK_EVENT_DISABLE_THREAD_SUPPORT
 	int r = 0;
 	EVTHREAD_ALLOC_LOCK(base->th_base_lock, VPK_THREAD_LOCKTYPE_RECURSIVE);
 	EVTHREAD_ALLOC_COND(base->current_event_cond);
@@ -636,6 +683,9 @@ vpk_evbase_t* vpk_evbase_create(void)
 		vpk_evbase_destroy(base);
 		return NULL;
 	}
+
+	//event_global_setup_locks(1);
+#endif
 
 	return base;
 }
@@ -715,6 +765,15 @@ void vpk_evbase_destroy(vpk_evbase_t* thiz)
 		return;
 	}
 
+	if (thiz->th_notify_fd[0] != -1) {
+		vpk_event_del(&thiz->th_notify);
+		close(thiz->th_notify_fd[0]);
+		if (thiz->th_notify_fd[1] != -1)
+			close(thiz->th_notify_fd[1]);
+		thiz->th_notify_fd[0] = -1;
+		thiz->th_notify_fd[1] = -1;
+	}
+
 	while((ev = minheap_top(&thiz->timeheap))) {
 		vpk_event_del(ev);
 		n_deleted++;
@@ -735,6 +794,15 @@ void vpk_evbase_destroy(vpk_evbase_t* thiz)
 	if (n_deleted) {
 		EVENT_LOGD(("%d events were still set in evbase."));
 	}
+
+	if (thiz->evsel && thiz->evsel->dealloc)
+		thiz->evsel->dealloc(thiz);
+
+	evmap_iomap_clear(&thiz->iomap);
+	evmap_noticemap_clear(&thiz->noticemap);
+
+	EVTHREAD_FREE_LOCK(thiz->th_base_lock, VPK_THREAD_LOCKTYPE_RECURSIVE);
+	EVTHREAD_FREE_COND(thiz->current_event_cond);
 
 	VPK_FREE(thiz->activequeues);
 	VPK_FREE(thiz);

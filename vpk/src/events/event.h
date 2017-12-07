@@ -15,6 +15,8 @@
 #include "vpk_util.h"
 //#include "vpk_minheap.h"
 
+#include "event_msg.h"
+
 TIMA_BEGIN_DELS
 
 #if 1
@@ -38,6 +40,7 @@ struct event_io_map {
 	/* The number of entries available in entries */
 	int nentries;
 };
+#define event_notice_map event_io_map
 
 struct event_change {
 	/* The fd whose events are to be changed */
@@ -92,8 +95,13 @@ struct eventop {
 
 struct vpk_evbase_t
 {
+	/** multi-plexing **/
 	const struct eventop	*evsel;
 	void					*priv;
+
+	/** uses for message event notice */
+	const struct eventop	*evmsgsel;
+	struct evmsg_notice		notice;
 
 	/** Number of total events added to this base */
 	int						event_count;
@@ -106,6 +114,7 @@ struct vpk_evbase_t
 	int						nactivequeues;
 
 	struct event_io_map		iomap;
+	struct event_notice_map noticemap;
 
 	struct vpk_event_queue	eventqueue;
 

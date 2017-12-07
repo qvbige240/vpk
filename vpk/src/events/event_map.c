@@ -17,9 +17,9 @@ typedef struct evmap_io {
 	unsigned short			nwrite;
 } evmap_io;
 
-struct evmap_notice {
+typedef struct evmap_notice {
 	struct vpk_event_queue	events;
-};
+} evmap_notice;
 
 static int evmap_make_space(struct event_io_map *map, int slot, int msize)
 {
@@ -190,4 +190,85 @@ int evmap_io_active(vpk_evbase_t *evbase, int fd, short events)
 	}
 
 	return 0;
+}
+
+/** notice **/
+void evmap_noticemap_init(struct event_notice_map *ctx)
+{
+	evmap_iomap_init(ctx);
+}
+
+void evmap_noticemap_clear(struct event_notice_map *ctx)
+{
+	evmap_iomap_clear(ctx);
+}
+
+static void evmap_notice_init(evmap_notice *entry)
+{
+	TAILQ_INIT(&entry->events);
+}
+
+int evmap_notice_add(vpk_evbase_t *base, int msg, vpk_events *ev)
+{
+	const struct eventop *evsel = base->evmsgsel;
+	struct event_notice_map *noticemap = &base->noticemap;
+	struct evmap_notice *ctx = NULL;
+	int fd = msg;
+
+	if (fd >= noticemap->nentries) {
+		if (evmap_make_space(noticemap, fd, sizeof(struct evmap_notice *)) == -1)
+			return -1;
+	}
+
+	if (noticemap->entries[fd] == NULL) {
+		noticemap->entries[fd] = VPK_CALLOC(1, sizeof(struct evmap_notice)+evsel->fdinfo_len);
+		if (noticemap->entries[fd] == NULL)
+			return -1;
+		evmap_notice_init((struct evmap_notice *)noticemap->entries[fd]);
+	}
+	ctx = (struct evmap_notice *)noticemap->entries[fd];
+
+	if (TAILQ_EMPTY(&ctx->events)) {
+		if (evsel->add(base, ev->ev_fd, 0, VPK_EV_NOTICE, NULL) == -1)
+			return -1;
+	}
+
+	TAILQ_INSERT_TAIL(&ctx->events, ev, ev_notice_next);
+
+	return 1;
+}
+
+int evmap_notice_del(vpk_evbase_t *base, int msg, vpk_events *ev)
+{
+	const struct eventop *evsel = base->evmsgsel;
+	struct event_notice_map *noticemap = &base->noticemap;
+	struct evmap_notice *ctx = NULL;
+	int fd = msg;
+
+	if (fd >= noticemap->nentries)
+		return -1;
+
+	ctx = (struct evmap_notice *)noticemap->entries[fd];
+
+	if (TAILQ_FIRST(&ctx->events) == TAILQ_LAST(&ctx->events, vpk_event_queue)) {
+		if (evsel->del(base, ev->ev_fd, 0, VPK_EV_NOTICE, NULL) == -1)
+			return -1;
+	}
+
+	TAILQ_REMOVE(&ctx->events, ev, ev_notice_next);
+
+	return 1;
+}
+
+void evmap_notice_active(vpk_evbase_t *base, int msg, int ncalls)
+{
+	struct event_notice_map *noticemap = &base->noticemap;
+	struct evmap_notice *ctx = NULL;
+	vpk_events *ev;
+	int fd = msg;
+
+	ctx = (struct evmap_notice *)noticemap->entries[fd];
+
+	TAILQ_FOREACH(ev, &ctx->events, ev_notice_next)
+		event_active_nolock(ev, VPK_EV_NOTICE, ncalls);
 }

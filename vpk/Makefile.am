@@ -83,6 +83,8 @@ src/events/event.c \
 src/events/event.h \
 src/events/event_map.c \
 src/events/event_map.h \
+src/events/event_msg.c \
+src/events/event_msg.h \
 src/events/event_thread.c \
 src/events/event_thread.h \
 $(platform_sources)

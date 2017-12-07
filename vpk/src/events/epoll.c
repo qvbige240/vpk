@@ -12,6 +12,7 @@
 #include <sys/epoll.h>
 
 #include "event.h"
+#include "event_msg.h"
 #include "event_map.h"
 #include "event_thread.h"
 
@@ -67,8 +68,7 @@ static void *epoll_init(vpk_evbase_t *thiz)
 	}
 	priv->nevents = EVENT_INITIAL_NEVENT;
 
-	//...  signal/notice init
-
+	evmsg_init(thiz);
 
 	return priv;
 }
@@ -310,7 +310,7 @@ static void epoll_dealloc(vpk_evbase_t *thiz)
 {
 	struct priv_info *priv = thiz->priv;
 
-	//... evsig
+	evmsg_dealloc(thiz);
 
 	if (priv->events)
 		VPK_FREE(priv->events);

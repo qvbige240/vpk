@@ -184,6 +184,22 @@ int impl_evthread_locking_enabled(void);
 	(impl_evthread_locking_enabled())
 
 
+#if !defined(VPK_EVENT_DISABLE_THREAD_SUPPORT)
+
+void *event_thread_setup_global_lock(void *lock, unsigned locktype, int enable_locks);
+
+#define EVTHREAD_SETUP_GLOBAL_LOCK(lockvar, locktype)			\
+	do {								\
+		lockvar = event_thread_setup_global_lock(lockvar,		\
+			(locktype), enable_locks);				\
+		if (!lockvar) {						\
+			EVENT_LOGW("Couldn't allocate %s", #lockvar);	\
+			return -1;					\
+		}							\
+	} while (0);
+
+#endif
+
 TIMA_END_DELS
 
 #endif // EVENT_THREAD_H

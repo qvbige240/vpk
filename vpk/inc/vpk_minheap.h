@@ -39,6 +39,13 @@ typedef struct vpk_events
 			TAILQ_ENTRY(vpk_events)  ev_io_next;
 			struct timeval ev_timeout;		/** relative time **/
 		} ev_io;
+
+		/* used for msg notice events */
+		struct {
+			TAILQ_ENTRY(vpk_events)  ev_notice_next;
+			short	ev_ncalls;
+			short	*ev_pncalls;
+		} ev_notice;
 	} _ev;
 
 	short			ev_events;

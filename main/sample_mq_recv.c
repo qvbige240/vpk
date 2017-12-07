@@ -49,7 +49,8 @@ int main(int argc, char *argv[])
 {
 	int ret = 0;
 	void* thread_result;
-	pthread_t pth_test3, pth_test2;
+	pthread_t pth_test2;
+	//pthread_t pth_test3;
 
 #ifdef USE_ZLOG
 		sample_zlog_init(0);
