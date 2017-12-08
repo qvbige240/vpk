@@ -36,12 +36,21 @@ mqrecv_LDFLAGS=$(EXTRA_LDFLAGS)
 mqrecv_SOURCES =\
 sample_mq_recv.c
 
-bin_PROGRAMS += ioevent
-ioevent_LDADD =\
+bin_PROGRAMS += evioevent
+evioevent_LDADD =\
 $(project_dir)/vpk/.libs/libvpk.a \
 $(STATIC_LIBS)
 LIBS=$(DYNAMIC_LIBS)
-ioevent_LDFLAGS=$(EXTRA_LDFLAGS)
-ioevent_SOURCES =\
-sample_ioevent.c
+evioevent_LDFLAGS=$(EXTRA_LDFLAGS)
+evioevent_SOURCES =\
+sample_evioevent.c
+
+bin_PROGRAMS += evmsgevent
+evmsgevent_LDADD =\
+$(project_dir)/vpk/.libs/libvpk.a \
+$(STATIC_LIBS)
+LIBS=$(DYNAMIC_LIBS)
+evmsgevent_LDFLAGS=$(EXTRA_LDFLAGS)
+evmsgevent_SOURCES =\
+sample_evmsgevent.c
 

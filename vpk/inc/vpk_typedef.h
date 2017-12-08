@@ -74,6 +74,12 @@ typedef enum _ret
 	RET_OUT_OF_SPACE
 }Ret;
 
+enum {
+#define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	NAME,
+#include "macro_event.h"
+#undef KEY_EVENT
+};
+
 #define	TIMA_MALLOC		malloc
 #define	TIMA_CALLOC		calloc
 #define	TIMA_FREE		free

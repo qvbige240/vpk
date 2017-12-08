@@ -9,6 +9,7 @@
 //#include <sys/time.h>
 #include <errno.h>
 #include <unistd.h>
+#include <pthread.h>
 #include <sys/socket.h>
 
 #include "event.h"

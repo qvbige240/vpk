@@ -202,9 +202,10 @@ static int event_add_internal(vpk_events* ev, const struct timeval* tv, int tv_i
 	EVENT_LOGD(("event_add: event: %p (fd %d), %s%s%s call %p",
 		ev,
 		ev->ev_fd,
-		ev->ev_events & VPK_EV_READ ? "VPK_EV_READ " : " ",
-		ev->ev_events & VPK_EV_WRITE ? "VPK_EV_WRITE " : " ",
-		tv ? "VPK_EV_TIMEOUT " : " ",
+		ev->ev_events & VPK_EV_READ ? "VPK_EV_READ " : "",
+		ev->ev_events & VPK_EV_WRITE ? "VPK_EV_WRITE " : "",
+		ev->ev_events & VPK_EV_NOTICE ? "VPK_EV_NOTICE " : "",
+		tv ? "VPK_EV_TIMEOUT " : "",
 		ev->event_callback));
 	
 	/*
@@ -472,11 +473,12 @@ static int event_process_active_single_queue(vpk_evbase_t *thiz, struct vpk_even
 			++count;
 
 		EVENT_LOGD((
-			"event_process_active: event: %p, %s%s%scall %p",
+			"event_process_active: event: %p, %s%s%s%scall %p",
 			ev,
-			ev->ev_result & VPK_EV_READ ? "VPK_EV_READ " : " ",
-			ev->ev_result & VPK_EV_WRITE ? "VPK_EV_WRITE " : " ",
-			ev->ev_result & VPK_EV_TIMEOUT ? "VPK_EV_TIMEOUT " : " ",
+			ev->ev_result & VPK_EV_READ ? "VPK_EV_READ " : "",
+			ev->ev_result & VPK_EV_WRITE ? "VPK_EV_WRITE " : "",
+			ev->ev_result & VPK_EV_TIMEOUT ? "VPK_EV_TIMEOUT " : "",
+			ev->ev_result & VPK_EV_NOTICE ? "VPK_EV_NOTICE " : "",
 			ev->event_callback));
 
 #ifndef VPK_EVENT_DISABLE_THREAD_SUPPORT

@@ -21,6 +21,11 @@ typedef struct vpk_event_type_t
 
 typedef struct vpk_keycodes_t
 {
+#define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	unsigned int FIELD;
+#include "macro_event.h"
+	// KEY_EVENT(SYS_ACC_ON, VPK_EVENT_NOTICE, EVENT_SYS_ACC_ON, 0x1001, "acc on")
+#undef KEY_EVENT
+	/*
 	// NOTICE
 	unsigned int EVENT_SYS_ACC_ON;
 	unsigned int EVENT_SYS_ACC_OFF;
@@ -65,6 +70,7 @@ typedef struct vpk_keycodes_t
 	//unsigned int EVENT_CAR_FAST_ACCEL;
 	//unsigned int EVENT_CAR_FAST_SLOW_DOWN;
 	//unsigned int EVENT_CAR_RAPID_TURN;
+	*/
 }vpk_keycodes_t;
 
 typedef struct vpk_constants_t
