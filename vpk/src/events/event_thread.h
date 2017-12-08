@@ -142,8 +142,8 @@ int impl_evthread_locking_enabled(void);
 
 /** Lock an event base. */
 #define EVBASE_ACQUIRE_LOCK(base, lockvar) do {				\
-		printf("%s[%d]: id[%lu]lock ====\n", __FILE__, __LINE__, impl_evthread_get_id());          \
 		EVLOCK_LOCK((base)->lockvar, 0);			\
+		printf("%s[%d]: id[%lu]lock ====\n", __FILE__, __LINE__, impl_evthread_get_id());          \
 	} while (0)
 
 /** Unlock an event base. */

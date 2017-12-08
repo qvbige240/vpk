@@ -79,13 +79,14 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
-static int start = 0;
+//static int start = 0;
 vpk_evbase_t *base = NULL;
 
 vpk_events *events_time;
 static struct timeval prev;
+int called = 0;
 
-static void test_timer_at_delay(int fd, short event, void *arg)
+static void test_timer_callback(int fd, short event, void *arg)
 {
 	//int value = HEART_BEAT_MESSAGE_VALUE;
 	double elapsed;
@@ -96,16 +97,19 @@ static void test_timer_at_delay(int fd, short event, void *arg)
 	elapsed = difference.tv_sec + (difference.tv_usec / 1.0e6);
 	prev = nowtime;
 
-	LOG_D("test_timer_at_delay, at %d: %.6f seconds elapsed.", nowtime.tv_sec, elapsed);
+	LOG_D("test_timer_event, at %d: %.6f seconds elapsed.", nowtime.tv_sec, elapsed);
 
-	//vpk_event_free(events_time);
+	if (called >= 2)
+		vpk_event_free(events_time);
+
+	called++;
 }
 
-int test_event_add_at_delay(const char* name)
+static int timer_event_add(const char* name)
 {
 	int ret = -1;
-	LOG_D("sample add another timer\n");
-	events_time = vpk_event_new(base, 0, VPK_EV_PERSIST, test_timer_at_delay, NULL);;
+	LOG_D("sample add a timer\n");
+	events_time = vpk_event_new(base, 0, VPK_EV_PERSIST, test_timer_callback, NULL);;
 
 	struct timeval tv;
 	vpk_timerclear(&tv);
@@ -114,6 +118,7 @@ int test_event_add_at_delay(const char* name)
 	vpk_event_add(events_time, &tv);
 
 	// need free events_time somewhere
+	// vpk_event_free(events_time);
 	return ret;
 }
 
@@ -149,25 +154,11 @@ static int eventq_recv(const char* name)
 }
 
 
-static void test_heart_beat(int fd, short event, void *arg)
+static int start_timer_flag = 0;
+static void notice_callback(int fd, short event, void *arg) 
 {
-	//int value = HEART_BEAT_MESSAGE_VALUE;
-	double elapsed;
-	struct timeval nowtime, difference;
-
-	vpk_gettimeofday(&nowtime, NULL);
-	vpk_timersub(&nowtime, &prev, &difference);
-	elapsed = difference.tv_sec + (difference.tv_usec / 1.0e6);
-	prev = nowtime;
-
-	LOG_D("test_heart_beat, at %d: %.6f seconds elapsed.", nowtime.tv_sec, elapsed);
-
-	vpk_event_free(events_time);
-	start = 1;
-}
-
-static void notice_callback(int fd, short event, void *arg) {
 	LOG_D("fd(%d) event(%x) in notice_callback.", fd, event);
+	start_timer_flag = 1;
 }
 
 int msg_event_add(const char* name)
@@ -260,17 +251,28 @@ void *vpk_test1(void* arg)
 
 void *vpk_test3(void* arg)
 {
-	//sleep(5);
+	sleep(2);
 	//LOG_D("start test3 thread!");
 	char ch = '0';
+	printf("\n\n\n");
+	LOG_D("please press 's' to start to register a msg event");
 	while (ch != 's') {
 		scanf("%c", &ch);
-		LOG_D("ch = %c", ch);
 	}
+	LOG_D("ch = %c", ch);
 	printf("\n\n\n");
 
-
 	msg_event_add(NULL);
+
+	printf("\n\n\n");
+
+	while (!start_timer_flag) {
+		sleep(3);
+	}
+
+	printf("\n\n\n");
+	timer_event_add(NULL);
+	printf("\n\n\n");
 
 	return NULL;
 }

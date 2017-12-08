@@ -268,6 +268,7 @@ static int epoll_dispatch(vpk_evbase_t *thiz, struct timeval *tv)
 	}
 
 	EVBASE_RELEASE_LOCK(thiz, th_base_lock);
+	printf("\n\n\n\n");
 
 	res = epoll_wait(priv->epfd, events, priv->nevents, timeout);
 

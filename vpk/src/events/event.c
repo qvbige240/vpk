@@ -360,8 +360,8 @@ static int timeout_next(vpk_evbase_t* thiz, struct timeval **tv_p)
 		tv->tv_sec = 0;
 	}
 
-	EVENT_LOGD(("timeout_next: in %d(%d %d) seconds", 
-		(int)tv->tv_sec, ev->ev_timeout.tv_sec, ev->ev_timeout.tv_usec));
+	EVENT_LOGD(("timeout_next: in %d\"%d(%d\"%d) seconds", 
+		(int)tv->tv_sec, tv->tv_usec, ev->ev_timeout.tv_sec, ev->ev_timeout.tv_usec));
 
 	return 0;
 }
