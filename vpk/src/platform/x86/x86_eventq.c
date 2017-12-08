@@ -32,15 +32,6 @@ typedef struct queue_message
 	char msg_value[MQUEUE_BUFFER_SIZE];
 }queue_message_t;
 
-//#define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)    { VPK_KEY_EVENT_ ## NAME, TYPE, VALUE, READABLE },
-
-typedef struct vpk_keymap_t
-{
-	int				key;
-	unsigned int	type;
-	unsigned int	value;
-	const char		*desc;
-}vpk_keymap_t;
 
 const vpk_keymap_t key_event_map[] =
 {
@@ -48,14 +39,12 @@ const vpk_keymap_t key_event_map[] =
 
 #define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	{ NAME, TYPE, VALUE, READABLE },
 #include "macro_event.h"
-	// KEY_EVENT(SYS_ACC_ON, VPK_EVENT_NOTICE, EVENT_SYS_ACC_ON, 0x1001, "acc on")
 #undef KEY_EVENT
 };
 
-
 const vpk_constants_t vpk = {
 	{
-		VPK_EVENT_ABNORMAL,
+		VPK_EVENT_EXCEP,
 		VPK_EVENT_ALERT,
 		VPK_EVENT_NOTICE,
 	},
@@ -270,7 +259,7 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 
 			e->type = key_event_map[i].type;
 			e->notice.keycode = key_event_map[i].key;
-			LOG_I("vpk.events.XXXTYPE = %d", e->type);
+			LOG_I("vpk.events (key, value)(%d, %d)", key_event_map[i].key, key_event_map[i].value);
 			break;
 		}
 	}
@@ -278,10 +267,6 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 		if (keycode != 0x9999)
 			LOG_W("event keycode unrecognized, value = %d(0x%x)", keycode, keycode);
 	}
-
-	//e->type = vpk.events.NOTICE;
-	//e->notice.keycode = keycode;
-	//LOG_I("vpk.events.NOTICE = %d", vpk.events.NOTICE);
 
 #else
 	switch (keycode)
@@ -361,7 +346,7 @@ static int x86_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 	case VPK_EVENT_ALERT:	//vpk.events.ALERT:
 		snprintf(send_buff, sizeof(send_buff), "%04x", e->alert.keycode);
 		break;
-	case VPK_EVENT_ABNORMAL:
+	case VPK_EVENT_EXCEP:
 		snprintf(send_buff, sizeof(send_buff), "%04x", e->abnormal.keycode);
 		break;
 	case VPK_EVENT_NOTICE:

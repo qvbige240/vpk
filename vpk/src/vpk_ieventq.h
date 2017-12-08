@@ -13,9 +13,18 @@
 
 TIMA_BEGIN_DELS
 
+typedef struct vpk_keymap_t
+{
+	int				key;
+	unsigned int	type;
+	unsigned int	value;
+	const char		*desc;
+}vpk_keymap_t;
+
+extern const vpk_keymap_t key_event_map[];
 
 enum {
-	VPK_EVENT_ABNORMAL = 0x10,
+	VPK_EVENT_EXCEP = 0x10,
 	VPK_EVENT_ALERT,
 	VPK_EVENT_NOTICE,
 

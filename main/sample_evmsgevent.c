@@ -164,7 +164,8 @@ static void notice_callback(int fd, short event, void *arg)
 int msg_event_add(const char* name)
 {
 	int ret = -1;
-	vpk_events *events_notice = vpk_event_new(base, VPK_KEY_EVENT_SYS_ACC_OFF, VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback, NULL);;
+	//vpk_events *events_notice = vpk_event_new(base, VPK_KEY_EVENT_SYS_ACC_OFF, VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback, NULL);;
+	vpk_events *events_notice = vpk_event_new(base, KEY2FD(vpk.keys.EVENT_NO_TF_CARD), VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback, NULL);;
 
 	vpk_event_add(events_notice, NULL);
 
