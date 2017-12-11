@@ -39,31 +39,8 @@ TIMA_BEGIN_DELS
 
 typedef void (*vpk_event_callback)(int fd, short events, void *args);
 
-#define ev_notice_next	_ev.ev_notice.ev_notice_next
-#define ev_io_next	_ev.ev_io.ev_io_next
-#define ev_io_timeout	_ev.ev_io.ev_timeout
-
-#define ev_ncalls	_ev.ev_notice.ev_ncalls
-
-#define VPK_EVLIST_TIMEOUT		0x01
-#define VPK_EVLIST_INSERTED		0x02
-#define VPK_EVLIST_SIGNAL		0x04
-#define VPK_EVLIST_ACTIVE		0x08
-#define VPK_EVLIST_INTERNAL		0x10
-#define VPK_EVLIST_NOTICE		0x40		// notice
-#define VPK_EVLIST_INIT			0x80
-
-/* Possible values for ev_closure in struct event. */
-#define VPK_EV_CLOSURE_NONE			0
-#define VPK_EV_CLOSURE_SIGNAL		1
-#define VPK_EV_CLOSURE_PERSIST		2
-#define VPK_EV_CLOSURE_NOTICE		3
-
-TAILQ_HEAD(vpk_event_queue, vpk_events);
-
 struct vpk_evbase_t;
 typedef struct vpk_evbase_t vpk_evbase_t;
-
 
 VPKAPI int vpk_event_assign(vpk_events *ev, vpk_evbase_t *base, int fd, short events, vpk_event_callback callback, void *arg);
 VPKAPI int vpk_event_add(vpk_events *ev, const struct timeval *tv);
