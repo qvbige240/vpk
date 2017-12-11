@@ -199,14 +199,14 @@ static int event_add_internal(vpk_events* ev, const struct timeval* tv, int tv_i
 	int notify = 0, ret = 0;
 	vpk_evbase_t* thiz = ev->ev_base;
 
-	EVENT_LOGD(("event_add: event: %p (fd %d), %s%s%s call %p",
+	EVENT_LOGI("event_add: event: %p (fd %d), %s%s%s%s call %p",
 		ev,
 		ev->ev_fd,
 		ev->ev_events & VPK_EV_READ ? "VPK_EV_READ " : "",
 		ev->ev_events & VPK_EV_WRITE ? "VPK_EV_WRITE " : "",
 		ev->ev_events & VPK_EV_NOTICE ? "VPK_EV_NOTICE " : "",
 		tv ? "VPK_EV_TIMEOUT " : "",
-		ev->event_callback));
+		ev->event_callback);
 	
 	/*
 	 * prepare for timeout insertion further below, if we get a
@@ -266,8 +266,8 @@ static int event_add_internal(vpk_events* ev, const struct timeval* tv, int tv_i
 		else
 			vpk_timeradd(&now, tv, &ev->ev_timeout);
 
-		EVENT_LOGD(("event_add: timeout in %d(%d/%d) seconds, (now: %d/%d)call %p",
-			(int)tv->tv_sec, ev->ev_timeout.tv_sec, ev->ev_timeout.tv_usec, now.tv_sec, now.tv_usec, ev->event_callback));
+		EVENT_LOGD(("event_add: timeout in %d\"%d(%d\"%d) seconds, (now: %d\"%d)call %p",
+			(int)tv->tv_sec, tv->tv_usec, ev->ev_timeout.tv_sec, ev->ev_timeout.tv_usec, now.tv_sec, now.tv_usec, ev->event_callback));
 
 		event_queue_insert(thiz, ev, VPK_EVLIST_TIMEOUT);
 
@@ -287,8 +287,8 @@ static int event_del_internal(vpk_events* ev)
 	vpk_evbase_t* thiz;
 	int ret = 0, notify = 0;
 
-	EVENT_LOGD(("event_del: %p (fd %d), callback %p",
-		ev, ev->ev_fd, ev->event_callback));
+	EVENT_LOGI("event_del: %p (fd %d), callback %p",
+		ev, ev->ev_fd, ev->event_callback);
 
 	if (ev->ev_base == NULL)
 		return -1;
@@ -340,7 +340,7 @@ static int timeout_next(vpk_evbase_t* thiz, struct timeval **tv_p)
 
 	ev = minheap_top(&thiz->timeheap);
 	if (ev == NULL) {
-		EVENT_LOGI("min heap don't have events");
+		EVENT_LOGD(("min heap don't have events"));
 		*tv_p = NULL;
 		return 0;
 	}
@@ -870,6 +870,7 @@ int event_thread_make_notifiable(vpk_evbase_t *thiz)
 		notify = event_thread_notify_default;
 	}
 
+	LOG_I("eventfd = %d", thiz->th_notify_fd[0]);
 	if (thiz->th_notify_fd[0] < 0) {
 		EVENT_LOGW("fd errrrrr..");
 		//... use socketpair

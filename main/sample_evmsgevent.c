@@ -97,7 +97,7 @@ static void test_timer_callback(int fd, short event, void *arg)
 	elapsed = difference.tv_sec + (difference.tv_usec / 1.0e6);
 	prev = nowtime;
 
-	LOG_D("test_timer_event, at %d: %.6f seconds elapsed.", nowtime.tv_sec, elapsed);
+	LOG_D("test_timer_event, at %d: %.6f seconds elapsed. %p", nowtime.tv_sec, elapsed, &test_timer_callback);
 
 	if (called >= 2)
 		vpk_event_free(events_time);
@@ -157,7 +157,7 @@ static int eventq_recv(const char* name)
 static int start_timer_flag = 0;
 static void notice_callback(int fd, short event, void *arg) 
 {
-	LOG_D("fd(%d) event(%x) in notice_callback.", fd, event);
+	LOG_D("fd(%d) event(0x%02x) in notice_callback.", fd, event);
 	start_timer_flag = 1;
 }
 

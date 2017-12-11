@@ -19,7 +19,7 @@
 
 TIMA_BEGIN_DELS
 
-#if 1
+#if 0
 #define EVENT_LOGD(x)	LOG_D x
 #define EVENT_LOGI		LOG_I
 #define EVENT_LOGW		LOG_W
@@ -27,7 +27,7 @@ TIMA_BEGIN_DELS
 #define EVENT_LOGF		LOG_F
 #else
 #define EVENT_LOGD(x)
-#define EVENT_LOGI(x)
+#define EVENT_LOGI		LOG_I
 #define EVENT_LOGW		LOG_W
 #define EVENT_LOGE		LOG_E
 #define EVENT_LOGF		LOG_F
