@@ -12,6 +12,7 @@
 *.log
 build_*
 main/mqrecv
+main/ev*
 
 .*
 *.o
