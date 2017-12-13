@@ -181,31 +181,10 @@ int msg_event_add(const char* name)
 	return ret;
 }
 
-#if 0
-int test_event_main(const char* name)
-{
-	int ret = -1;
-	vpk_events events_time;
-	return_val_if_fail(name != NULL, -1);
-
-	base = vpk_evbase_create();
-
-	vpk_event_assign(&events_time, base, 0, VPK_EV_PERSIST, test_heart_beat, NULL);
-
-	struct timeval tv;
-	vpk_timerclear(&tv);
-	tv.tv_sec = 5;
-	vpk_gettimeofday(&prev, NULL);
-	vpk_event_add(&events_time, &tv);
-
-	vpk_evbase_loop(base, 0);
-
-	return ret;
-}
-#else
 static void pipe_callback(int fd, short event, void *arg) {
 	LOG_D("in pipe_callback.");
 }
+
 int msg_event_main(const char* name)
 {
 	int ret = -1;
@@ -225,24 +204,12 @@ int msg_event_main(const char* name)
 
 	return ret;
 }
-#endif
 
 void *vpk_test1(void* arg)
 {
-
-	//while (!start) {
-	//	sleep(2);
-	//}
-
-	//sleep(5);
-	//printf("\n\n-------------------------------\n");
-	//LOG_D("start vpk_delay_start thread!\n");
-	//test_event_add_at_delay(NULL);
-
-
 	while(1)
 	{
-		LOG_D("test2 thread run.");
+		LOG_D("test1 thread run.");
 		eventq_recv("RECV EVENTQ");
 		sleep(1);
 	}
@@ -253,7 +220,7 @@ void *vpk_test1(void* arg)
 void *vpk_test3(void* arg)
 {
 	sleep(2);
-	//LOG_D("start test3 thread!");
+	LOG_D("test3 thread run.");
 	char ch = '0';
 	printf("\n\n\n");
 	LOG_D("please press 's' to start to register a msg event");

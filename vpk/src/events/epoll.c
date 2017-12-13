@@ -322,7 +322,7 @@ static void epoll_dealloc(vpk_evbase_t *thiz)
 	VPK_FREE(priv);
 }
 
-const struct eventop epollops = {
+const struct eventop epoll_ops = {
 	"epoll",
 	epoll_init,
 	epoll_change_add,

@@ -259,7 +259,7 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 
 			e->type = key_event_map[i].type;
 			e->notice.keycode = key_event_map[i].key;
-			LOG_I("vpk.events (key, value)(%d, %d)", key_event_map[i].key, key_event_map[i].value);
+			LOG_I("vpk.events (key, value)(%d, 0x%04x)", key_event_map[i].key, key_event_map[i].value);
 			break;
 		}
 	}

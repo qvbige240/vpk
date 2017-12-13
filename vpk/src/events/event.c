@@ -16,10 +16,10 @@
 #include "event_map.h"
 #include "event_thread.h"
 
-extern const struct eventop epollops;
+extern const struct eventop epoll_ops;
 
 static const struct eventop *eventops[] = {
-	&epollops,
+	&epoll_ops,
 	NULL
 };
 
