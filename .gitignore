@@ -13,6 +13,7 @@
 *.log
 build_*
 main/mqrecv
+main/ev*
 
 premake
 

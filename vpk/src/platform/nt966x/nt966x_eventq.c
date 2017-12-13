@@ -25,6 +25,15 @@
 
 #include "vpk_constants.h"
 
+const vpk_keymap_t key_event_map[] =
+{
+	//{ VPK_KEY_EVENT_SYS_ACC_ON, VPK_EVENT_NOTICE, 0x1001, "acc on" },
+
+#define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	{ NAME, TYPE, VALUE, READABLE },
+#include "macro_event.h"
+#undef KEY_EVENT
+};
+
 const vpk_constants_t vpk = {
 	{
 		VPK_EVENT_EXCEP,
@@ -32,6 +41,10 @@ const vpk_constants_t vpk = {
 		VPK_EVENT_NOTICE,
 	},
 	{
+		#define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	VALUE,
+		#include "macro_event.h"
+		#undef KEY_EVENT
+		/*
 		// NOTICE
 		VPK_KEY_EVENT_SYS_ACC_ON,
 		VPK_KEY_EVENT_SYS_ACC_OFF,
@@ -74,6 +87,7 @@ const vpk_constants_t vpk = {
 		VPK_KEY_EVENT_FILE_NOT_EXIST,
 		// NOTICE
 		VPK_KEY_EVENT_UPDATE_SYS_TIME,
+		*/
 	},
 };
 
@@ -172,6 +186,24 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 
 		//int keycode = atoi(thiz->recv_buff);
 		int keycode = HEXSTR_PARSE(&thiz->recv_buff[0]);
+#if 1
+
+		int i;
+		for (i = 0; i < VPK_KEY_EVENT_MAX_NUM; i++) {
+			if (key_event_map[i].value == keycode) {
+
+				e->type = key_event_map[i].type;
+				e->notice.keycode = key_event_map[i].key;
+				LOG_I("vpk.events (key, value)(%d, 0x%04x)", key_event_map[i].key, key_event_map[i].value);
+				break;
+			}
+		}
+		if (i == VPK_KEY_EVENT_MAX_NUM) {
+			if (keycode != 0x9999)
+				LOG_W("event keycode unrecognized, value = %d(0x%x)", keycode, keycode);
+		}
+
+#else
 		switch (keycode)
 		{
 		case VPK_KEY_EVENT_NO_TF_CARD:
@@ -231,7 +263,7 @@ static int nt966x_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 				LOG_W("event keycode unrecognized, value = %d(0x%x)", keycode, keycode);
 			break;
 		}
-
+#endif
 		LOG_I("Alert message keycode(type:%x): 0x%x, string: %s, len: %d\n", e->type, keycode, thiz->recv_buff, len);
 	}
 
@@ -249,15 +281,18 @@ static int nt966x_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 	switch (e->type)
 	{
 	case VPK_EVENT_ALERT:	//vpk.events.ALERT:
-		snprintf(send_buff, sizeof(send_buff), "%d", e->alert.keycode);
+		snprintf(send_buff, sizeof(send_buff), "%04x", e->alert.keycode);
 		break;
 	case VPK_EVENT_EXCEP:
-		snprintf(send_buff, sizeof(send_buff), "%d", e->abnormal.keycode);
+		snprintf(send_buff, sizeof(send_buff), "%04x", e->abnormal.keycode);
 		break;
 	case VPK_EVENT_NOTICE:
-		snprintf(send_buff, sizeof(send_buff), "%d", e->notice.keycode);
+		snprintf(send_buff, sizeof(send_buff), "%04x", e->notice.keycode);
 		break;
-	default:break;
+	default:
+		LOG_D("post default type, keycode: %04x", e->alert.keycode);
+		snprintf(send_buff, sizeof(send_buff), "%04x", e->alert.keycode);
+		break;
 	}
 
 	LOG_I("event post msg type: %d, keycode: 0x%x, string: %s", e->type, e->alert.keycode, send_buff);
