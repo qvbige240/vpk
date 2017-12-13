@@ -14,6 +14,15 @@ TIMA_BEGIN_DELS
 #define EVENT_MQ_MSG_NUM_MAX	10
 #define EVENT_MQ_MSG_LEN_MAX	16
 
+
+//enum {
+//// #define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	VPK_KEY_EVENT_ ## NAME,
+//#define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	NAME,
+//// KEY_EVENT(VPK_KEY_EVENT_SYS_ACC_ON, VPK_EVENT_NOTICE, EVENT_SYS_ACC_ON, 0x1001, "acc on")
+//#include "macro_event.h"
+//#undef KEY_EVENT
+//};
+
 #define    extends_event()     unsigned int  type
 
 typedef struct vpk_abnormal_t
@@ -93,6 +102,16 @@ VPKAPI int vpk_eventq_close(vpk_eventq_t *queue);
  */
 VPKAPI int vpk_eventq_destroy(vpk_eventq_t *queue);
 
+/**
+ * Get keycode map index.
+ *
+ * @param queue		The event keycode from a constant named 'vpk', vpk.keys.EVENT_XXX.
+ *
+ * @return the map index of keycode, -1 on failure.
+ */
+VPKAPI int vpk_eventq_keymap(unsigned int keycode);
+
+#define KEY2FD(k)	vpk_eventq_keymap(k)
 
 TIMA_END_DELS
 

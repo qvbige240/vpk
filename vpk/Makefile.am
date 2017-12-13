@@ -78,10 +78,15 @@ src/vpk_system.h \
 src/vpk_tqueue.c \
 src/vpk_tqueue.h \
 src/vpk_util.c \
-src/timer/timer_event.h \
-src/timer/timer_event.c \
-src/timer/timer_epoll.h \
-src/timer/timer_epoll.c \
+src/events/epoll.c \
+src/events/event.c \
+src/events/event.h \
+src/events/event_map.c \
+src/events/event_map.h \
+src/events/event_msg.c \
+src/events/event_msg.h \
+src/events/event_thread.c \
+src/events/event_thread.h \
 $(platform_sources)
 ipc_all_sources =\
 inc/vpk_filesys.h \
@@ -118,9 +123,11 @@ libipc_la_SOURCES=$(ipc_all_sources)
 #includedir=includedir/vpk
 
 include_HEADERS =\
+inc/macro_event.h \
 inc/vpk_action.h \
 inc/vpk_constants.h \
 inc/vpk_event.h \
+inc/vpk_events.h \
 inc/vpk_filesys.h \
 inc/vpk.h \
 inc/vpk_heap.h \
@@ -134,6 +141,6 @@ inc/vpk_mmap.h \
 inc/vpk_nvtuctrlc.h \
 inc/vpk_queues.h \
 inc/vpk_serialc.h \
-inc/vpk_timer.h \
 inc/vpk_typedef.h \
 inc/vpk_util.h
+

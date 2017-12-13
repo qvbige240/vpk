@@ -76,3 +76,15 @@ int vpk_eventq_destroy(vpk_eventq_t *queue)
 
 	return 0;
 }
+
+int vpk_eventq_keymap(unsigned int keycode)
+{
+	int i;
+	for (i = 0; i < VPK_KEY_EVENT_MAX_NUM; i++) 
+	{
+		if (key_event_map[i].value == keycode)
+			return key_event_map[i].key;
+	}
+
+	return -1;
+}

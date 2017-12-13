@@ -25,10 +25,12 @@
 
 #define ZERO_LEN_ARRAY	1
 #define return_if_fail(p) if(!(p)) \
-	{printf("%s:%d Error: "#p" failed.\n", \
+	{printf("%s:%d Error: "#p" failed.\n", __FILE__, __LINE__); \
+		(void)fprintf(stderr, "%s:%d Error: "#p" failed.\n", \
 		__FILE__, __LINE__); return;}
 #define return_val_if_fail(p, ret) if(!(p)) \
-	{printf("%s:%d Error: "#p" failed.\n", \
+	{printf("%s:%d Error: "#p" failed.\n", __FILE__, __LINE__); \
+		(void)fprintf(stderr, "%s:%d Error: "#p" failed.\n", \
 		__FILE__, __LINE__); return (ret);}
 #define DECL_PRIV(thiz, priv) PrivInfo* priv = thiz != NULL ? (PrivInfo*)thiz->priv : NULL
 
@@ -72,17 +74,25 @@ typedef enum _ret
 	RET_OUT_OF_SPACE
 }Ret;
 
+enum {
+#define KEY_EVENT(NAME, TYPE, FIELD, VALUE, READABLE)	NAME,
+#include "macro_event.h"
+#undef KEY_EVENT
+};
+
 #define	TIMA_MALLOC		malloc
+#define	TIMA_CALLOC		calloc
 #define	TIMA_FREE		free
 #define	TIMA_MEMSET		memset
 #define	TIMA_MEMCPY		memcpy
+#define TIMA_REALLOC	realloc
 
 #define	VPK_MALLOC		malloc
+#define	VPK_CALLOC		calloc
 #define	VPK_FREE		free
 #define	VPK_MEMSET		memset
 #define	VPK_MEMCPY		memcpy
 #define	VPK_REALLOC		realloc
-#define	VPK_CALLOC		calloc
 
 #define VPKAPI			extern	
 

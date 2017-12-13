@@ -70,8 +70,11 @@ VPKAPI char* vpk_strstrip(char* str, char c);
 #define vpk_gettimeofday(tv, tz)  gettimeofday((tv), (tz))
 #else
 struct timezone;
-int vpk_gettimeofday(struct timeval *tv, struct timezone *tz);
+VPKAPI int vpk_gettimeofday(struct timeval *tv, struct timezone *tz);
 #endif
+
+VPKAPI int vpk_socket_closeonexec(int fd);
+VPKAPI int vpk_socket_nonblocking(int fd);
 
 TIMA_END_DELS
 

@@ -27,7 +27,7 @@
 
 const vpk_constants_t vpk = {
 	{
-		VPK_EVENT_ABNORMAL,
+		VPK_EVENT_EXCEP,
 		VPK_EVENT_ALERT,
 		VPK_EVENT_NOTICE,
 	},
@@ -251,7 +251,7 @@ static int nt966x_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 	case VPK_EVENT_ALERT:	//vpk.events.ALERT:
 		snprintf(send_buff, sizeof(send_buff), "%d", e->alert.keycode);
 		break;
-	case VPK_EVENT_ABNORMAL:
+	case VPK_EVENT_EXCEP:
 		snprintf(send_buff, sizeof(send_buff), "%d", e->abnormal.keycode);
 		break;
 	case VPK_EVENT_NOTICE:

@@ -48,6 +48,7 @@ int server_test()
 	/*  Allow re-using the address. */
 	opt = 1;
 	rc = setsockopt (fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof (opt));
+	LOG_D("rc = %d", rc);
 	if (bind(fd, (struct sockaddr*)un, sizeof(struct sockaddr_un)) < 0) {
 		LOG_E("bind: %s", strerror(errno));
 		return -1;

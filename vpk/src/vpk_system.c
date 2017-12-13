@@ -37,7 +37,7 @@ const system_kset* const systems[] =
 
 const char* archs[] = {"X86", "MIPS", "ARM", "Other"};
 const char* vpk_chip_architecture(void) {
-	char* arch = archs[3];
+	const char* arch = archs[3];
 
 #if defined(_X86_)
 	arch = archs[0];
