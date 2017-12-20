@@ -151,7 +151,14 @@ int test_event_add(const char* name)
 	return ret;
 }
 
-#if 0
+#if 1
+static void event_callback1(int fd, short event, void *arg) 
+{
+	if (event & VPK_EV_TIMEOUT)
+		LOG_D("timeout event_callback1.");
+	LOG_D("=========fd(%d) event(0x%02x) in event_callback1.", fd, event);
+}
+
 int test_event_main(const char* name)
 {
 	int ret = -1;
@@ -160,7 +167,7 @@ int test_event_main(const char* name)
 
 	base = vpk_evbase_create();
 
-	vpk_event_assign(&events_time, base, 0, VPK_EV_PERSIST, test_heart_beat, NULL);
+	vpk_event_assign(&events_time, base, 0, 0, event_callback1, NULL);
 
 	struct timeval tv;
 	vpk_timerclear(&tv);
@@ -214,10 +221,14 @@ void *vpk_delay_start(void* arg)
 
 void *vpk_test3(void* arg)
 {
-	//sleep(5);
+	sleep(1);
 	//LOG_D("start test3 thread!");
-	char ch;
-	scanf("%c", &ch);
+	char ch = '0';
+	printf("\n\n\n");
+	LOG_D("please press 's' to start to register a msg event");
+	while (ch != 's') {
+		scanf("%c", &ch);
+	}
 	LOG_D("ch = %c", ch);
 	printf("\n\n\n");
 
