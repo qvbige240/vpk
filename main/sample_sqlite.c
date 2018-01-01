@@ -63,24 +63,24 @@ int sqlite_test(char* filename)
 		return -1;
 	}
 
-	rc = sqlite3_exec(db, sql04, callback, 0, &errmsg);
-	if (rc != SQLITE_OK) {
-		LOG_E("SQL error: %s", errmsg);
-		sqlite3_free(errmsg);
-	}
+	//rc = sqlite3_exec(db, sql04, callback, 0, &errmsg);
+	//if (rc != SQLITE_OK) {
+	//	LOG_E("SQL error: %s", errmsg);
+	//	sqlite3_free(errmsg);
+	//}
 
-	rc = sqlite3_exec(db, sql_select, callback, 0, &errmsg);
-	if (rc != SQLITE_OK) {
-		LOG_E("SQL error: %s", errmsg);
-		sqlite3_free(errmsg);
-	}
-#if 0
+	//rc = sqlite3_exec(db, sql_select, callback, 0, &errmsg);
+	//if (rc != SQLITE_OK) {
+	//	LOG_E("SQL error: %s", errmsg);
+	//	sqlite3_free(errmsg);
+	//}
 	rc = sqlite3_exec(db, sql01, callback, 0, &errmsg);
 	if (rc != SQLITE_OK) {
 		LOG_E("SQL error: %s", errmsg);
 		sqlite3_free(errmsg);
 	}
 
+#if 0
 	rc = sqlite3_exec(db, sql02, callback, 0, &errmsg);
 	if (rc != SQLITE_OK) {
 		LOG_E("SQL error: %s", errmsg);
@@ -111,9 +111,7 @@ int sqlite_test(char* filename)
 		sqlite3_free(errmsg);
 	}
 
-#endif
 
-#if 0
 
 	char* zsql = sqlite3_mprintf("CREATE TABLE %s(id INTEGER,"
 		"name nvarchar(32) PRIMARY KEY,"
@@ -129,6 +127,9 @@ int sqlite_test(char* filename)
 	sqlite3_free(zsql);
 	LOG_D("values: %s", values);
 
+#endif
+
+#if 1
 	char **result;
 	int nrow, ncol;
 	rc = sqlite3_get_table(db, sql_select, &result, &nrow, &ncol, &errmsg);
@@ -137,6 +138,14 @@ int sqlite_test(char* filename)
 		int i, j;
 		int index = ncol;
 		LOG_I("total %d", nrow);
+
+		if (nrow == 0)
+		{
+			if (result)
+				sqlite3_free_table(result);
+			result = NULL;
+		}
+
 		for (i = 0; i < nrow; i++)
 		{
 			LOG_I("data index %d", i);
@@ -148,6 +157,8 @@ int sqlite_test(char* filename)
 			LOG_I("--------------");
 		}
 		
+	} else {
+		LOG_D("failed, rc = %d, errmsg: %s", rc, errmsg);
 	}
 
 	rc = sqlite3_exec(db, sql_select, callback, 0, &errmsg);
