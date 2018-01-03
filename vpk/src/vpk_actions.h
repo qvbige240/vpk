@@ -14,10 +14,10 @@ TIMA_BEGIN_DELS
 
 typedef struct _ActionInfo
 {
-	VpkNvtuType type;
+	VpkActionType	type;
 
-	char*		name;
-	char*		action;
+	char*			name;
+	char*			action;
 } ActionInfo;
 
 extern const ActionInfo vpk_action_tables[];
