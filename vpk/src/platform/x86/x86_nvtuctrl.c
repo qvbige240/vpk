@@ -10,9 +10,81 @@
 
 #include "vpk_mmap.h"
 #include "vpk_logging.h"
+#include "vpk_actions.h"
 #include "x86_nvtuctrl.h"
 
 #include "jansson.h"
+
+const ActionInfo vpk_action_tables[] =
+{
+	/** it needs order by 'VpkNvtuType' **/
+	{VPK_NVTU_START_TAG,				"UCUSTOM",	"	"},
+	{VPK_NVTU_GPSINFO,					"GPS",		"ucustom -gpsinfo "},
+	{VPK_NVTU_ACCEINFO,					"ACCE",		"ucustom -accinfo "},
+	{VPK_NVTU_SNAPSHOT,					"SNAP",		"ucustom -snapshot "},
+	{VPK_NVTU_MOVIEREC,					"VIDEO",	"ucustom -movierec "},
+	{VPK_NVTU_MOVIELEN,					"VIDEO",	"ucustom -movielen "},
+	{VPK_NVTU_RECSTATE,					"VIDEO",	"ucustom -recstate "},
+	{VPK_NVTU_DEVINFO,					"DEVINFO",	"ucustom -getdevinfo "},
+	{VPK_NVTU_VIDEOREC,					"VIDEO",	"ucustom -getvideo "},
+	{VPK_NVTU_GETFILENAME,				"FILE",		"ucustom -getcurfile "},
+	{VPK_NVTU_UNBINDEVICE,				"UNBIND",	"ucustom -removebind "},
+
+	/* menu get */
+	{VPK_NVTU_MENU_PICSIZEGET,			"MENUGET",	"ucustom -picsizeget "},
+	{VPK_NVTU_MENU_RECSIZEGET,			"MENUGET",	"ucustom -recsizeget "},
+	{VPK_NVTU_MENU_CYCRECGET,			"MENUGET",	"ucustom -cycrecget "},
+	{VPK_NVTU_MENU_GSENSORGET,			"MENUGET",	"ucustom -gsensorget "},
+	{VPK_NVTU_MENU_PARKGSENSORGET,		"MENUGET",	"ucustom -park_gsensorget "},
+	{VPK_NVTU_MENU_PARKMONITORGET,		"MENUGET",	"ucustom -parkmonitorget "},
+	{VPK_NVTU_MENU_POWEROFFVOLTGET,		"MENUGET",	"ucustom -poweroffvoltget "},
+	{VPK_NVTU_MENU_AUDIOGET,			"MENUGET",	"ucustom -audioget "},
+	{VPK_NVTU_MENU_HDRGET,				"MENUGET",	"ucustom -hdrget "},
+	{VPK_NVTU_MENU_TIMESTAMPGET,		"MENUGET",	"ucustom -timestampget "},
+	{VPK_NVTU_MENU_UPDATEGET,			"MENUGET",	"ucustom -updateget "},
+	{VPK_NVTU_MENU_POWERSTATEGET,		"MENUGET",	"ucustom -powerstateget "},
+	{VPK_NVTU_MENU_CRASHSTATGET,		"MENUGET",	"ucustom -crashstatget "},
+	{VPK_NVTU_MENU_DRIVEBEHAVIORGET,	"MENUGET",	"ucustom -drivebehaviorget "},
+	{VPK_NVTU_MENU_DEVSTATGET,			"MENUGET",	"ucustom -devstatget "},
+	{VPK_NVTU_MENU_FORMATSD_NOP,		"MENUGET",	" "},	// be careful
+	{VPK_NVTU_MENU_FACTORYSET_NOP,		"MENUGET",	" "},	// be careful
+	{VPK_NVTU_MENU_VERSIONGET,			"MENUGET",	"ucustom -versionget "},
+	{VPK_NVTU_MENU_WIFIPHRASEGET,		"MENUGET",	"ucustom -wifiphraseget "},
+
+	/* menu set */
+	{VPK_NVTU_MENU_PICSIZESET,			"MENUSET",  "ucustom -picsizeset "},
+	{VPK_NVTU_MENU_RECSIZESET,			"MENUSET",  "ucustom -recsizeset "},
+	{VPK_NVTU_MENU_CYCRECSET,			"MENUSET",  "ucustom -cycrecset "},
+	{VPK_NVTU_MENU_GSENSORSET,			"MENUSET",  "ucustom -gsensorset "},
+	{VPK_NVTU_MENU_PARKGSENSORSET,		"MENUGET",	"ucustom -park_gsensorset "},
+	{VPK_NVTU_MENU_PARKMONITORSET,		"MENUSET",  "ucustom -parkmonitorset "},
+	{VPK_NVTU_MENU_POWEROFFVOLTSET,		"MENUSET",  "ucustom -poweroffvoltset "},
+	{VPK_NVTU_MENU_AUDIOSET,			"MENUSET",  "ucustom -audioset "},
+	{VPK_NVTU_MENU_HDRSET,				"MENUSET",  "ucustom -hdrset "},
+	{VPK_NVTU_MENU_TIMESTAMPSET,		"MENUSET",  "ucustom -timestampset "},
+	{VPK_NVTU_MENU_UPDATESET,			"MENUSET",  "ucustom -updateset "},
+	{VPK_NVTU_MENU_POWERSTATESET,		"MENUSET",  "ucustom -powerstateset "},
+	{VPK_NVTU_MENU_CRASHSTATSET,		"MENUSET",  "ucustom -crashstatset "},
+	{VPK_NVTU_MENU_DRIVEBEHAVIORSET,	"MENUSET",  "ucustom -drivebehaviorset "},
+	{VPK_NVTU_MENU_DEVSTATSET,			"MENUSET",  "ucustom -devstatset "},
+	{VPK_NVTU_MENU_FORMATSD,			"MENUSET",  "ucustom -formatsd "},
+	{VPK_NVTU_MENU_FACTORYSET,			"MENUSET",  "ucustom -factoryset "},
+	{VPK_NVTU_MENU_VERSIONGET_NOP,		"MENUSET",  " "},		// not use
+	{VPK_NVTU_MENU_WIFIPHRASESET,		"MENUSET",	"ucustom -wifiphraseset "},
+
+	{VPK_NVTU_QRCODE,					"QRCODE",	"ucustom -qrcodeshow "},
+	//	{VPK_NVTU_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
+	{VPK_NVTU_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -fwdownload "},
+	{VPK_NVTU_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -fwupdate "},
+
+	/* tencent iot */
+	{VPK_NVTU_IOTPIDGET,				"QQIOT",	"ucustom -getiotpid "},
+	{VPK_NVTU_IOTIDSET,					"QQIOT",	"ucustom -setiotid "},
+	{VPK_NVTU_IOTLICENCESET,			"QQIOT",	"ucustom -setiotlicence "},
+
+	{VPK_NVTU_POWER_OFF,				"POWEROFF",	"ucustom -poweroff "},
+};
+const int vpk_action_tables_size = _countof(vpk_action_tables);
 
 static int x86_nvtuctrl_destruct(void *session)
 {

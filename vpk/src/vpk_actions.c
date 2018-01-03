@@ -18,15 +18,8 @@ typedef struct _PrivInfo
 	char			action[256];
 }PrivInfo;
 
-typedef struct _ActionInfo
-{
-	VpkNvtuType type;
-
-	char* name;
-	char* action;
-}ActionInfo;
-
-static const ActionInfo action_tables[] =
+#if 0
+static const ActionInfo vpk_action_tables[] =
 {
 	/** it needs order by 'VpkNvtuType' **/
 	{VPK_NVTU_START_TAG,				"UCUSTOM",	"	"},
@@ -95,6 +88,8 @@ static const ActionInfo action_tables[] =
 
 	{VPK_NVTU_POWER_OFF,				"POWEROFF",	"ucustom -poweroff "},
 };
+#endif
+
 
 VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint32_t recvsize) 
 {
@@ -108,20 +103,20 @@ VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint3
 		DECL_PRIV(thiz, priv);
 		memset(thiz, 0x00, sizeof(VpkAction) + sizeof(PrivInfo));
 
-		if (type == action_tables[type-VPK_NVTU_START_TAG].type) 
+		if (type == vpk_action_tables[type-VPK_NVTU_START_TAG].type) 
 		{
 			thiz->type = type;
-			strcpy(priv->name, action_tables[type-VPK_NVTU_START_TAG].name);
-			strncpy(priv->action, action_tables[type-VPK_NVTU_START_TAG].action, strlen(action_tables[type-VPK_NVTU_START_TAG].action));
+			strcpy(priv->name, vpk_action_tables[type-VPK_NVTU_START_TAG].name);
+			strncpy(priv->action, vpk_action_tables[type-VPK_NVTU_START_TAG].action, strlen(vpk_action_tables[type-VPK_NVTU_START_TAG].action));
 		}
 		else
 		{
-			for (i = 0; i < _countof(action_tables); i++)
+			for (i = 0; i < vpk_action_tables_size; i++)
 			{
-				if (type == action_tables[i].type) {
+				if (type == vpk_action_tables[i].type) {
 					thiz->type = type;
-					strcpy(priv->name, action_tables[i].name);
-					strncpy(priv->action, action_tables[i].action, strlen(action_tables[i].action));
+					strcpy(priv->name, vpk_action_tables[i].name);
+					strncpy(priv->action, vpk_action_tables[i].action, strlen(vpk_action_tables[i].action));
 					break;
 				}
 			}
@@ -173,42 +168,42 @@ int vpk_action_param_set(VpkAction* thiz, VpkNvtuType type, void *param)
 
 // 	if (thiz->type != type)
 // 	{
-// 		for (int i = 0; i < _countof(action_tables); i++) 
+// 		for (int i = 0; i < vpk_action_tables_size; i++) 
 // 		{
-// 			if (type == action_tables[i].type) 
+// 			if (type == vpk_action_tables[i].type) 
 // 			{
 // 				thiz->type = type;
-// 				strcpy(priv->name, action_tables[i].name);
-// 				strncpy(priv->action, action_tables[i].action, strlen(action_tables[i].action));
+// 				strcpy(priv->name, vpk_action_tables[i].name);
+// 				strncpy(priv->action, vpk_action_tables[i].action, strlen(vpk_action_tables[i].action));
 // 				break;
 // 			}
 // 		}
 // 	}
 
-	if (type == action_tables[type-VPK_NVTU_START_TAG].type) 
+	if (type == vpk_action_tables[type-VPK_NVTU_START_TAG].type) 
 	{
 		memset(priv->name, 0x00, sizeof(priv->name));
 		memset(priv->action, 0x00, sizeof(priv->action));
 		thiz->type = type;
-		strcpy(priv->name, action_tables[type-VPK_NVTU_START_TAG].name);
-		strncpy(priv->action, action_tables[type-VPK_NVTU_START_TAG].action, strlen(action_tables[type-VPK_NVTU_START_TAG].action));
+		strcpy(priv->name, vpk_action_tables[type-VPK_NVTU_START_TAG].name);
+		strncpy(priv->action, vpk_action_tables[type-VPK_NVTU_START_TAG].action, strlen(vpk_action_tables[type-VPK_NVTU_START_TAG].action));
 	}
 	else
 	{
-		for (i = 1; i < _countof(action_tables); i++) 
+		for (i = 1; i < vpk_action_tables_size; i++) 
 		{
-			if (type == action_tables[i].type) 
+			if (type == vpk_action_tables[i].type) 
 			{
 				memset(priv->name, 0x00, sizeof(priv->name));
 				memset(priv->action, 0x00, sizeof(priv->action));
 				thiz->type = type;
-				strcpy(priv->name, action_tables[i].name);
-				strncpy(priv->action, action_tables[i].action, strlen(action_tables[i].action));
+				strcpy(priv->name, vpk_action_tables[i].name);
+				strncpy(priv->action, vpk_action_tables[i].action, strlen(vpk_action_tables[i].action));
 				break;
 			}
 		}
 
-		if (i == _countof(action_tables))
+		if (i == vpk_action_tables_size)
 		{
 			LOG_W("failed set the cmd or instructions[type:%d] unrecognized!!!", type);
 			return -1;
