@@ -8,12 +8,12 @@
 
 #include "vpk_action.h"
 #include "vpk_logging.h"
-#include "vpk_nvtuctrlc.h"
+#include "vpk_actuator.h"
 
 
 typedef struct _PrivInfo
 {
-	vpk_nvtuctrl_t* nvtuctrl;
+	vpk_actuator_t* actuator;
 	char			name[16];
 	char			action[256];
 }PrivInfo;
@@ -139,19 +139,19 @@ VpkAction* vpk_action_create(VpkActionType type, void *param, void *recvbuf, uin
 
 		LOG_D("[%s]action or instructions created: \'%s\'", priv->name, priv->action);
 
-		priv->nvtuctrl = vpk_nvtuctrl_create(priv->name);
-		if (priv->nvtuctrl == NULL)
+		priv->actuator = vpk_actuator_create(priv->name);
+		if (priv->actuator == NULL)
 		{
 			TIMA_FREE(thiz);
-			LOG_E("nvtuctrl create failed!");
+			LOG_E("actuator create failed!");
 			return NULL;
 		}
 
-		ret = vpk_nvtuctrl_open(priv->nvtuctrl);
+		ret = vpk_actuator_open(priv->actuator);
 		if (ret < 0)
 		{
-			LOG_E("open nvtuctrl \'%s\' failed.", priv->name);
-			vpk_nvtuctrl_destroy(priv->nvtuctrl);
+			LOG_E("open actuator \'%s\' failed.", priv->name);
+			vpk_actuator_destroy(priv->actuator);
 			TIMA_FREE(thiz);
 			return NULL;
 		}
@@ -228,7 +228,7 @@ int vpk_action_exec(VpkAction* thiz, VpkActionCallback callback, void *ctx)
 	return_val_if_fail(thiz != NULL && thiz->recvbuf != NULL, -1);
 
 	memset(thiz->recvbuf, 0x00, thiz->recvsize);
-	ret = vpk_nvtuctrl_write(priv->nvtuctrl, priv->action, strlen(priv->action), thiz->recvbuf, thiz->recvsize, 0);
+	ret = vpk_actuator_write(priv->actuator, priv->action, strlen(priv->action), thiz->recvbuf, thiz->recvsize, 0);
 	if (!strstr(priv->action, "gpsinfo"))
 	LOG_D("action[%s] ret = %d, recv_buf: %s, len: %d", priv->name, ret, thiz->recvbuf, strlen(thiz->recvbuf));
 	if (callback == NULL)
@@ -249,11 +249,11 @@ int vpk_action_destroy(VpkAction* thiz)
 	DECL_PRIV(thiz, priv);
 	return_val_if_fail(thiz != NULL, -1);
 
-	if (priv->nvtuctrl)
+	if (priv->actuator)
 	{
-		vpk_nvtuctrl_close(priv->nvtuctrl);
-		vpk_nvtuctrl_destroy(priv->nvtuctrl);
-		priv->nvtuctrl = NULL;
+		vpk_actuator_close(priv->actuator);
+		vpk_actuator_destroy(priv->actuator);
+		priv->actuator = NULL;
 	}
 
 	thiz->param		= NULL;

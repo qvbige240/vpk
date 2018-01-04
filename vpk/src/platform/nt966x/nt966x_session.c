@@ -18,7 +18,7 @@ static vpk_sessionsys_t* nt966x_sessionsys_init(void)
 	{
 		thiz->ssops = &nt966x_sessionsys_ops;
 		register_serial_device("serial", get_nt966x_serial_ops());
-		register_nvtuctrl_device("nvtuctrl", get_nt966x_nvtuctrl_ops());
+		register_actuator_device("actuator", get_nt966x_nvtuctrl_ops());
 	}
 
 	return thiz;

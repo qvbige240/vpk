@@ -84,7 +84,7 @@ const int vpk_action_tables_size = _countof(vpk_action_tables);
 
 static int nt966x_nvtuctrl_destruct(void *session)
 {
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t*)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t*)session;
 	if (thiz)
 	{
 		if (thiz->fd >= 0)
@@ -102,10 +102,10 @@ static int nt966x_nvtuctrl_destruct(void *session)
 
 static vpk_session_t* nt966x_nvtuctrl_load(void *ctx)
 {
-	vpk_nvtuctrl_t* thiz = NULL;
+	vpk_actuator_t* thiz = NULL;
 	ctx = ctx;
 
-	thiz = (vpk_nvtuctrl_t*)TIMA_MALLOC(sizeof(vpk_nvtuctrl_t));
+	thiz = (vpk_actuator_t*)TIMA_MALLOC(sizeof(vpk_actuator_t));
 	if (thiz)
 	{
 		thiz->destruct   = (vpk_destruct_func)nt966x_nvtuctrl_destruct;
@@ -119,7 +119,7 @@ static vpk_session_t* nt966x_nvtuctrl_load(void *ctx)
 
 static int nt966x_nvtuctrl_open(vpk_session_t *session, void *data)
 {
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t*)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t*)session;
 	return_val_if_fail(thiz != NULL, -1);
 
 	thiz->fd = NvtUctrl_Open();
@@ -141,7 +141,7 @@ static int nt966x_nvtuctrl_read(vpk_session_t *session, void *buf, size_t nbytes
 static int nt966x_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, int timout)
 {
 	int ret = -1;
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t *)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t *)session;
 	return_val_if_fail(thiz != NULL && thiz->fd >= 0 && thiz->data_buff != NULL, -1);
 	timout = timout;
 	
@@ -155,7 +155,7 @@ static int nt966x_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbyte
 
 static int nt966x_nvtuctrl_close(vpk_session_t *session)
 {
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t*)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t*)session;
 	if (thiz && thiz->fd >= 0)
 	{
 		LOG_I("nvtuctrl \'%s\' close with fd = %d!\n", thiz->name, thiz->fd);
