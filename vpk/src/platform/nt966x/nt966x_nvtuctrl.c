@@ -14,7 +14,7 @@
 const ActionInfo vpk_action_tables[] =
 {
 	/** it needs order by 'VpkActionType' **/
-	{VPK_ACTION_START_TAG,				"UCUSTOM",	"	"},
+	{VPK_ACTION_START_TAG,					"UCUSTOM",	"	"},
 	{VPK_ACTION_GPSINFO,					"GPS",		"ucustom -gpsinfo "},
 	{VPK_ACTION_ACCEINFO,					"ACCE",		"ucustom -accinfo "},
 	{VPK_ACTION_SNAPSHOT,					"SNAP",		"ucustom -snapshot "},
@@ -29,56 +29,56 @@ const ActionInfo vpk_action_tables[] =
 	/* menu get */
 	{VPK_ACTION_MENU_PICSIZEGET,			"MENUGET",	"ucustom -picsizeget "},
 	{VPK_ACTION_MENU_RECSIZEGET,			"MENUGET",	"ucustom -recsizeget "},
-	{VPK_ACTION_MENU_CYCRECGET,			"MENUGET",	"ucustom -cycrecget "},
+	{VPK_ACTION_MENU_CYCRECGET,				"MENUGET",	"ucustom -cycrecget "},
 	{VPK_ACTION_MENU_GSENSORGET,			"MENUGET",	"ucustom -gsensorget "},
 	{VPK_ACTION_MENU_PARKGSENSORGET,		"MENUGET",	"ucustom -park_gsensorget "},
 	{VPK_ACTION_MENU_PARKMONITORGET,		"MENUGET",	"ucustom -parkmonitorget "},
 	{VPK_ACTION_MENU_POWEROFFVOLTGET,		"MENUGET",	"ucustom -poweroffvoltget "},
-	{VPK_ACTION_MENU_AUDIOGET,			"MENUGET",	"ucustom -audioget "},
+	{VPK_ACTION_MENU_AUDIOGET,				"MENUGET",	"ucustom -audioget "},
 	{VPK_ACTION_MENU_HDRGET,				"MENUGET",	"ucustom -hdrget "},
-	{VPK_ACTION_MENU_TIMESTAMPGET,		"MENUGET",	"ucustom -timestampget "},
-	{VPK_ACTION_MENU_UPDATEGET,			"MENUGET",	"ucustom -updateget "},
-	{VPK_ACTION_MENU_POWERSTATEGET,		"MENUGET",	"ucustom -powerstateget "},
-	{VPK_ACTION_MENU_CRASHSTATGET,		"MENUGET",	"ucustom -crashstatget "},
-	{VPK_ACTION_MENU_DRIVEBEHAVIORGET,	"MENUGET",	"ucustom -drivebehaviorget "},
+	{VPK_ACTION_MENU_TIMESTAMPGET,			"MENUGET",	"ucustom -timestampget "},
+	{VPK_ACTION_MENU_UPDATEGET,				"MENUGET",	"ucustom -updateget "},
+	{VPK_ACTION_MENU_POWERSTATEGET,			"MENUGET",	"ucustom -powerstateget "},
+	{VPK_ACTION_MENU_CRASHSTATGET,			"MENUGET",	"ucustom -crashstatget "},
+	{VPK_ACTION_MENU_DRIVEBEHAVIORGET,		"MENUGET",	"ucustom -drivebehaviorget "},
 	{VPK_ACTION_MENU_DEVSTATGET,			"MENUGET",	"ucustom -devstatget "},
-	{VPK_ACTION_MENU_FORMATSD_NOP,		"MENUGET",	" "},	// be careful
+	{VPK_ACTION_MENU_FORMATSD_NOP,			"MENUGET",	" "},	// be careful
 	{VPK_ACTION_MENU_FACTORYSET_NOP,		"MENUGET",	" "},	// be careful
 	{VPK_ACTION_MENU_VERSIONGET,			"MENUGET",	"ucustom -versionget "},
-	{VPK_ACTION_MENU_WIFIPHRASEGET,		"MENUGET",	"ucustom -wifiphraseget "},
+	{VPK_ACTION_MENU_WIFIPHRASEGET,			"MENUGET",	"ucustom -wifiphraseget "},
 
 	/* menu set */
 	{VPK_ACTION_MENU_PICSIZESET,			"MENUSET",  "ucustom -picsizeset "},
 	{VPK_ACTION_MENU_RECSIZESET,			"MENUSET",  "ucustom -recsizeset "},
-	{VPK_ACTION_MENU_CYCRECSET,			"MENUSET",  "ucustom -cycrecset "},
+	{VPK_ACTION_MENU_CYCRECSET,				"MENUSET",  "ucustom -cycrecset "},
 	{VPK_ACTION_MENU_GSENSORSET,			"MENUSET",  "ucustom -gsensorset "},
 	{VPK_ACTION_MENU_PARKGSENSORSET,		"MENUGET",	"ucustom -park_gsensorset "},
 	{VPK_ACTION_MENU_PARKMONITORSET,		"MENUSET",  "ucustom -parkmonitorset "},
 	{VPK_ACTION_MENU_POWEROFFVOLTSET,		"MENUSET",  "ucustom -poweroffvoltset "},
-	{VPK_ACTION_MENU_AUDIOSET,			"MENUSET",  "ucustom -audioset "},
+	{VPK_ACTION_MENU_AUDIOSET,				"MENUSET",  "ucustom -audioset "},
 	{VPK_ACTION_MENU_HDRSET,				"MENUSET",  "ucustom -hdrset "},
-	{VPK_ACTION_MENU_TIMESTAMPSET,		"MENUSET",  "ucustom -timestampset "},
-	{VPK_ACTION_MENU_UPDATESET,			"MENUSET",  "ucustom -updateset "},
-	{VPK_ACTION_MENU_POWERSTATESET,		"MENUSET",  "ucustom -powerstateset "},
-	{VPK_ACTION_MENU_CRASHSTATSET,		"MENUSET",  "ucustom -crashstatset "},
-	{VPK_ACTION_MENU_DRIVEBEHAVIORSET,	"MENUSET",  "ucustom -drivebehaviorset "},
+	{VPK_ACTION_MENU_TIMESTAMPSET,			"MENUSET",  "ucustom -timestampset "},
+	{VPK_ACTION_MENU_UPDATESET,				"MENUSET",  "ucustom -updateset "},
+	{VPK_ACTION_MENU_POWERSTATESET,			"MENUSET",  "ucustom -powerstateset "},
+	{VPK_ACTION_MENU_CRASHSTATSET,			"MENUSET",  "ucustom -crashstatset "},
+	{VPK_ACTION_MENU_DRIVEBEHAVIORSET,		"MENUSET",  "ucustom -drivebehaviorset "},
 	{VPK_ACTION_MENU_DEVSTATSET,			"MENUSET",  "ucustom -devstatset "},
-	{VPK_ACTION_MENU_FORMATSD,			"MENUSET",  "ucustom -formatsd "},
+	{VPK_ACTION_MENU_FORMATSD,				"MENUSET",  "ucustom -formatsd "},
 	{VPK_ACTION_MENU_FACTORYSET,			"MENUSET",  "ucustom -factoryset "},
 	{VPK_ACTION_MENU_VERSIONGET_NOP,		"MENUSET",  " "},		// not use
-	{VPK_ACTION_MENU_WIFIPHRASESET,		"MENUSET",	"ucustom -wifiphraseset "},
+	{VPK_ACTION_MENU_WIFIPHRASESET,			"MENUSET",	"ucustom -wifiphraseset "},
 
-	{VPK_ACTION_QRCODE,					"QRCODE",	"ucustom -qrcodeshow "},
+	{VPK_ACTION_QRCODE,						"QRCODE",	"ucustom -qrcodeshow "},
 	//	{VPK_ACTION_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
 	{VPK_ACTION_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -fwdownload "},
-	{VPK_ACTION_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -fwupdate "},
+	{VPK_ACTION_UPDATE_WHETHER_UPGRADE,		"UPDATE",	"ucustom -fwupdate "},
 
 	/* tencent iot */
-	{VPK_ACTION_IOTPIDGET,				"QQIOT",	"ucustom -getiotpid "},
+	{VPK_ACTION_IOTPIDGET,					"QQIOT",	"ucustom -getiotpid "},
 	{VPK_ACTION_IOTIDSET,					"QQIOT",	"ucustom -setiotid "},
-	{VPK_ACTION_IOTLICENCESET,			"QQIOT",	"ucustom -setiotlicence "},
+	{VPK_ACTION_IOTLICENCESET,				"QQIOT",	"ucustom -setiotlicence "},
 
-	{VPK_ACTION_POWER_OFF,				"POWEROFF",	"ucustom -poweroff "},
+	{VPK_ACTION_POWER_OFF,					"POWEROFF",	"ucustom -poweroff "},
 };
 const int vpk_action_tables_size = _countof(vpk_action_tables);
 
