@@ -724,7 +724,7 @@ int vpk_evbase_loop(vpk_evbase_t* thiz, int flags)
 
 		if (!thiz->event_count_active && !(thiz->event_count > 0)) {
 			EVENT_LOGI("no events registered.");
-			sleep(5);
+			//sleep(5);
 		}
 
 		vpk_gettime(thiz, &thiz->timer_tv);

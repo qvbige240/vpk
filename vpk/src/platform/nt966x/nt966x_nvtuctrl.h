@@ -7,8 +7,9 @@
 #ifndef NT966X_NVTUCTRL_H
 #define NT966X_NVTUCTRL_H
 
-#include "vpk_nvtuctrl.h"
+#include "vpk_actuator.h"
 #include "vpk_session.h"
+#include "vpk_actions.h"
 
 TIMA_BEGIN_DELS
 

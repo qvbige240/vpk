@@ -153,31 +153,43 @@ static int eventq_recv(const char* name)
 	return ret;
 }
 
-
+vpk_events *events_notice;
+vpk_events *events_notice2;
 static int start_timer_flag = 0;
 static void notice_callback(int fd, short event, void *arg) 
 {
-	LOG_D("fd(%d) event(0x%02x) in notice_callback.", fd, event);
-	start_timer_flag = 1;
+	if (event & VPK_EV_TIMEOUT)
+		LOG_D("timeout notice_callback.");
+	LOG_D("=========1111fd(%d) event(0x%02x) in notice_callback.", fd, event);
+	//start_timer_flag = 1;
+	vpk_event_free(events_notice);
+}
+static void notice_callback2(int fd, short event, void *arg) 
+{
+	if (event & VPK_EV_TIMEOUT)
+		LOG_D("timeout notice_callback2.");
+	LOG_D("=========2222fd(%d) event(0x%02x) in notice_callback.", fd, event);
+	//start_timer_flag = 1;
+	vpk_event_free(events_notice2);
 }
 
 int msg_event_add(const char* name)
 {
 	int ret = -1;
 	//vpk_events *events_notice = vpk_event_new(base, VPK_KEY_EVENT_SYS_ACC_OFF, VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback, NULL);;
-	vpk_events *events_notice = vpk_event_new(base, KEY2FD(vpk.keys.EVENT_NO_TF_CARD), VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback, NULL);;
+	events_notice = vpk_event_new(base, KEY2FD(vpk.keys.EVENT_NO_TF_CARD),
+		VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback, NULL);;
 
-	vpk_event_add(events_notice, NULL);
+	struct timeval tv;
+	vpk_timerclear(&tv);
+	tv.tv_sec = 10;
+	vpk_event_add(events_notice, &tv);
 
-	//vpk_event_assign(&events_time, base, 0, VPK_EV_PERSIST, test_heart_beat, NULL);
+	events_notice2 = vpk_event_new(base, KEY2FD(vpk.keys.EVENT_NO_TF_CARD),
+		VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback2, NULL);;
 
-	//struct timeval tv;
-	//vpk_timerclear(&tv);
-	//tv.tv_sec = 5;
-	//vpk_gettimeofday(&prev, NULL);
-	//vpk_event_add(events_time, &tv);
+	vpk_event_add(events_notice2, NULL);
 
-	// need free events_time somewhere
 	return ret;
 }
 

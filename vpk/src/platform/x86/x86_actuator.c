@@ -1,99 +1,97 @@
 /*
  * History:
  * ================================================================
- * 2017-03-27 qing.zou created
+ * 2018-01-04 qing.zou created
  *
  */
 #include <unistd.h>
 
-//#include "nvtuctrl.h"
-
 #include "vpk_mmap.h"
 #include "vpk_logging.h"
 #include "vpk_actions.h"
-#include "x86_nvtuctrl.h"
+#include "x86_actuator.h"
 
 #include "jansson.h"
 
 const ActionInfo vpk_action_tables[] =
 {
 	/** it needs order by 'VpkActionType' **/
-	{VPK_ACTION_START_TAG,				"UCUSTOM",	"	"},
-	{VPK_ACTION_GPSINFO,					"GPS",		"ucustom -gpsinfo "},
-	{VPK_ACTION_ACCEINFO,					"ACCE",		"ucustom -accinfo "},
-	{VPK_ACTION_SNAPSHOT,					"SNAP",		"ucustom -snapshot "},
-	{VPK_ACTION_MOVIEREC,					"VIDEO",	"ucustom -movierec "},
-	{VPK_ACTION_MOVIELEN,					"VIDEO",	"ucustom -movielen "},
-	{VPK_ACTION_RECSTATE,					"VIDEO",	"ucustom -recstate "},
-	{VPK_ACTION_DEVINFO,					"DEVINFO",	"ucustom -getdevinfo "},
-	{VPK_ACTION_VIDEOREC,					"VIDEO",	"ucustom -getvideo "},
-	{VPK_ACTION_GETFILENAME,				"FILE",		"ucustom -getcurfile "},
-	{VPK_ACTION_UNBINDEVICE,				"UNBIND",	"ucustom -removebind "},
+	{VPK_ACTION_START_TAG,					"ACTIONS",	"	"},
+	{VPK_ACTION_GPSINFO,					"GPS",		"tima -gpsinfo "},
+	{VPK_ACTION_ACCEINFO,					"ACCE",		"tima -accinfo "},
+	{VPK_ACTION_SNAPSHOT,					"SNAP",		"tima -snapshot "},
+	{VPK_ACTION_MOVIEREC,					"VIDEO",	"tima -movierec "},
+	{VPK_ACTION_MOVIELEN,					"VIDEO",	"tima -movielen "},
+	{VPK_ACTION_RECSTATE,					"VIDEO",	"tima -recstate "},
+	{VPK_ACTION_DEVINFO,					"DEVINFO",	"tima -getdevinfo "},
+	{VPK_ACTION_VIDEOREC,					"VIDEO",	"tima -getvideo "},
+	{VPK_ACTION_GETFILENAME,				"FILE",		"tima -getcurfile "},
+	{VPK_ACTION_UNBINDEVICE,				"UNBIND",	"tima -removebind "},
 
 	/* menu get */
-	{VPK_ACTION_MENU_PICSIZEGET,			"MENUGET",	"ucustom -picsizeget "},
-	{VPK_ACTION_MENU_RECSIZEGET,			"MENUGET",	"ucustom -recsizeget "},
-	{VPK_ACTION_MENU_CYCRECGET,			"MENUGET",	"ucustom -cycrecget "},
-	{VPK_ACTION_MENU_GSENSORGET,			"MENUGET",	"ucustom -gsensorget "},
-	{VPK_ACTION_MENU_PARKGSENSORGET,		"MENUGET",	"ucustom -park_gsensorget "},
-	{VPK_ACTION_MENU_PARKMONITORGET,		"MENUGET",	"ucustom -parkmonitorget "},
-	{VPK_ACTION_MENU_POWEROFFVOLTGET,		"MENUGET",	"ucustom -poweroffvoltget "},
-	{VPK_ACTION_MENU_AUDIOGET,			"MENUGET",	"ucustom -audioget "},
-	{VPK_ACTION_MENU_HDRGET,				"MENUGET",	"ucustom -hdrget "},
-	{VPK_ACTION_MENU_TIMESTAMPGET,		"MENUGET",	"ucustom -timestampget "},
-	{VPK_ACTION_MENU_UPDATEGET,			"MENUGET",	"ucustom -updateget "},
-	{VPK_ACTION_MENU_POWERSTATEGET,		"MENUGET",	"ucustom -powerstateget "},
-	{VPK_ACTION_MENU_CRASHSTATGET,		"MENUGET",	"ucustom -crashstatget "},
-	{VPK_ACTION_MENU_DRIVEBEHAVIORGET,	"MENUGET",	"ucustom -drivebehaviorget "},
-	{VPK_ACTION_MENU_DEVSTATGET,			"MENUGET",	"ucustom -devstatget "},
-	{VPK_ACTION_MENU_FORMATSD_NOP,		"MENUGET",	" "},	// be careful
+	{VPK_ACTION_MENU_PICSIZEGET,			"MENUGET",	"tima -picsizeget "},
+	{VPK_ACTION_MENU_RECSIZEGET,			"MENUGET",	"tima -recsizeget "},
+	{VPK_ACTION_MENU_CYCRECGET,				"MENUGET",	"tima -cycrecget "},
+	{VPK_ACTION_MENU_GSENSORGET,			"MENUGET",	"tima -gsensorget "},
+	{VPK_ACTION_MENU_PARKGSENSORGET,		"MENUGET",	"tima -park_gsensorget "},
+	{VPK_ACTION_MENU_PARKMONITORGET,		"MENUGET",	"tima -parkmonitorget "},
+	{VPK_ACTION_MENU_POWEROFFVOLTGET,		"MENUGET",	"tima -poweroffvoltget "},
+	{VPK_ACTION_MENU_AUDIOGET,				"MENUGET",	"tima -audioget "},
+	{VPK_ACTION_MENU_HDRGET,				"MENUGET",	"tima -hdrget "},
+	{VPK_ACTION_MENU_TIMESTAMPGET,			"MENUGET",	"tima -timestampget "},
+	{VPK_ACTION_MENU_UPDATEGET,				"MENUGET",	"tima -updateget "},
+	{VPK_ACTION_MENU_POWERSTATEGET,			"MENUGET",	"tima -powerstateget "},
+	{VPK_ACTION_MENU_CRASHSTATGET,			"MENUGET",	"tima -crashstatget "},
+	{VPK_ACTION_MENU_DRIVEBEHAVIORGET,		"MENUGET",	"tima -drivebehaviorget "},
+	{VPK_ACTION_MENU_DEVSTATGET,			"MENUGET",	"tima -devstatget "},
+	{VPK_ACTION_MENU_FORMATSD_NOP,			"MENUGET",	" "},	// be careful
 	{VPK_ACTION_MENU_FACTORYSET_NOP,		"MENUGET",	" "},	// be careful
-	{VPK_ACTION_MENU_VERSIONGET,			"MENUGET",	"ucustom -versionget "},
-	{VPK_ACTION_MENU_WIFIPHRASEGET,		"MENUGET",	"ucustom -wifiphraseget "},
+	{VPK_ACTION_MENU_VERSIONGET,			"MENUGET",	"tima -versionget "},
+	{VPK_ACTION_MENU_WIFIPHRASEGET,			"MENUGET",	"tima -wifiphraseget "},
 
 	/* menu set */
-	{VPK_ACTION_MENU_PICSIZESET,			"MENUSET",  "ucustom -picsizeset "},
-	{VPK_ACTION_MENU_RECSIZESET,			"MENUSET",  "ucustom -recsizeset "},
-	{VPK_ACTION_MENU_CYCRECSET,			"MENUSET",  "ucustom -cycrecset "},
-	{VPK_ACTION_MENU_GSENSORSET,			"MENUSET",  "ucustom -gsensorset "},
-	{VPK_ACTION_MENU_PARKGSENSORSET,		"MENUGET",	"ucustom -park_gsensorset "},
-	{VPK_ACTION_MENU_PARKMONITORSET,		"MENUSET",  "ucustom -parkmonitorset "},
-	{VPK_ACTION_MENU_POWEROFFVOLTSET,		"MENUSET",  "ucustom -poweroffvoltset "},
-	{VPK_ACTION_MENU_AUDIOSET,			"MENUSET",  "ucustom -audioset "},
-	{VPK_ACTION_MENU_HDRSET,				"MENUSET",  "ucustom -hdrset "},
-	{VPK_ACTION_MENU_TIMESTAMPSET,		"MENUSET",  "ucustom -timestampset "},
-	{VPK_ACTION_MENU_UPDATESET,			"MENUSET",  "ucustom -updateset "},
-	{VPK_ACTION_MENU_POWERSTATESET,		"MENUSET",  "ucustom -powerstateset "},
-	{VPK_ACTION_MENU_CRASHSTATSET,		"MENUSET",  "ucustom -crashstatset "},
-	{VPK_ACTION_MENU_DRIVEBEHAVIORSET,	"MENUSET",  "ucustom -drivebehaviorset "},
-	{VPK_ACTION_MENU_DEVSTATSET,			"MENUSET",  "ucustom -devstatset "},
-	{VPK_ACTION_MENU_FORMATSD,			"MENUSET",  "ucustom -formatsd "},
-	{VPK_ACTION_MENU_FACTORYSET,			"MENUSET",  "ucustom -factoryset "},
+	{VPK_ACTION_MENU_PICSIZESET,			"MENUSET",  "tima -picsizeset "},
+	{VPK_ACTION_MENU_RECSIZESET,			"MENUSET",  "tima -recsizeset "},
+	{VPK_ACTION_MENU_CYCRECSET,				"MENUSET",  "tima -cycrecset "},
+	{VPK_ACTION_MENU_GSENSORSET,			"MENUSET",  "tima -gsensorset "},
+	{VPK_ACTION_MENU_PARKGSENSORSET,		"MENUGET",	"tima -park_gsensorset "},
+	{VPK_ACTION_MENU_PARKMONITORSET,		"MENUSET",  "tima -parkmonitorset "},
+	{VPK_ACTION_MENU_POWEROFFVOLTSET,		"MENUSET",  "tima -poweroffvoltset "},
+	{VPK_ACTION_MENU_AUDIOSET,				"MENUSET",  "tima -audioset "},
+	{VPK_ACTION_MENU_HDRSET,				"MENUSET",  "tima -hdrset "},
+	{VPK_ACTION_MENU_TIMESTAMPSET,			"MENUSET",  "tima -timestampset "},
+	{VPK_ACTION_MENU_UPDATESET,				"MENUSET",  "tima -updateset "},
+	{VPK_ACTION_MENU_POWERSTATESET,			"MENUSET",  "tima -powerstateset "},
+	{VPK_ACTION_MENU_CRASHSTATSET,			"MENUSET",  "tima -crashstatset "},
+	{VPK_ACTION_MENU_DRIVEBEHAVIORSET,		"MENUSET",  "tima -drivebehaviorset "},
+	{VPK_ACTION_MENU_DEVSTATSET,			"MENUSET",  "tima -devstatset "},
+	{VPK_ACTION_MENU_FORMATSD,				"MENUSET",  "tima -formatsd "},
+	{VPK_ACTION_MENU_FACTORYSET,			"MENUSET",  "tima -factoryset "},
 	{VPK_ACTION_MENU_VERSIONGET_NOP,		"MENUSET",  " "},		// not use
-	{VPK_ACTION_MENU_WIFIPHRASESET,		"MENUSET",	"ucustom -wifiphraseset "},
+	{VPK_ACTION_MENU_WIFIPHRASESET,			"MENUSET",	"tima -wifiphraseset "},
 
-	{VPK_ACTION_QRCODE,					"QRCODE",	"ucustom -qrcodeshow "},
-	//	{VPK_ACTION_UPDATE_FREQGET,			"UPDATE",	"ucustom -updateconditionget "},
-	{VPK_ACTION_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"ucustom -fwdownload "},
-	{VPK_ACTION_UPDATE_WHETHER_UPGRADE,	"UPDATE",	"ucustom -fwupdate "},
+	{VPK_ACTION_QRCODE,						"QRCODE",	"tima -qrcodeshow "},
+	//	{VPK_ACTION_UPDATE_FREQGET,			"UPDATE",	"tima -updateconditionget "},
+	{VPK_ACTION_UPDATE_WHETHER_DOWNLOAD,	"UPDATE",	"tima -fwdownload "},
+	{VPK_ACTION_UPDATE_WHETHER_UPGRADE,		"UPDATE",	"tima -fwupdate "},
 
 	/* tencent iot */
-	{VPK_ACTION_IOTPIDGET,				"QQIOT",	"ucustom -getiotpid "},
-	{VPK_ACTION_IOTIDSET,					"QQIOT",	"ucustom -setiotid "},
-	{VPK_ACTION_IOTLICENCESET,			"QQIOT",	"ucustom -setiotlicence "},
+	{VPK_ACTION_IOTPIDGET,					"QQIOT",	"tima -getiotpid "},
+	{VPK_ACTION_IOTIDSET,					"QQIOT",	"tima -setiotid "},
+	{VPK_ACTION_IOTLICENCESET,				"QQIOT",	"tima -setiotlicence "},
 
-	{VPK_ACTION_POWER_OFF,				"POWEROFF",	"ucustom -poweroff "},
+	{VPK_ACTION_POWER_OFF,					"POWEROFF",	"tima -poweroff "},
 };
 const int vpk_action_tables_size = _countof(vpk_action_tables);
 
-static int x86_nvtuctrl_destruct(void *session)
+static int x86_actuator_destruct(void *session)
 {
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t*)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t*)session;
 	if (thiz)
 	{
 		if (thiz->fd >= 0)
 		{
-			LOG_I("nvtuctrl \'%s\' close with fd = %d!\n", thiz->name, thiz->fd);
+			LOG_I("actuator \'%s\' close with fd = %d!\n", thiz->name, thiz->fd);
 			//NvtUctrl_Close(thiz->fd);
 			thiz->fd = -1;
 		}
@@ -104,15 +102,15 @@ static int x86_nvtuctrl_destruct(void *session)
 	return 0;
 }
 
-static vpk_session_t* x86_nvtuctrl_load(void *ctx)
+static vpk_session_t* x86_actuator_load(void *ctx)
 {
-	vpk_nvtuctrl_t* thiz = NULL;
+	vpk_actuator_t* thiz = NULL;
 	ctx = ctx;
 
-	thiz = (vpk_nvtuctrl_t*)TIMA_MALLOC(sizeof(vpk_nvtuctrl_t));
+	thiz = (vpk_actuator_t*)TIMA_MALLOC(sizeof(vpk_actuator_t));
 	if (thiz)
 	{
-		thiz->destruct   = (vpk_destruct_func)x86_nvtuctrl_destruct;
+		thiz->destruct   = (vpk_destruct_func)x86_actuator_destruct;
 		thiz->data_buff  = NULL;
 		thiz->total_size = 0;
 		thiz->fd		 = -1;
@@ -121,16 +119,16 @@ static vpk_session_t* x86_nvtuctrl_load(void *ctx)
 	return (vpk_session_t*)thiz;
 }
 
-static int x86_nvtuctrl_open(vpk_session_t *session, void *data)
+static int x86_actuator_open(vpk_session_t *session, void *data)
 {
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t*)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t*)session;
 	return_val_if_fail(thiz != NULL, -1);
 
 	//thiz->fd = NvtUctrl_Open();
 	thiz->fd = 1;
 	if (thiz->fd < 0)
 	{
-		LOG_E("nvtuctrl \'%s\' communication open failed!", thiz->name);
+		LOG_E("actuator \'%s\' communication open failed!", thiz->name);
 		return thiz->fd;
 	}
 
@@ -138,7 +136,7 @@ static int x86_nvtuctrl_open(vpk_session_t *session, void *data)
 }
 
 
-static int x86_nvtuctrl_read(vpk_session_t *session, void *buf, size_t nbytes, int timout, void* visit)
+static int x86_actuator_read(vpk_session_t *session, void *buf, size_t nbytes, int timout, void* visit)
 {
 	return 0;
 }
@@ -224,10 +222,10 @@ static int setting_item_write(const char* file, char* key, int value)
 }
 
 static char gps_str[256] = {0};
-static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, int timout)
+static int x86_actuator_write(vpk_session_t *session, void *buf, size_t nbytes, int timout)
 {
 	int ret = -1;
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t *)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t *)session;
 	return_val_if_fail(thiz != NULL && thiz->fd >= 0 && thiz->data_buff != NULL, -1);
 	timout = timout;
 	
@@ -261,7 +259,7 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 		p = strstr(buf, "-snapshot");
 		if (p != NULL)
 		{
-			char *str = "{\"rcode\":\"0\",\"file\":\"resources/test_2017_0409_171946_RE.JPG\"}";
+			char *str = "{\"rcode\":\"0\",\"file\":\"resources/test_2017-10-05.png, resources/test_2017_0409_171946_RE.JPG\"}";
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}
@@ -347,7 +345,7 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 		p = strstr(buf, "-versionget");
 		if (p != NULL)
 		{
-			char *str = "K40.20170808.01";
+			char *str = "K90.20170808.01";
 			memcpy(thiz->data_buff, str, strlen(str));
 			return 0;
 		}
@@ -379,7 +377,7 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 			char* key = NULL;
 			int value = 0;
 			char tmp[256] = {0};
-			int r = sscanf(buf, "ucustom -%s MENUMOCK\n", tmp);
+			int r = sscanf(buf, "tima -%s MENUMOCK\n", tmp);
 			if (r) {
 				p = strstr(tmp, "set");
 				if (p)
@@ -434,41 +432,40 @@ static int x86_nvtuctrl_write(vpk_session_t *session, void *buf, size_t nbytes, 
 	return ret;
 }
 
-static int x86_nvtuctrl_close(vpk_session_t *session)
+static int x86_actuator_close(vpk_session_t *session)
 {
-	vpk_nvtuctrl_t* thiz = (vpk_nvtuctrl_t*)session;
+	vpk_actuator_t* thiz = (vpk_actuator_t*)session;
 	if (thiz && thiz->fd >= 0)
 	{
-		LOG_I("nvtuctrl \'%s\' close with fd = %d!\n", thiz->name, thiz->fd);
+		LOG_I("actuator \'%s\' close with fd = %d!\n", thiz->name, thiz->fd);
 		//NvtUctrl_Close(thiz->fd);
 		thiz->fd = -1;
 	}
 	else
 	{
-		LOG_W("nvtuctrl(fd) has been closed!");
+		LOG_W("actuator(fd) has been closed!");
 	}
 
 	return 0;
 }
 
-static int x86_nvtuctrl_opt_set(vpk_session_t *session)
+static int x86_actuator_opt_set(vpk_session_t *session)
 {
 	return 0;
 }
 
-/* The nvtuctrl operations */
-static const session_ops x86_nvtuctrl_ops =
+/* The actuator operations */
+static const session_ops x86_actuator_ops =
 {
-	x86_nvtuctrl_load,
-	x86_nvtuctrl_open,
-	x86_nvtuctrl_read,
-	x86_nvtuctrl_write,
-	x86_nvtuctrl_close,
-	x86_nvtuctrl_opt_set,
+	x86_actuator_load,
+	x86_actuator_open,
+	x86_actuator_read,
+	x86_actuator_write,
+	x86_actuator_close,
+	x86_actuator_opt_set,
 };
 
-const session_ops* get_x86_nvtuctrl_ops(void)
+const session_ops* get_x86_actuator_ops(void)
 {
-	return (const session_ops*)&x86_nvtuctrl_ops;
+	return (const session_ops*)&x86_actuator_ops;
 }
-

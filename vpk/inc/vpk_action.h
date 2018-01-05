@@ -11,91 +11,90 @@
 
 TIMA_BEGIN_DELS
 
-typedef enum _VpkNvtuType
+typedef enum _VpkActionType
 {
-	VPK_NVTU_START_TAG = 0,				// without use
-	VPK_NVTU_GPSINFO = 1,
-	VPK_NVTU_ACCEINFO,
-	VPK_NVTU_SNAPSHOT,
-	VPK_NVTU_MOVIEREC,
-	VPK_NVTU_MOVIELEN,
-	VPK_NVTU_RECSTATE,
-	VPK_NVTU_DEVINFO,
-	VPK_NVTU_VIDEOREC,
-	VPK_NVTU_GETFILENAME,
-	VPK_NVTU_UNBINDEVICE,
+	VPK_ACTION_START_TAG = 0,				// without use
+	VPK_ACTION_GPSINFO = 1,
+	VPK_ACTION_ACCEINFO,
+	VPK_ACTION_SNAPSHOT,
+	VPK_ACTION_MOVIEREC,
+	VPK_ACTION_MOVIELEN,
+	VPK_ACTION_RECSTATE,
+	VPK_ACTION_DEVINFO,
+	VPK_ACTION_VIDEOREC,
+	VPK_ACTION_GETFILENAME,
+	VPK_ACTION_UNBINDEVICE,
 
 	// menu get
-	VPK_NVTU_MENU_PICSIZEGET,		// photo_resolution	
-	VPK_NVTU_MENU_RECSIZEGET,		// video_resolution
-	VPK_NVTU_MENU_CYCRECGET,		// video_time
-	VPK_NVTU_MENU_GSENSORGET,		// vibration_sensor
-	VPK_NVTU_MENU_PARKGSENSORGET,	// park_sensor
-	VPK_NVTU_MENU_PARKMONITORGET,	// parking_mode
-	VPK_NVTU_MENU_POWEROFFVOLTGET,	// off_voltage
-	VPK_NVTU_MENU_AUDIOGET,			// record_sound
-	VPK_NVTU_MENU_HDRGET,			// HDR
-	VPK_NVTU_MENU_TIMESTAMPGET,		// time_watermark
-	VPK_NVTU_MENU_UPDATEGET,		// upgrade			
-	VPK_NVTU_MENU_POWERSTATEGET,	// switch_machine
-	VPK_NVTU_MENU_CRASHSTATGET,		// car_warning
-	VPK_NVTU_MENU_DRIVEBEHAVIORGET, // driving
-	VPK_NVTU_MENU_DEVSTATGET,		// abnormal_equipment
-	VPK_NVTU_MENU_HOTSPOTGET,		// hotspot
-	VPK_NVTU_MENU_FORMATSD_NOP,		// format_tf		//
-	VPK_NVTU_MENU_FACTORYSET_NOP,	// factory_reset	//
-	VPK_NVTU_MENU_VERSIONGET,		// version			//
-	VPK_NVTU_MENU_WIFIPHRASEGET,	// wifiphrase
+	VPK_ACTION_MENU_PICSIZEGET,			// photo_resolution	
+	VPK_ACTION_MENU_RECSIZEGET,			// video_resolution
+	VPK_ACTION_MENU_CYCRECGET,			// video_time
+	VPK_ACTION_MENU_GSENSORGET,			// vibration_sensor
+	VPK_ACTION_MENU_PARKGSENSORGET,		// park_sensor
+	VPK_ACTION_MENU_PARKMONITORGET,		// parking_mode
+	VPK_ACTION_MENU_POWEROFFVOLTGET,	// off_voltage
+	VPK_ACTION_MENU_AUDIOGET,			// record_sound
+	VPK_ACTION_MENU_HDRGET,				// HDR
+	VPK_ACTION_MENU_TIMESTAMPGET,		// time_watermark
+	VPK_ACTION_MENU_UPDATEGET,			// upgrade			
+	VPK_ACTION_MENU_POWERSTATEGET,		// switch_machine
+	VPK_ACTION_MENU_CRASHSTATGET,		// car_warning
+	VPK_ACTION_MENU_DRIVEBEHAVIORGET,	// driving
+	VPK_ACTION_MENU_DEVSTATGET,			// abnormal_equipment
+	VPK_ACTION_MENU_FORMATSD_NOP,		// format_tf		//
+	VPK_ACTION_MENU_FACTORYSET_NOP,		// factory_reset	//
+	VPK_ACTION_MENU_VERSIONGET,			// version			//
+	VPK_ACTION_MENU_WIFIPHRASEGET,		// wifiphrase
 	// menu set
-	VPK_NVTU_MENU_PICSIZESET,		// photo_resolution	
-	VPK_NVTU_MENU_RECSIZESET,		// video_resolution
-	VPK_NVTU_MENU_CYCRECSET,		// video_time
-	VPK_NVTU_MENU_GSENSORSET,		// vibration_sensor
-	VPK_NVTU_MENU_PARKGSENSORSET,	// park_sensor
-	VPK_NVTU_MENU_PARKMONITORSET,	// parking_mode
-	VPK_NVTU_MENU_POWEROFFVOLTSET,	// off_voltage
-	VPK_NVTU_MENU_AUDIOSET,			// record_sound
-	VPK_NVTU_MENU_HDRSET,			// HDR
-	VPK_NVTU_MENU_TIMESTAMPSET,		// time_watermark
-	VPK_NVTU_MENU_UPDATESET,		// upgrade			
-	VPK_NVTU_MENU_POWERSTATESET,	// switch_machine
-	VPK_NVTU_MENU_CRASHSTATSET,		// car_warning
-	VPK_NVTU_MENU_DRIVEBEHAVIORSET, // driving
-	VPK_NVTU_MENU_DEVSTATSET,		// abnormal_equipment
-	VPK_NVTU_MENU_HOTSPOTSET,		// hotspot
-	VPK_NVTU_MENU_FORMATSD,			// format_tf		//
-	VPK_NVTU_MENU_FACTORYSET,		// factory_reset	//
-	VPK_NVTU_MENU_VERSIONGET_NOP,	// version			//
-	VPK_NVTU_MENU_WIFIPHRASESET,	// wifiphrase
+	VPK_ACTION_MENU_PICSIZESET,			// photo_resolution	
+	VPK_ACTION_MENU_RECSIZESET,			// video_resolution
+	VPK_ACTION_MENU_CYCRECSET,			// video_time
+	VPK_ACTION_MENU_GSENSORSET,			// vibration_sensor
+	VPK_ACTION_MENU_PARKGSENSORSET,		// park_sensor
+	VPK_ACTION_MENU_PARKMONITORSET,		// parking_mode
+	VPK_ACTION_MENU_POWEROFFVOLTSET,	// off_voltage
+	VPK_ACTION_MENU_AUDIOSET,			// record_sound
+	VPK_ACTION_MENU_HDRSET,				// HDR
+	VPK_ACTION_MENU_TIMESTAMPSET,		// time_watermark
+	VPK_ACTION_MENU_UPDATESET,			// upgrade			
+	VPK_ACTION_MENU_POWERSTATESET,		// switch_machine
+	VPK_ACTION_MENU_CRASHSTATSET,		// car_warning
+	VPK_ACTION_MENU_DRIVEBEHAVIORSET,	// driving
+	VPK_ACTION_MENU_DEVSTATSET,			// abnormal_equipment
+	VPK_ACTION_MENU_FORMATSD,			// format_tf		//
+	VPK_ACTION_MENU_FACTORYSET,			// factory_reset	//
+	VPK_ACTION_MENU_VERSIONGET_NOP,		// version			//
+	VPK_ACTION_MENU_WIFIPHRASESET,		// wifiphrase
 
-	VPK_NVTU_QRCODE,
-//	VPK_NVTU_UPDATE_FREQGET,
-	VPK_NVTU_UPDATE_WHETHER_DOWNLOAD,
-	VPK_NVTU_UPDATE_WHETHER_UPGRADE,
+	VPK_ACTION_QRCODE,
+//	VPK_ACTION_UPDATE_FREQGET,
+	VPK_ACTION_UPDATE_WHETHER_DOWNLOAD,
+	VPK_ACTION_UPDATE_WHETHER_UPGRADE,
 
 	// tencent iot 
-	VPK_NVTU_IOTPIDGET,
-	VPK_NVTU_IOTIDSET,
-	VPK_NVTU_IOTLICENCESET,
+	VPK_ACTION_IOTPIDGET,
+	VPK_ACTION_IOTIDSET,
+	VPK_ACTION_IOTLICENCESET,
 
-	VPK_NVTU_POWER_OFF,
+	VPK_ACTION_POWER_OFF,
 
-	VPK_NVTU_MAX,
-}VpkNvtuType;
+	VPK_ACTION_MAX,
+} VpkActionType;
 
 typedef struct _VpkAction
 {
-	VpkNvtuType type;
-	char*		param;
-	char*		recvbuf;
-	uint32_t	recvsize;
-	char		priv[ZERO_LEN_ARRAY];
+	VpkActionType	type;
+	char*			param;
+	char*			recvbuf;
+	uint32_t		recvsize;
+	char			priv[ZERO_LEN_ARRAY];
 }VpkAction;
 
 typedef int (*VpkActionCallback)(void *ctx, void *data);
 
-VPKAPI VpkAction* vpk_action_create(VpkNvtuType type, void *param, void *recvbuf, uint32_t recvsize);
-VPKAPI int vpk_action_param_set(VpkAction* thiz, VpkNvtuType type, void *param);
+/* 256 buffer */
+VPKAPI VpkAction* vpk_action_create(VpkActionType type, void *param, void *recvbuf, uint32_t recvsize);
+VPKAPI int vpk_action_param_set(VpkAction* thiz, VpkActionType type, void *param);
 VPKAPI int vpk_action_exec(VpkAction* thiz, VpkActionCallback callback, void *ctx);
 VPKAPI int vpk_action_destroy(VpkAction* thiz);
 // 
