@@ -12,6 +12,7 @@
 
 #include "vpk.h"
 
+extern int actions_main(int argc, char *argv[]);
 extern int epoll_main(int argc, char *argv[]);
 extern int socket_main(int argc, char *argv[]);
 extern int minheap_main(int argc, char *argv[]);
@@ -127,6 +128,7 @@ typedef enum {
 	SAMPLE_DEMO_MINHEAP,
 	SAMPLE_DEMO_SOCKET,
 	SAMPLE_DEMO_EPOLL,
+	SAMPLE_DEMO_ACTIONS,
 } SampleDemo;
 
 typedef struct _demo_exec
@@ -151,6 +153,7 @@ static const demo_exec demo_tables[] = {
 	{SAMPLE_DEMO_MINHEAP,	"minheap"},
 	{SAMPLE_DEMO_SOCKET,	"socket"},
 	{SAMPLE_DEMO_EPOLL,		"epoll"},
+	{SAMPLE_DEMO_ACTIONS,	"actions"},
 };
 
 static int find_demo(const char* demo)
@@ -310,6 +313,8 @@ int main(int argc, char *argv[])
 		socket_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_EPOLL) {
 		epoll_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_ACTIONS) {
+		actions_main(argc, argv);
 	} else {
 		fprintf(stderr, "\n\n-d --sample without arguments error\n");
 		vpk_testbyte();

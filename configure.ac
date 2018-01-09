@@ -64,14 +64,17 @@ if test x$enable_x86 = xyes; then
 	AC_SUBST(GOLBAL_CFLAGS)
 
     LIB_PATH='$(project_dir)/x86/lib'
+    AC_SUBST(LIB_PATH)
 	
+	TIMAPI_LIB='$(project_dir)/x86/lib/libtimapi.a'
+	NANOMSG_LIB='$(project_dir)/x86/lib/libnanomsg.a'
 	JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
 	CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
 	#SQLITE3_LIB='$(project_dir)/x86/lib/libsqlite3.a'
     #AC_SUBST(CURL_LIB)
 	#AC_SUBST(JANSSON_LIB)
 
-    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
+    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB $TIMAPI_LIB $NANOMSG_LIB"
 
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
@@ -84,7 +87,7 @@ if test x$enable_x86 = xyes; then
     echo "STATIC_LIBS: $STATIC_LIBS"
 	AC_SUBST(STATIC_LIBS)
 	
-	DYNAMIC_LIBS="-ldl -lpthread -lrt -lz"
+	DYNAMIC_LIBS="-lanl -ldl -lpthread -lrt -lz"
 	AC_SUBST(DYNAMIC_LIBS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
