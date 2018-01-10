@@ -13,8 +13,8 @@ src/platform/nt966x/nt966x_session.h \
 src/platform/nt966x/nt966x_system.c \
 src/platform/nt966x/nt966x_system.h
 platform_x86_sources = \
-src/platform/x86/x86_actuator.c \
-src/platform/x86/x86_actuator.h \
+src/platform/x86/hi35xx_actuator.c \
+src/platform/x86/hi35xx_actuator.h \
 src/platform/x86/x86_eventq.c \
 src/platform/x86/x86_eventq.h \
 src/platform/x86/x86_log.c \
@@ -25,6 +25,9 @@ src/platform/x86/x86_session.c \
 src/platform/x86/x86_session.h \
 src/platform/x86/x86_system.c \
 src/platform/x86/x86_system.h
+
+#src/platform/x86/x86_actuator.c 
+#src/platform/x86/x86_actuator.h 
 
 if X8666
 platform_sources = $(platform_x86_sources)
