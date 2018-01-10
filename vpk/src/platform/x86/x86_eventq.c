@@ -15,16 +15,13 @@
 #include "vpk_event.h"
 #include "vpk_logging.h"
 #include "vpk_util.h"
-
-// //customed event from uITRON
-// #define CUSTOM_EVT_PREFIX				"CST,"
-// #define CUSTOM_EVT_MQ_MSG_NUM_MAX		10
-// #define CUSTOM_EVT_MQ_MSG_LEN_MAX		12
-// #define CUSTOM_NOTIFY_EVENT_QUEUE_NAME	"/NvtCustomEventMq"
-
 #include "vpk_constants.h"
 
-#define MQUEUE_BUFFER_SIZE		EVENT_MQ_MSG_LEN_MAX
+#include "jansson.h"
+#include "timapi/tima_eventq.h"
+
+#define MQUEUE_BUFFER_SIZE		EVENT_QUEUE_MSG_LEN_MAX
+#define MQUEUE_EVENT_PATH		"/tmp/tima.ipc"
 
 typedef struct queue_message
 {
@@ -104,7 +101,7 @@ const vpk_constants_t vpk = {
 	},
 };
 
-
+#if 0
 static int msg_queue_init(char* fname, int id)
 {
 	int qid;
@@ -179,7 +176,7 @@ static int msg_queue_recv(int qid, void* msg_value)
 
 	return 0;
 }
-
+#endif
 
 static int x86_eventq_destruct(void *queue)
 {
@@ -210,10 +207,11 @@ static vpk_eventq_t* x86_eventq_init(const char* name, const char* mode)
 		thiz->destruct	= x86_eventq_destruct;
 		thiz->fd		= -1;
 		memcpy(thiz->name, name, sizeof(thiz->name));
-		thiz->fd = msg_queue_init(".", 'a');
+		//thiz->fd = msg_queue_init(".", 'a');
+		thiz->fd = tima_mqueue_open();
 		if (thiz->fd < 0)
 		{
-			LOG_E("mq_open error(name = %s), queue id: %d", thiz->name, thiz->fd);
+			LOG_E("[name = %s]tima_mqueue_open error, queue id: %d", thiz->name, thiz->fd);
 			TIMA_FREE(thiz);
 			return NULL;
 		}
@@ -225,13 +223,37 @@ static vpk_eventq_t* x86_eventq_init(const char* name, const char* mode)
 
 static int x86_eventq_empty(const vpk_eventq_t* queue)
 {
-	return msg_queue_is_empty(queue->fd);
+	//return msg_queue_is_empty(queue->fd);
+	return tima_mqueue_is_empty(queue->fd);
 }
 
 
 #define HEXSTR_PARSE(ptr)	\
 	((vpk_hex_to_int(*(ptr)) << 12) | (vpk_hex_to_int(*((ptr)+1)) << 8) \
 	| (vpk_hex_to_int(*((ptr)+2)) << 4) | vpk_hex_to_int(*((ptr)+3)))
+
+static int event_code_get(char* data)
+{
+	int ret = -1;
+	json_t* json_root = json_loads(data, 0, NULL);
+	if (json_root) {
+
+		json_t *jobject = json_object_get(json_root, "event");
+		if (!jobject) {
+			LOG_E("jobject[event] not exist, event data format error.");
+		} else {
+			char* event = json_string_value(jobject);
+			if (event)
+				ret = HEXSTR_PARSE(event);
+		}
+
+		json_decref(json_root);
+	}
+
+	if (ret = -1)
+		LOG_E("[json]event data format error.");
+	return ret;
+}
 
 static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 {
@@ -240,15 +262,17 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 	return_val_if_fail(thiz != NULL && e != NULL, -1);
 
 	memset(thiz->recv_buff, 0x00, sizeof(thiz->recv_buff));
-	ret = msg_queue_recv(thiz->fd, thiz->recv_buff);
+	//ret = msg_queue_recv(thiz->fd, thiz->recv_buff);
+	ret = tima_mqueue_recv(thiz->fd, thiz->recv_buff);
 	if (ret < 0) 
 	{
-		LOG_E("msg_queue_recv error(name = %s), ret = %d, qid: %d", thiz->name, thiz->fd);
+		LOG_E("tima_mqueue_recv error(name = %s), ret = %d, qid: %d", thiz->name, thiz->fd);
 		return -1;
 	}
 
 	//unsigned int keycode = atoi(thiz->recv_buff);
-	keycode = HEXSTR_PARSE(&thiz->recv_buff[0]);
+	//keycode = HEXSTR_PARSE(&thiz->recv_buff[0]);
+	keycode = event_code_get(&thiz->recv_buff[0]);
 // 	int keycode = 0;
 // 	sprintf(&keycode, "%x", thiz->recv_buff);
 #if 1
@@ -259,6 +283,7 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 
 			e->type = key_event_map[i].type;
 			e->notice.keycode = key_event_map[i].key;
+			e->data = thiz->recv_buff;
 			LOG_I("vpk.events (key, value)(%d, 0x%04x)", key_event_map[i].key, key_event_map[i].value);
 			break;
 		}
@@ -333,38 +358,79 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 	return ret;
 }
 
+
+typedef struct json_event_t
+{
+	char	event[8];
+	char	key[8];
+	int		id;
+	int		rcode;
+	char	value[512];
+} json_event_t;
+
+json_event_t *e = NULL;
+char *videos = "[{\"camera\":0,\"type\":1,\"file\":\"/xxx/01.mp4\"},{\"camera\":1,\"type\":1,\"file\":\"/xxx/02.mp4\"}]";
+static int event_data_create(char* code, int id)
+{
+	json_t* json_msg = NULL;
+	json_t* json_root = NULL;
+
+	json_msg = json_object();
+	json_root = json_object();
+	
+	json_object_set_new(json_root, "event", json_string(code));
+
+	json_object_set_new(json_msg, "id", json_integer(e->id));
+	json_object_set_new(json_msg, "key", json_string(e->key));
+	json_object_set_new(json_msg, "rcode", json_integer(e->rcode));
+	json_object_set_new(json_msg, "value", json_string(e->value));
+
+	json_object_set_new(json_root, "msg", json_msg);
+
+	char* data_dump = json_dumps(json_root, 0);			/* to buffer */
+	LOG_D("event data: %s\n", data_dump);
+
+	free(data_dump);
+	json_decref(json_msg);
+	json_decref(json_root);
+
+	return 0;
+}
+
 static int x86_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 {
 	int ret = 0;
 //	struct timespec ts;
 	vpk_eventq_t* thiz = queue;
-	char send_buff[EVENT_MQ_MSG_LEN_MAX] = {0};
-	return_val_if_fail(thiz != NULL && send_buff != NULL && e != NULL, -1);
+	char send_buff[MQUEUE_BUFFER_SIZE] = {0};
+	char send_code[16] = {0};
+	return_val_if_fail(thiz != NULL && send_code != NULL && e != NULL, -1);
 
 	switch (e->type)
 	{
 	case VPK_EVENT_ALERT:	//vpk.events.ALERT:
-		snprintf(send_buff, sizeof(send_buff), "%04x", e->alert.keycode);
+		snprintf(send_code, sizeof(send_code), "%04x", e->alert.keycode);
 		break;
 	case VPK_EVENT_EXCEP:
-		snprintf(send_buff, sizeof(send_buff), "%04x", e->abnormal.keycode);
+		snprintf(send_code, sizeof(send_code), "%04x", e->abnormal.keycode);
 		break;
 	case VPK_EVENT_NOTICE:
-		snprintf(send_buff, sizeof(send_buff), "%04x", e->notice.keycode);
+		snprintf(send_code, sizeof(send_code), "%04x", e->notice.keycode);
 		break;
 	default:
 		LOG_D("post default type, keycode: %04x", e->alert.keycode);
-		snprintf(send_buff, sizeof(send_buff), "%04x", e->alert.keycode);
+		snprintf(send_code, sizeof(send_code), "%04x", e->alert.keycode);
 		break;
 	}
 
-	LOG_I("event post msg type: %d, keycode: 0x%x, string: %s", e->type, e->alert.keycode, send_buff);
+	LOG_I("event post msg type: %d, keycode: 0x%x, string: %s", e->type, e->alert.keycode, send_code);
 
 // 	ts.tv_sec	= 3;
 // 	ts.tv_nsec	= 0;
 // 	ret = mq_timedsend(thiz->fd, send_buff, EVENT_MQ_MSG_LEN_MAX, 0, &ts);
 //	ret = mq_send(thiz->fd, send_buff, EVENT_MQ_MSG_LEN_MAX, 0);
-	ret = msg_queue_post(thiz->fd, send_buff);
+	//ret = msg_queue_post(thiz->fd, send_buff);
+	ret = tima_mqueue_post(thiz->fd, send_buff);
 	if (ret != 0)
 	{
 		LOG_E("mq_timedsend error(name = %s), ret = %d, qid: %d", thiz->name, ret, thiz->fd);

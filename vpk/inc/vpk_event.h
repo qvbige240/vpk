@@ -12,7 +12,7 @@
 TIMA_BEGIN_DELS
 
 #define EVENT_MQ_MSG_NUM_MAX	10
-#define EVENT_MQ_MSG_LEN_MAX	16
+#define EVENT_MQ_MSG_LEN_MAX	512
 
 
 //enum {
@@ -23,7 +23,9 @@ TIMA_BEGIN_DELS
 //#undef KEY_EVENT
 //};
 
-#define    extends_event()     unsigned int  type
+#define    extends_event()     \
+	unsigned int	type;		\
+	char*			data
 
 typedef struct vpk_abnormal_t
 {
