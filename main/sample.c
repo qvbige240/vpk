@@ -12,6 +12,7 @@
 
 #include "vpk.h"
 
+extern int condition_main(int argc, char *argv[]);
 extern int actions_main(int argc, char *argv[]);
 extern int epoll_main(int argc, char *argv[]);
 extern int socket_main(int argc, char *argv[]);
@@ -97,8 +98,9 @@ static void help(FILE *f) {
 		"    -h --help          Show this help\n"
 		"    -V --version       Show version\n"
 		"    -d --sample        Target sample demo which will be running(mqsend, \n"
-		"                       queue, download, md5, json, filesys, ipc, sort).\n"
-		"                       timer, string, sqlite3, minheap, socket, epoll).\n"
+		"                       queue, download, md5, json, filesys, ipc, sort,\n"
+		"                       timer, string, sqlite3, minheap, socket, epoll,\n"
+		"                       actions, condition).\n"
 		"    -t --type          Event type for keycode\n"
 		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
 		"    -u --url           Target remote url.\n"
@@ -129,6 +131,7 @@ typedef enum {
 	SAMPLE_DEMO_SOCKET,
 	SAMPLE_DEMO_EPOLL,
 	SAMPLE_DEMO_ACTIONS,
+	SAMPLE_DEMO_CONDITION,
 } SampleDemo;
 
 typedef struct _demo_exec
@@ -154,6 +157,7 @@ static const demo_exec demo_tables[] = {
 	{SAMPLE_DEMO_SOCKET,	"socket"},
 	{SAMPLE_DEMO_EPOLL,		"epoll"},
 	{SAMPLE_DEMO_ACTIONS,	"actions"},
+	{SAMPLE_DEMO_CONDITION,	"condition"},
 };
 
 static int find_demo(const char* demo)
@@ -315,6 +319,8 @@ int main(int argc, char *argv[])
 		epoll_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_ACTIONS) {
 		actions_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_CONDITION) {
+		condition_main(argc, argv);
 	} else {
 		fprintf(stderr, "\n\n-d --sample without arguments error\n");
 		vpk_testbyte();
