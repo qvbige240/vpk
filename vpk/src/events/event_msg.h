@@ -27,7 +27,8 @@ struct evmsg_notice {
 	int			ev_notice_added_cnt;
 };
 
-int vpk_evmsg_notice(int key);
+//int vpk_evmsg_notice(int key);
+int vpk_evmsg_notice(int key, void *data, int size);
 
 int evmsg_init(vpk_evbase_t *base);
 void evmsg_dealloc(vpk_evbase_t *base);

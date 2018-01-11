@@ -545,6 +545,8 @@ int vpk_event_assign(vpk_events *ev, vpk_evbase_t *base, int fd, short events, v
 	ev->ev_result		= 0;
 	ev->ev_flags		= VPK_EVLIST_INIT;
 	ev->ev_ncalls		= 0;
+	/* add for notice event to pass param data */
+	memset(ev->ev_pdata, 0x00, sizeof(ev->ev_pdata));
 
 	if (events & VPK_EV_SIGNAL) {
 		if (events & (VPK_EV_READ | VPK_EV_WRITE)) {
@@ -628,6 +630,23 @@ int vpk_event_del(vpk_events *ev)
 	EVBASE_RELEASE_LOCK(ev->ev_base, th_base_lock);
 
 	return ret;
+}
+
+int vpk_event_data_set(vpk_events *ev, void *data, int len)
+{
+	if (data && len > 0) {
+		int size = len > EVENT_PARAM_DATA_SIZE_MAX - 1 ? EVENT_PARAM_DATA_SIZE_MAX - 1 : len;
+		if (size != len)
+			EVENT_LOGE("event param data len is out of the scope");
+		memset(ev->ev_pdata, 0x00, EVENT_PARAM_DATA_SIZE_MAX);
+		memcpy(ev->ev_pdata, data, size);
+	}
+	return 0;
+}
+
+char *vpk_event_data_get(vpk_events *ev)
+{
+	return ev->ev_pdata;
 }
 
 //#ifndef VPK_EVENT_DISABLE_THREAD_SUPPORT

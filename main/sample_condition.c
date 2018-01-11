@@ -15,7 +15,7 @@
 
 static pthread_mutex_t mutex;
 static pthread_cond_t cond;
-static int size = 0;
+static int size = -1;
 
 static void *vpk_test2(void* arg)
 {
@@ -25,12 +25,13 @@ static void *vpk_test2(void* arg)
 	while(1)
 	{
 		pthread_mutex_lock(&mutex);
-		while (size > 0) {
+		while (size > -1) {
 			LOG_D("pthread_cond_wait");
 			pthread_cond_wait(&cond, &mutex);
 		}
 
-		size++;
+		//size++;
+		size = 1;
 		LOG_D("[send]size = %d", size);
 
 		pthread_mutex_unlock(&mutex);
@@ -45,15 +46,26 @@ static void *vpk_test1(void* arg)
 
 	while(1)
 	{
+		//usleep(100000);
 		ch = '0';
-		LOG_D("please press 's' to start a condition");
+		LOG_D("please press 's' to start a condition\n\n\n");
+
 		while (ch != 's') {
 			scanf("%c", &ch);
 		}
-
+#if 0
+		//pthread_mutex_lock(&mutex);
 		size--;
 		LOG_D("[recv]size = %d", size);
 		pthread_cond_broadcast(&cond);
+		//pthread_mutex_unlock(&mutex);
+#else
+		if (size > -1) {
+			size = -1;
+			LOG_D("[recv]size = %d", size);
+			pthread_cond_broadcast(&cond);
+		}
+#endif
 	}
 
 	return NULL;

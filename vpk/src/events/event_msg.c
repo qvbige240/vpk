@@ -36,16 +36,26 @@ static const struct eventop evmsg_ops = {
 	0
 };
 
+#define EVENT_MSG_NOTICE_BUFFER_MAX		1024
+
 #ifndef VPK_EVENT_DISABLE_THREAD_SUPPORT
 static void *evmsg_base_lock = NULL;
+static void *evmsg_base_cond = NULL;
 #endif
 
 static vpk_evbase_t *evmsg_base = NULL;
 static int evmsg_notice_added_cnt = 0;
 static int evmsg_base_fd = -1;
 
+static int evmsg_buffer_flag = -1;
+static int evmsg_buffer_len = 0;
+static char evmsg_buffer[EVENT_MSG_NOTICE_BUFFER_MAX] = {0};
+
 #define EVNOTICEBASE_LOCK()		EVLOCK_LOCK(evmsg_base_lock, 0)
 #define EVNOTICEBASE_UNLOCK()	EVLOCK_UNLOCK(evmsg_base_lock, 0)
+
+#define	EVNOTICE_COND_WAIT()		EVTHREAD_COND_WAIT(evmsg_base_cond, evmsg_base_lock)
+#define EVNOTICE_COND_BROADCAST()	EVTHREAD_COND_BROADCAST(evmsg_base_cond)
 
 static void evmsg_callback(int fd, short what, void *arg)
 {
@@ -67,11 +77,13 @@ static void evmsg_callback(int fd, short what, void *arg)
 		}
 		for (i = 0; i < n; ++i) {
 			unsigned char key = notices[i];
+			EVENT_LOGD(("event msg recv key: %d", (int)key));
 			if (key < EVENT_MSG_NOTICE_MAX_NUM)
 				ncaught[key]++;
 		}
 	}
 
+#if 0
 	EVBASE_ACQUIRE_LOCK(thiz, th_base_lock);
 	for (i = 0; i < EVENT_MSG_NOTICE_MAX_NUM; i++)
 	{
@@ -79,7 +91,28 @@ static void evmsg_callback(int fd, short what, void *arg)
 			evmap_notice_active(thiz, i, ncaught[i]);
 	}
 	EVBASE_RELEASE_LOCK(thiz, th_base_lock);
+#else
+	EVNOTICEBASE_LOCK();
 
+	EVBASE_ACQUIRE_LOCK(thiz, th_base_lock);
+	for (i = 0; i < EVENT_MSG_NOTICE_MAX_NUM; i++)
+	{
+		if (ncaught[i]) {
+			if (i == evmsg_buffer_flag)
+				evmap_notice_active(thiz, i, ncaught[i], evmsg_buffer, evmsg_buffer_len);
+			else
+				evmap_notice_active(thiz, i, ncaught[i], NULL, 0);
+		}
+	}
+	EVBASE_RELEASE_LOCK(thiz, th_base_lock);
+
+	if (evmsg_buffer_flag > -1) {
+		evmsg_buffer_flag = -1;
+		EVNOTICE_COND_BROADCAST();
+	}
+
+	EVNOTICEBASE_UNLOCK();
+#endif
 }
 
 int evmsg_init(vpk_evbase_t *base)
@@ -184,11 +217,12 @@ static int evmsg_del(vpk_evbase_t *base, int msgfd, short old, short events, voi
 }
 
 //static int evmsg_dispatch(vpk_evbase_t *base, struct timeval *tv)
+#if 0
 int vpk_evmsg_notice(int key)
 {
 	int msg = key;
 	int flag = 0;
-	
+
 	EVNOTICEBASE_LOCK();
 	if (msg < evtable.total)
 		flag = evtable.notices[msg];
@@ -201,6 +235,41 @@ int vpk_evmsg_notice(int key)
 
 	return -1;
 }
+#else
+int vpk_evmsg_notice(int key, void *data, int size)
+{
+	int msg = key;
+	int flag = 0;
+	int len = size > EVENT_MSG_NOTICE_BUFFER_MAX - 1 ? EVENT_MSG_NOTICE_BUFFER_MAX - 1 : size;;
+
+	EVNOTICEBASE_LOCK();
+	if (msg < evtable.total)
+		flag = evtable.notices[msg];
+	EVNOTICEBASE_UNLOCK();
+
+	/* whether this notice is registered */
+	if (flag > 0) {
+		if (data && len > 0) {
+			EVNOTICEBASE_LOCK();
+			while (evmsg_buffer_flag > -1)
+				EVNOTICE_COND_WAIT();
+
+			/* because of 'msg >= 0' */
+			evmsg_buffer_flag = msg;
+			evmsg_buffer_len = len;
+			memset(evmsg_buffer, 0x00, sizeof(evmsg_buffer));
+			memcpy(evmsg_buffer, data, len);
+
+			EVNOTICEBASE_UNLOCK();
+		}
+
+		send(evmsg_base_fd, (char*)&msg, 1, 0);
+		return 0;
+	}
+
+	return -1;
+}
+#endif
 
 void evmsg_dealloc(vpk_evbase_t *base)
 {
@@ -241,10 +310,12 @@ int evmsg_global_setup_locks(const int enable_locks)
 {
 	EVTHREAD_SETUP_GLOBAL_LOCK(evmsg_base_lock, 0);
 	//EVTHREAD_ALLOC_LOCK(evmsg_base_lock, 0);
+	EVTHREAD_ALLOC_COND(evmsg_base_cond);
 	return 0;
 }
 void evmsg_global_free_locks(void)
 {
+	EVTHREAD_FREE_COND(evmsg_base_cond);
 	EVTHREAD_FREE_LOCK(evmsg_base_lock, 0);
 }
 #endif

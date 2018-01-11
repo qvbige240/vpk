@@ -250,7 +250,7 @@ static int event_code_get(char* data)
 		json_decref(json_root);
 	}
 
-	if (ret = -1)
+	if (ret == -1)
 		LOG_E("[json]event data format error.");
 	return ret;
 }
