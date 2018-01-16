@@ -24,6 +24,7 @@
 #define MAX_ACTION_RECEIVE_SIZE		256
 
 #define ZERO_LEN_ARRAY	1
+#ifndef return_if_fail
 #define return_if_fail(p) if(!(p)) \
 	{printf("%s:%d Error: "#p" failed.\n", __FILE__, __LINE__); \
 		(void)fprintf(stderr, "%s:%d Error: "#p" failed.\n", \
@@ -32,6 +33,8 @@
 	{printf("%s:%d Error: "#p" failed.\n", __FILE__, __LINE__); \
 		(void)fprintf(stderr, "%s:%d Error: "#p" failed.\n", \
 		__FILE__, __LINE__); return (ret);}
+#endif
+
 #define DECL_PRIV(thiz, priv) PrivInfo* priv = thiz != NULL ? (PrivInfo*)thiz->priv : NULL
 
 #ifndef INLINE
