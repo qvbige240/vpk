@@ -47,11 +47,13 @@ VPKAPI int vpk_event_add(vpk_events *ev, const struct timeval *tv);
 VPKAPI int vpk_event_del(vpk_events *ev);
 VPKAPI vpk_events *vpk_event_new(vpk_evbase_t *base, int fd, short events, vpk_event_callback callback, void *arg);
 VPKAPI void vpk_event_free(vpk_events *ev);
+VPKAPI char *vpk_event_data_get(vpk_events *ev);
 VPKAPI vpk_evbase_t* vpk_evbase_create(void);
 VPKAPI int vpk_evbase_loop(vpk_evbase_t* thiz, int flags);
 VPKAPI void vpk_evbase_destroy(vpk_evbase_t* thiz);
 
-VPKAPI int vpk_evmsg_notice(int key);
+//VPKAPI int vpk_evmsg_notice(int key);
+VPKAPI int vpk_evmsg_notice(int key, void *data, int size);
 
 TIMA_END_DELS
 

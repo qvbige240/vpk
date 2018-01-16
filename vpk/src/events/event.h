@@ -38,6 +38,8 @@ TIMA_BEGIN_DELS
 #define ev_io_timeout	_ev.ev_io.ev_timeout
 
 #define ev_ncalls	_ev.ev_notice.ev_ncalls
+#define ev_pdata	_ev.ev_notice.ev_pdata
+
 
 #define VPK_EVLIST_TIMEOUT			0x01
 #define VPK_EVLIST_INSERTED			0x02
@@ -166,6 +168,8 @@ struct vpk_evbase_t
 };
 
 int event_thread_make_notifiable(vpk_evbase_t *thiz);
+
+int vpk_event_data_set(vpk_events *ev, void *data, int len);
 
 void event_active_nolock(vpk_events *ev, int flag, short ncalls);
 

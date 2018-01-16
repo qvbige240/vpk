@@ -22,7 +22,7 @@ const ActionInfo vpk_action_tables[] =
 	{VPK_ACTION_MOVIELEN,					"VIDEO",	"tima -movielen "},
 	{VPK_ACTION_RECSTATE,					"VIDEO",	"tima -recstate "},
 	{VPK_ACTION_DEVINFO,					"DEVINFO",	"tima -getdevinfo "},
-	{VPK_ACTION_VIDEOREC,					"VIDEO",	"tima -getvideo "},
+	{VPK_ACTION_VIDEOREC,					"VIDEO",	"tima -movierec "},
 	{VPK_ACTION_GETFILENAME,				"FILE",		"tima -getcurfile "},
 	{VPK_ACTION_UNBINDEVICE,				"UNBIND",	"tima -removebind "},
 

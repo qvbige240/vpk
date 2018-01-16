@@ -16,6 +16,9 @@
 
 TIMA_BEGIN_DELS
 
+// #define EVENT_PARAM_DATA_SIZE_MAX	EVENT_MQ_MSG_LEN_MAX
+#define EVENT_PARAM_DATA_SIZE_MAX	512
+
 struct vpk_evbase_t;
 typedef struct vpk_evbase_t vpk_evbase_t;
 
@@ -45,6 +48,7 @@ typedef struct vpk_events
 			TAILQ_ENTRY(vpk_events)  ev_notice_next;
 			short	ev_ncalls;
 			short	*ev_pncalls;
+			char	ev_pdata[EVENT_PARAM_DATA_SIZE_MAX];
 		} ev_notice;
 	} _ev;
 

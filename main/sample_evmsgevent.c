@@ -140,7 +140,7 @@ static int eventq_recv(const char* name)
 		ret = vpk_eventq_recv(eventq, &alert);
 		LOG_I("[%s] ret = %d, recv event key = 0x%x\n", name, ret, alert.alert.keycode);
 
-		if ((ret = vpk_evmsg_notice(alert.alert.keycode)) < 0) {
+		if ((ret = vpk_evmsg_notice(alert.alert.keycode, alert.data, strlen(alert.data))) < 0) {
 			LOG_E("vpk_evmsg_notice failed, maybe msg not register callback.");
 		}
 
@@ -155,6 +155,7 @@ static int eventq_recv(const char* name)
 
 vpk_events *events_notice;
 vpk_events *events_notice2;
+vpk_events *events_notice3;
 static int start_timer_flag = 0;
 static void notice_callback(int fd, short event, void *arg) 
 {
@@ -172,6 +173,17 @@ static void notice_callback2(int fd, short event, void *arg)
 	//start_timer_flag = 1;
 	vpk_event_free(events_notice2);
 }
+static void notice_callback3(int fd, short event, void *arg) 
+{
+	if (event & VPK_EV_TIMEOUT)
+		LOG_D("timeout notice_callback3.");
+	LOG_D("=========3333fd(%d) event(0x%02x) in notice_callback.", fd, event);
+	
+	char *data = vpk_event_data_get(events_notice3);
+	LOG_D("recv data: %s", data);
+
+	vpk_event_free(events_notice3);
+}
 
 int msg_event_add(const char* name)
 {
@@ -185,10 +197,17 @@ int msg_event_add(const char* name)
 	tv.tv_sec = 10;
 	vpk_event_add(events_notice, &tv);
 
+	// events_notice2
 	events_notice2 = vpk_event_new(base, KEY2FD(vpk.keys.EVENT_NO_TF_CARD),
 		VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback2, NULL);;
 
 	vpk_event_add(events_notice2, NULL);
+
+	// events_notice3
+	events_notice3 = vpk_event_new(base, KEY2FD(vpk.keys.EVENT_VIDEOREC_FINISH),
+		VPK_EV_NOTICE|VPK_EV_PERSIST, notice_callback3, NULL);;
+
+	vpk_event_add(events_notice3, NULL);
 
 	return ret;
 }

@@ -260,7 +260,7 @@ int evmap_notice_del(vpk_evbase_t *base, int msg, vpk_events *ev)
 	return 1;
 }
 
-void evmap_notice_active(vpk_evbase_t *base, int msg, int ncalls)
+void evmap_notice_active(vpk_evbase_t *base, int msg, int ncalls, void *data, int size)
 {
 	struct event_notice_map *noticemap = &base->noticemap;
 	struct evmap_notice *ctx = NULL;
@@ -269,6 +269,9 @@ void evmap_notice_active(vpk_evbase_t *base, int msg, int ncalls)
 
 	ctx = (struct evmap_notice *)noticemap->entries[fd];
 
-	TAILQ_FOREACH(ev, &ctx->events, ev_notice_next)
+	TAILQ_FOREACH(ev, &ctx->events, ev_notice_next) {
+		if (data && size > 0)
+			vpk_event_data_set(ev, data, size);
 		event_active_nolock(ev, VPK_EV_NOTICE, ncalls);
+	}
 }

@@ -135,7 +135,7 @@ int http_download(const char* remote_path, const char* local_path, long timout)
 	CURLcode res;
 	FILE* fp = NULL;
 	CURL* curl_handle = NULL;
-	char* redirect_url = NULL;
+	//char* redirect_url = NULL;
 	long response_code;
 	long file_size = 0;
 	long have_size = 0;

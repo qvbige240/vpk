@@ -276,6 +276,7 @@ void test_null(void)
 	LOG_D("ret cmp: %d", ret);
 	//const char* desc = "hello";
 	const char* desc = NULL;
+	LOG_D("desc: %s", desc);
 	if (!desc) desc = "Device Exception Parse Error!";
 	LOG_D("desc: %s", desc);
 
