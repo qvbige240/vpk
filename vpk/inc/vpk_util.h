@@ -52,6 +52,10 @@ TIMA_BEGIN_DELS
 
 #define TO_HEX_CHAR(c)	((c) > 9 ? (c) + 55 : (c) + 48)
 
+#define HEX_PARSE_DIGIT_STR(ptr)	\
+	((vpk_hex_to_int(*(ptr)) << 12) | (vpk_hex_to_int(*((ptr)+1)) << 8) \
+	| (vpk_hex_to_int(*((ptr)+2)) << 4) | vpk_hex_to_int(*((ptr)+3)))
+
 VPKAPI int vpk_hex_to_int(char c);
 
 /**
