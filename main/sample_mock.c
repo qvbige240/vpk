@@ -164,7 +164,7 @@ static int tima_command_mock(int fd, char *recv_buff)
 			//const char *str = "{\"event\":\"5002\",\"msg\":{\"id\":0,\"key\":\"5002\",\"rcode\":0,\"value\":\"[{\\\"camera\\\":0,\\\"type\\\":0,\\\"file\\\":\\\"P70625-161747.jpg\\\"},{\\\"camera\\\":1,\\\"type\\\":0,\\\"file\\\":\\\"02.JPG\\\"}]\"}}";
 			const char *str = "0";
 			rc = tima_command_send(fd, str, strlen(str), 0);
-			printf("rc = %d, send: %s\n", rc, str);
+			printf("rc = %d, reply: %s\n", rc, str);
 			reply_code = "5002";
 			command_reply_semaphore();
 			return 0;
@@ -176,7 +176,7 @@ static int tima_command_mock(int fd, char *recv_buff)
 			//const char *str = "{\"event\":\"5001\",\"msg\":{\"id\":0,\"key\":\"5001\",\"rcode\":0,\"value\":\"[{\\\"camera\\\":0,\\\"type\\\":1,\\\"file\\\":\\\"2017_a.TS\\\"},{\\\"camera\\\":1,\\\"type\\\":1,\\\"file\\\":\\\"2017_b.TS\\\"}]\"}}";
 			const char *str = "0";
 			rc = tima_command_send(fd, str, strlen(str), 0);
-			printf("rc = %d, send: %s\n", rc, str);
+			printf("rc = %d, reply: %s\n", rc, str);
 			reply_code = "5001";
 			command_reply_semaphore();
 			return 0;
@@ -193,6 +193,28 @@ static int tima_command_mock(int fd, char *recv_buff)
 			vpk_mmap_destroy(mmap);
 			return 0;
 		}
+		p = strstr(buf, "-fwdownload");
+		if (p != NULL)
+		{
+			const char *str = "0";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			printf("rc = %d, reply: %s\n", rc, str);
+			reply_code = "1051";
+			command_reply_semaphore();
+			return 0;
+		}
+		p = strstr(buf, "-fwupdate");	/** tima -fwupdate   1 **/
+		if (p != NULL)
+		{
+			const char *str = "0";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			printf("rc = %d, reply: %s\n", rc, str);
+			if (strstr(p, "1")) {
+				reply_code = "1052";
+				command_reply_semaphore();
+			}
+			return 0;
+		}
 
 	}
 	return ret;
@@ -201,6 +223,7 @@ static int tima_command_mock(int fd, char *recv_buff)
 static void *command_mock(void *name)
 {
 	int rc;
+	int count = 0;
 	char recvbuf[256];
 
 	int fd = tima_command_open();
@@ -216,7 +239,15 @@ static void *command_mock(void *name)
 		if (rc < 0) {
 			printf(" tima_rpcd_recv error");
 		}
-		printf("rc = %d, recv: %s\n", rc, recvbuf);
+
+		if (strstr(recvbuf, "-gpsinfo")) {
+			if (++count > 10) {
+				printf("rc = %d, recv: %s\n", rc, recvbuf);
+				count = 0;
+			}
+		} else {
+			printf("rc = %d, recv: %s\n", rc, recvbuf);
+		}
 		tima_command_mock(fd, recvbuf);
 	}
 
