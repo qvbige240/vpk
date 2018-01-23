@@ -126,6 +126,85 @@ static INLINE void command_reply_semaphore(void)
 		LOG_E("mock_sem sem post failed!");
 }
 
+static int setting_item_get(const char* file, char* key, int* value)
+{
+	int ret = 0;
+	json_t* json_root = NULL;
+	if (vpk_mmap_exist(file)) {
+		json_root = json_load_file(file, 0, NULL);
+	}
+	else {
+		LOG_W("file not exist, and new json_root");
+		json_root = json_object();
+	}
+
+	if (json_root)
+	{
+		json_t* jobject = json_object_get(json_root, key);
+		if (!jobject)
+		{
+			LOG_W("jobject not exist, and return default 0.");
+			*value = 0;
+			ret = -1;
+		}
+		else
+		{
+			*value = json_integer_value(jobject);
+		}
+
+		json_decref(json_root);
+	}
+
+	return ret;
+}
+static int setting_item_write(const char* file, char* key, int value)
+{
+	json_t* json_root = NULL;
+	if (vpk_mmap_exist(file)) {
+		json_root = json_load_file(file, 0, NULL);
+	}
+	else {
+		LOG_W("file not exist, and new json_root");
+		json_root = json_object();
+	}
+
+	if (json_root)
+	{
+		json_t* jobject = json_object_get(json_root, key);
+		if (!jobject)
+		{
+			LOG_W("jobject not exist, and new json object.");
+			json_object_set(json_root, key, json_integer(value));
+			json_dump_file(json_root, file, 0);						/* to file */
+
+			char* update_dump = json_dumps(json_root, 0);			/* to buffer */
+			LOG_D("update_dump setting:\n%s\n", update_dump);
+			free(update_dump);
+		}
+		else
+		{
+			int curr_val = json_integer_value(jobject);
+			if (curr_val != value)
+			{
+				json_object_set(json_root, key, json_integer(value));
+				json_dump_file(json_root, file, 0);						/* to file */
+
+				char* update_dump = json_dumps(json_root, 0);			/* to buffer */
+				LOG_D("update_dump setting:\n%s\n", update_dump);
+				free(update_dump);
+			}
+			else
+			{
+				LOG_D("no value change at \'%s\'", key);
+			}
+		}
+
+		json_decref(json_root);
+	}
+
+	return 0;
+}
+
 static char gps_str[256] = {0};
 static int tima_command_mock(int fd, char *recv_buff)
 {
@@ -214,6 +293,109 @@ static int tima_command_mock(int fd, char *recv_buff)
 				command_reply_semaphore();
 			}
 			return 0;
+		}
+		p = strstr(buf, "-qrcodeshow");
+		if (p != NULL)
+		{
+			char *str = "0";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			return 0;
+		}
+		p = strstr(buf, "-setiotid");
+		if (p != NULL)
+		{
+			char *str = "0";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			return 0;
+		}
+		p = strstr(buf, "-setiotlicence");
+		if (p != NULL)
+		{
+			char *str = "0";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			return 0;
+		}
+		p = strstr(buf, "-poweroff");
+		if (p != NULL)
+		{
+			char *str = "0";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			return 0;
+		}
+		p = strstr(buf, "-removebind");
+		if (p != NULL)
+		{
+			char *str = "0";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			return 0;
+		}
+		p = strstr(buf, "-versionget");
+		if (p != NULL)
+		{
+			char *str = "K90.20170808.01";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			return 0;
+		}
+		p = strstr(buf, "-wifiphraseget");
+		if (p != NULL)
+		{
+			char *str = "DECAI_,%s";
+			rc = tima_command_send(fd, str, strlen(str), 0);
+			return 0;
+		}
+		p = strstr(buf, "MENUMOCK");		/* menus setting mock */
+		if (p != NULL)
+		{
+#define DEVICE_MENUS_INFO_FILE	"menu_setting_pc.json"
+			int value = 0;
+			char *key = NULL;
+			char tmp[256] = {0};
+			char reply_buff[32] = {0};
+			int r = sscanf(buf, "tima -%s MENUMOCK\n", tmp);
+			if (r) {
+				p = strstr(tmp, "set");
+				if (p)
+				{
+					int pos = p - tmp;
+					tmp[pos] = '\0';
+					key = tmp;
+					p = strstr(buf, "MENUMOCK");
+					if (p)
+					{
+						p = p + strlen("MENUMOCK");
+						value = atoi(p);
+						LOG_D("set key = %s, value(atoi) = %d\n", key, value);
+						setting_item_write(DEVICE_MENUS_INFO_FILE, key, value);
+						sprintf(reply_buff, "%d", value);
+					}
+				}
+				p = strstr(tmp, "get");
+				if (p)
+				{
+					int pos = p - tmp;
+					tmp[pos] = '\0';
+					key = tmp;
+					setting_item_get(DEVICE_MENUS_INFO_FILE, key, &value);
+					LOG_D("get key = %s, value = %d\n", key, value);
+					sprintf(reply_buff, "%d", value);
+				}
+				else
+				{
+					char *str = "0";
+					memcpy(reply_buff, str, strlen(str));
+				}
+			} else {
+				char *str = "0";
+				memcpy(reply_buff, str, strlen(str));
+			}
+			rc = tima_command_send(fd, reply_buff, strlen(reply_buff), 0);
+
+			return 0;
+		}		
+		else
+		{
+			char *str = "unkonwn command!!!";
+			rc = tima_command_send(fd, str, strlen(str), 0);
 		}
 
 	}
