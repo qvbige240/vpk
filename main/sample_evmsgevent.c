@@ -140,7 +140,7 @@ static int eventq_recv(const char* name)
 		ret = vpk_eventq_recv(eventq, &alert);
 		LOG_I("[%s] ret = %d, recv event key = 0x%x\n", name, ret, alert.alert.keycode);
 
-		if ((ret = vpk_evmsg_notice(alert.alert.keycode, alert.data, strlen(alert.data))) < 0) {
+		if ((ret = vpk_evmsg_notice(alert.alert.keycode, alert.alert.data, strlen(alert.alert.data))) < 0) {
 			LOG_E("vpk_evmsg_notice failed, maybe msg not register callback.");
 		}
 
