@@ -24,25 +24,27 @@ TIMA_BEGIN_DELS
 //};
 
 #define    extends_event()     \
-	unsigned int	type;		\
-	char*			data
+	unsigned int	type;
 
 typedef struct vpk_abnormal_t
 {
 	extends_event();
-	int keycode;
+	int			keycode;
+	char*		data;
 }vpk_abnormal_t;
 
 typedef struct vpk_alert_t
 {
 	extends_event();
-	int keycode;
+	int			keycode;
+	char*		data;
 }vpk_alert_t;
 
 typedef struct vpk_notice_t
 {
 	extends_event();
-	int keycode;
+	int			keycode;
+	char*		data;
 }vpk_notice_t;
 
 typedef union vpk_event_t

@@ -251,7 +251,7 @@ static int event_code_get(char* data)
 	}
 
 	if (ret == -1)
-		LOG_E("[json]event data format error.");
+		LOG_E("[json]event data format error.\n");
 	return ret;
 }
 
@@ -282,9 +282,10 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 		if (key_event_map[i].value == keycode) {
 
 			e->type = key_event_map[i].type;
-			e->notice.keycode = key_event_map[i].key;
-			e->data = thiz->recv_buff;
-			LOG_I("vpk.events (key, value)(%d, 0x%04x)", key_event_map[i].key, key_event_map[i].value);
+			//e->notice.keycode = key_event_map[i].key;
+			e->notice.keycode = keycode;
+			e->notice.data = thiz->recv_buff;
+			LOG_I("[0x%x]vpk.events (key, value)(%d, 0x%04x)", e->type, key_event_map[i].key, key_event_map[i].value);
 			break;
 		}
 	}
