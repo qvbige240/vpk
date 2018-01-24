@@ -13,6 +13,7 @@
 build_*
 main/mqrecv
 main/ev*
+main/menu_setting_pc.json
 vpk_sample.log*
 
 .*
