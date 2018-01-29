@@ -83,6 +83,9 @@ VPKAPI int vpk_create_file(const char *filename);
  */
 VPKAPI int vpk_pathname_get(const char* full, char* path);
 
+
+VPKAPI const char* vpk_path_extension(const char* path);
+
 /**
  * rename file.
  *

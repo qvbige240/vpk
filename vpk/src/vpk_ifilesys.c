@@ -188,6 +188,27 @@ int vpk_filename_get(const char *full, char *name)
 	return 0;
 }
 
+#define IS_SEPARATOR(c)     ((c) == '/' || (c) == '\\')
+VPKAPI const char* vpk_path_extension(const char* path)
+{
+	const char* p = path;
+	while (*p)
+	{
+		++p;
+	}
+
+	--p;
+	while (p > path && !IS_SEPARATOR(*p))
+	{
+		--p;
+		if (*p == '.')
+		{
+			return p;
+		}
+	}
+	return NULL;
+}
+
 VPKAPI int vpk_rename(const char* oldname, const char* newname)
 {
 	if (!oldname || !newname)

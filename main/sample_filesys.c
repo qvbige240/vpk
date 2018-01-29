@@ -111,7 +111,7 @@ static int file_dir_test(const char *prefix)
 	const char* path = prefix;
 	snprintf(tmpaa, sizeof(tmpaa), "%s/aaaa/", path);
 	snprintf(tmpbb, sizeof(tmpbb), "%s/bbbb", path);
-	snprintf(tmpcc, sizeof(tmpcc), "%s/ctest", path);
+	snprintf(tmpcc, sizeof(tmpcc), "%s/ctest.txt", path);
 	snprintf(ipc, sizeof(ipc), "%s//1/ipc", tmpaa);
 	snprintf(cmd, sizeof(cmd), "touch %s", tmpcc);
 	LOG_I("prefix path \'%s\'\n", path);
@@ -179,6 +179,11 @@ static int file_dir_test(const char *prefix)
 	vpk_enumerate(path, dir_print, NULL);
 
 	vpk_system_ex(cmd, 3);
+
+	if (vpk_exists(tmpcc)) {
+		const char *ext = vpk_path_extension(tmpcc);
+		LOG_I("vpk_path_extension \'%s\' ext = %s\n", tmpcc, ext);
+	}
 
 	ret = vpk_rename(tmpcc, tmpbb);
 	LOG_I("vpk_rename \'%s\' to \'%s\' ret = %d\n", tmpcc, tmpbb, ret);
