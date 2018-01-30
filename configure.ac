@@ -90,6 +90,7 @@ if test x$enable_x86 = xyes; then
 	DYNAMIC_LIBS="-lanl -ldl -lpthread -lrt -lz"
 	AC_SUBST(DYNAMIC_LIBS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS+=' -I$(project_dir)/vpk/src/database'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
 else
