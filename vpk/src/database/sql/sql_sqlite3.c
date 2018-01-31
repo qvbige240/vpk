@@ -405,12 +405,13 @@ static int database_sqlite3_statement_done(vpk_database_t* database, vpk_sql_sta
 			sqlite->result.iterator.mode = VPK_ITERATOR_MODE_FORWARD | VPK_ITERATOR_MODE_READONLY;
 			sqlite->result.statement = (sqlite3_stmt*)statement;
 
-			sqlite->result.nrow = -1;
+			sqlite->result.nrow = ~(1 << (sizeof(int) * 8 - 1));
 			sqlite->result.row.ncol = sqlite3_column_count((sqlite3_stmt*)statement);
 		} else {
-			if (SQLITE_OK != sqlite3_reset((sqlite3_stmt*)statement))
+			if (SQLITE_OK != sqlite3_reset((sqlite3_stmt*)statement)) {
 				DB_LOGE("statement: reset failed, error[%d]: %s", sqlite3_errcode(sqlite->database), sqlite3_errmsg(sqlite->database));
-			break;
+				break;
+			}
 		}
 
 		ret = 0;

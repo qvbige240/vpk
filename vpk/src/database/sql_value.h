@@ -13,6 +13,7 @@ TIMA_BEGIN_DELS
 
 typedef long long		db_int64_t;
 typedef int				db_int32_t;
+typedef unsigned short	db_uint16_t;
 
 #define SQL_CONFIG_TYPE_HAVE_FLOAT
 
