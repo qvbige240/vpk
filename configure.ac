@@ -131,6 +131,7 @@ else
 	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
 	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/mips/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS+=' -I$(project_dir)/vpk/src/database'
 fi
 echo "platform: $PLATFORMS"
 echo "platform11111: ${PLATFORMS}"

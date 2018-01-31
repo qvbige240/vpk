@@ -11,10 +11,17 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#include "vpk.h"
+
+#if defined(_NT966X_)
+static int test_mock(int argc, char *argv[])
+{
+	return 0;
+}
+#else
 #include "timapi/tima_eventq.h"
 #include "timapi/tima_command.h"
 
-#include "vpk.h"
 #include "jansson.h"
 
 #define BUFFER_SIZE			EVENT_QUEUE_MSG_LEN_MAX
@@ -467,6 +474,7 @@ static int test_mock(int argc, char *argv[])
 
 	return 0;
 }
+#endif
 
 int mock_main(int argc, char *argv[])
 {
