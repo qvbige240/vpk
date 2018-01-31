@@ -93,6 +93,15 @@ src/events/event_msg.c \
 src/events/event_msg.h \
 src/events/event_thread.c \
 src/events/event_thread.h \
+src/database/vpk_sql.h \
+src/database/vpk_sql.c \
+src/database/vpk_iterator.h \
+src/database/vpk_iterator.c \
+src/database/sql_value.h \
+src/database/sql_value.c \
+src/database/sql/sql_sqlite3.h \
+src/database/sql/sql_sqlite3.c \
+src/database/sql/sql_impl.h \
 $(platform_sources)
 ipc_all_sources =\
 inc/vpk_filesys.h \
@@ -148,5 +157,8 @@ inc/vpk_nvtuctrlc.h \
 inc/vpk_queues.h \
 inc/vpk_serialc.h \
 inc/vpk_typedef.h \
-inc/vpk_util.h
-
+inc/vpk_util.h \
+src/database/vpk_sql.h \
+src/database/vpk_iterator.h \
+src/database/sql_value.h \
+src/database/sql/sql_impl.h

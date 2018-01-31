@@ -111,6 +111,7 @@ if test x$platform = xx86; then
 	AC_SUBST(DYNAMIC_LIBS)
 	#CFLAGS='-Wall $(VPK_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS+=' -I$(project_dir)/vpk/src/database'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
 elif test x$platform = xnt966x; then
@@ -156,6 +157,7 @@ elif test x$platform = xnt966x; then
 	#EXTRA_LDFLAGS='-L$(project_dir)/mips/lib -L$(project_dir)/vpk/.libs'
 	#CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/mips/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
 	CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+	CFLAGS+=' -I$(project_dir)/vpk/src/database'
 	EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
 	AC_SUBST(EXTRA_LDFLAGS)
 else 

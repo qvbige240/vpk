@@ -57,3 +57,12 @@ evmsgevent_LDFLAGS=$(EXTRA_LDFLAGS)
 evmsgevent_SOURCES =\
 sample_evmsgevent.c
 
+bin_PROGRAMS += sql
+sql_LDADD =\
+$(project_dir)/vpk/.libs/libvpk.a \
+$(STATIC_LIBS)
+LIBS=$(DYNAMIC_LIBS)
+sql_LDFLAGS=$(EXTRA_LDFLAGS)
+sql_SOURCES =\
+sample_sql.c
+
