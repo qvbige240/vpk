@@ -13,12 +13,8 @@
 
 #include "vpk.h"
 
-#if defined(_NT966X_)
-static int test_mock(int argc, char *argv[])
-{
-	return 0;
-}
-#else
+#if defined(TIMA_PROTOCOL)
+
 #include "timapi/tima_eventq.h"
 #include "timapi/tima_command.h"
 
@@ -474,7 +470,12 @@ static int test_mock(int argc, char *argv[])
 
 	return 0;
 }
-#endif
+#else
+static int test_mock(int argc, char *argv[])
+{
+	return 0;
+}
+#endif // TIMA_PROTOCOL
 
 int mock_main(int argc, char *argv[])
 {

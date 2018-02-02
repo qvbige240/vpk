@@ -48,6 +48,18 @@ else
     ZLOG_LIB=''
 fi
 
+if test x$enable_protocol = xyes; then
+	TIMAPI_LIB='libtimapi.a'
+	NANOMSG_LIB='libnanomsg.a'
+    TIMA_PROTOCOL="LIBNANOMSG"
+    AC_DEFINE(TIMA_PROTOCOL, 1, [if protocol is enabled])
+    DEFINE_CFLAGS="$DEFINE_CFLAGS -DTIMA_PROTOCOL"
+else
+	TIMAPI_LIB=''
+	NANOMSG_LIB=''
+    TIMA_PROTOCOL=""
+fi
+
 DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_TESTDEF"
 echo "DEFINE_CFLAGS: $DEFINE_CFLAGS"
 echo "sqlite lib: $SQLITE3_LIB"
@@ -66,15 +78,15 @@ if test x$enable_x86 = xyes; then
     LIB_PATH='$(project_dir)/x86/lib'
     AC_SUBST(LIB_PATH)
 	
-	TIMAPI_LIB='$(project_dir)/x86/lib/libtimapi.a'
-	NANOMSG_LIB='$(project_dir)/x86/lib/libnanomsg.a'
+	#TIMAPI_LIB='$(project_dir)/x86/lib/libtimapi.a'
+	#NANOMSG_LIB='$(project_dir)/x86/lib/libnanomsg.a'
 	JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
 	CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
 	#SQLITE3_LIB='$(project_dir)/x86/lib/libsqlite3.a'
     #AC_SUBST(CURL_LIB)
 	#AC_SUBST(JANSSON_LIB)
 
-    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB $TIMAPI_LIB $NANOMSG_LIB"
+    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
 
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
@@ -82,6 +94,14 @@ if test x$enable_x86 = xyes; then
 
     if test X"$ZLOG_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
+    fi
+
+    if test X"$TIMAPI_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$TIMAPI_LIB"
+    fi
+
+    if test X"$NANOMSG_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$NANOMSG_LIB"
     fi
 
     echo "STATIC_LIBS: $STATIC_LIBS"
@@ -138,6 +158,7 @@ echo "platform11111: ${PLATFORMS}"
 echo 'platform222222: $(PLATFORMS)'
 AM_CONDITIONAL(X8666, test "${PLATFORMS}" = "_X86_")
 AM_CONDITIONAL(NT966X, test "${PLATFORMS}" = "_NT966X_")
+AM_CONDITIONAL(TIMA_PROTOCOL, test "${TIMA_PROTOCOL}" = "LIBNANOMSG")
 #AM_CONDITIONAL(USE_SHARED, test x$enable_shared = xyes)
 
 
