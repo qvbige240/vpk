@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="tbox"
+	Name="recorder-2.0"
 	ProjectGUID="{66CDC938-5B66-40A0-B16C-315F42DB6376}"
 	RootNamespace="vpk"
 	TargetFrameworkVersion="196613"
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="USE_ZLOG"
+				PreprocessorDefinitions="USE_ZLOG;EVENT__HAVE_EPOLL;VPK_HAVE_CLOCK_GETTIME;CLOCK_MONOTONIC;USE_SQLITE3;SQL_CONFIG_TYPE_HAVE_FLOAT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -172,6 +172,10 @@
 						Name="inc"
 						>
 						<File
+							RelativePath="..\..\..\vpk\inc\macro_event.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\vpk\inc\vpk.h"
 							>
 						</File>
@@ -185,6 +189,10 @@
 						</File>
 						<File
 							RelativePath="..\..\..\vpk\inc\vpk_event.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\inc\vpk_events.h"
 							>
 						</File>
 						<File
@@ -236,10 +244,6 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\vpk\inc\vpk_timer.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\vpk\inc\vpk_typedef.h"
 							>
 						</File>
@@ -257,6 +261,14 @@
 						</File>
 						<File
 							RelativePath="..\..\..\vpk\src\vpk_actions.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_actuator.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\vpk\src\vpk_actuator.h"
 							>
 						</File>
 						<File
@@ -442,6 +454,22 @@
 								Name="x86"
 								>
 								<File
+									RelativePath="..\..\..\vpk\src\platform\x86\hi35xx_actuator.c"
+									>
+								</File>
+								<File
+									RelativePath="..\..\..\vpk\src\platform\x86\hi35xx_actuator.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\..\vpk\src\platform\x86\x86_actuator.c"
+									>
+								</File>
+								<File
+									RelativePath="..\..\..\vpk\src\platform\x86\x86_actuator.h"
+									>
+								</File>
+								<File
 									RelativePath="..\..\..\vpk\src\platform\x86\x86_eventq.c"
 									>
 								</File>
@@ -492,34 +520,94 @@
 							</Filter>
 						</Filter>
 						<Filter
-							Name="timer"
+							Name="events"
 							>
 							<File
-								RelativePath="..\..\..\vpk\src\timer\timer_epoll.c"
+								RelativePath="..\..\..\vpk\src\events\epoll.c"
 								>
 							</File>
 							<File
-								RelativePath="..\..\..\vpk\src\timer\timer_epoll.h"
+								RelativePath="..\..\..\vpk\src\events\event.c"
 								>
 							</File>
 							<File
-								RelativePath="..\..\..\vpk\src\timer\timer_event.c"
+								RelativePath="..\..\..\vpk\src\events\event.h"
 								>
 							</File>
 							<File
-								RelativePath="..\..\..\vpk\src\timer\timer_event.h"
+								RelativePath="..\..\..\vpk\src\events\event_map.c"
 								>
 							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\events\event_map.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\events\event_msg.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\events\event_msg.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\events\event_thread.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\events\event_thread.h"
+								>
+							</File>
+						</Filter>
+						<Filter
+							Name="database"
+							>
+							<File
+								RelativePath="..\..\..\vpk\src\database\sql_value.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\database\sql_value.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\database\vpk_iterator.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\database\vpk_iterator.h"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\database\vpk_sql.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\vpk\src\database\vpk_sql.h"
+								>
+							</File>
+							<Filter
+								Name="sql"
+								>
+								<File
+									RelativePath="..\..\..\vpk\src\database\sql\sql_impl.h"
+									>
+								</File>
+								<File
+									RelativePath="..\..\..\vpk\src\database\sql\sql_sqlite3.c"
+									>
+								</File>
+								<File
+									RelativePath="..\..\..\vpk\src\database\sql\sql_sqlite3.h"
+									>
+								</File>
+							</Filter>
 						</Filter>
 					</Filter>
 				</Filter>
 				<Filter
 					Name="main"
 					>
-					<File
-						RelativePath="Y:\work\project\vpk\main\curl_md5.h"
-						>
-					</File>
 					<File
 						RelativePath="..\..\..\main\md5.c"
 						>
@@ -533,11 +621,31 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\main\sample_actions.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_condition.c"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\main\sample_consumer.c"
 						>
 					</File>
 					<File
 						RelativePath="..\..\..\main\sample_download.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_epoll.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_evioevent.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_evmsgevent.c"
 						>
 					</File>
 					<File
@@ -554,6 +662,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\main\sample_minheap.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_mock.c"
 						>
 					</File>
 					<File
@@ -578,6 +690,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\main\sample_sort.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\main\sample_sql.c"
 						>
 					</File>
 					<File
@@ -730,14 +846,6 @@
 					</File>
 					<File
 						RelativePath="..\..\..\..\bll\bll_remotelocation.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\bll\bll_remotemedia.c"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\..\include\bll\bll_remotemedia.h"
 						>
 					</File>
 					<File
@@ -2268,6 +2376,538 @@
 							</File>
 						</Filter>
 					</Filter>
+					<Filter
+						Name="libevent2"
+						>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\arc4random.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\bench.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\bench_cascade.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\bench_http.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\bench_httpclient.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\buffer.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\buffer.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\buffer_compat.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\buffer_iocp.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\bufferevent.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent_async.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\bufferevent_compat.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent_filter.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent_openssl.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent_pair.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent_ratelim.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\bufferevent_sock.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\bufferevent_ssl.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\bufferevent_struct.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\changelist-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\defer-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\devpoll.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\sample\dns-example.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\dns.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\dns_compat.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\dns_struct.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\epoll.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\epoll_sub.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evbuffer-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evdns.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evdns.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\WIN32-Code\event2\event-config.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\event-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\sample\event-test.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\event.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\event.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\event.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\event_compat.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\event_iocp.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\event_struct.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\event_tagging.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evhttp.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evmap-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evmap.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evport.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evrpc-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evrpc.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evrpc.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evsignal-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evthread-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evthread.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evthread_pthread.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evthread_win32.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evutil.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evutil.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\evutil_rand.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\sample\hello-world.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\ht-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\http-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\sample\http-server.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\http.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\http.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\http_compat.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\http_struct.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\iocp-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\ipv6-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\keyvalq_struct.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\kqueue.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\sample\le-proxy.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\listener.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\listener.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\log-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\log.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\minheap-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\mm-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\poll.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\compat\sys\queue.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\ratelim-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress.gen.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress.gen.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_buffer.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_bufferevent.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_dns.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_et.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_http.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_iocp.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_listener.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_main.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_minheap.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_rpc.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_ssl.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_testutils.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_testutils.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_thread.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_util.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\regress_zlib.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\rpc.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\rpc_compat.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\rpc_struct.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\select.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\sample\signal-test.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\signal.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\strlcpy-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\strlcpy.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\tag.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\tag_compat.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\test-changelist.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\test-eof.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\test-init.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\test-ratelim.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\test-time.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\test-weof.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\thread.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\sample\time-test.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\tinytest.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\tinytest.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\tinytest_local.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\test\tinytest_macros.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\WIN32-Code\tree.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\util-internal.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\include\event2\util.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\libevent-2.0.22-stable\win32select.c"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="sqlite3"
+						>
+						<File
+							RelativePath="..\..\..\..\common\sqlite-autoconf-3190300\msvc.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\sqlite-autoconf-3190300\shell.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\sqlite-autoconf-3190300\sqlite3.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\sqlite-autoconf-3190300\sqlite3.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\common\sqlite-autoconf-3190300\sqlite3ext.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="mw"
@@ -2276,15 +2916,15 @@
 						Name="platform"
 						>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat.c"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\include\platform\plat.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_event.c"
+							RelativePath="..\..\..\..\include\platform\plat_alert.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\platform\plat_dispatch.h"
 							>
 						</File>
 						<File
@@ -2292,15 +2932,7 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_gps.c"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\include\platform\plat_gps.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\platform\plat_gps_gcc.c"
 							>
 						</File>
 						<File
@@ -2308,23 +2940,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_menu.c"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\include\platform\plat_menu.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_misc.c"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\include\platform\plat_misc.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\platform\plat_snapshot.c"
 							>
 						</File>
 						<File
@@ -2336,41 +2956,69 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\platform\plat_video.c"
+							RelativePath="..\..\..\..\include\platform\plat_upgrade.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\platform\plat_util.h"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\..\include\platform\plat_video.h"
 							>
 						</File>
-					</Filter>
-					<Filter
-						Name="common"
-						>
-						<File
-							RelativePath="..\..\..\..\mw\common\context.c"
+						<Filter
+							Name="general"
 							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\common\Libevent_Http.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\common\log.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\common\node.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\common\tmHttp.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\common\tp.c"
-							>
-						</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_alert.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_dispatch.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_event.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_gps.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_gps_gcc.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_menu.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_misc.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_snapshot.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_upgrade.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_util.c"
+								>
+							</File>
+							<File
+								RelativePath="..\..\..\..\mw\platform\general\plat_video.c"
+								>
+							</File>
+						</Filter>
 					</Filter>
 					<Filter
 						Name="qiniu"
@@ -2564,27 +3212,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\tima\tima_buffer.c"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\tima\tima_buffer.h"
-							>
-						</File>
-						<File
 							RelativePath="..\..\..\..\mw\tima\tima_collection.c"
 							>
 						</File>
 						<File
 							RelativePath="..\..\..\..\include\tima\tima_collection.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\tima\tima_downloader.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\mw\tima\tima_downloader_curl.c"
 							>
 						</File>
 						<File
@@ -2664,7 +3296,27 @@
 						Name="support"
 						>
 						<File
+							RelativePath="..\..\..\..\mw\support\context.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\mw\context.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\support\Libevent_Http.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\mw\Libevent_Http.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\mw\support\node.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\mw\node.h"
 							>
 						</File>
 						<File
@@ -2672,11 +3324,11 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\support\tima_buffer.h"
+							RelativePath="..\..\..\..\include\mw\tima_buffer.h"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\support\tima_downloader.h"
+							RelativePath="..\..\..\..\include\mw\tima_downloader.h"
 							>
 						</File>
 						<File
@@ -2684,11 +3336,19 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\..\..\mw\support\tima_jansson.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\mw\tima_jansson.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\..\mw\support\tima_logs.c"
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\support\tima_logs.h"
+							RelativePath="..\..\..\..\include\mw\tima_logs.h"
 							>
 						</File>
 						<File
@@ -2696,7 +3356,15 @@
 							>
 						</File>
 						<File
-							RelativePath="..\..\..\..\mw\support\tima_pool.h"
+							RelativePath="..\..\..\..\include\mw\tima_pool.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\mw\support\tmHttp.c"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\..\include\mw\tmHttp.h"
 							>
 						</File>
 					</Filter>
@@ -2737,18 +3405,6 @@
 						</File>
 						<File
 							RelativePath="..\..\..\..\include\bll\bll_remotevideo.h"
-							>
-						</File>
-					</Filter>
-					<Filter
-						Name="common"
-						>
-						<File
-							RelativePath="..\..\..\..\include\common\elog.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\common\elog_cfg.h"
 							>
 						</File>
 					</Filter>
@@ -2991,30 +3647,6 @@
 					<Filter
 						Name="mw"
 						>
-						<File
-							RelativePath="..\..\..\..\include\mw\context.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\mw\Libevent_Http.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\mw\log.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\mw\node.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\mw\tmHttp.h"
-							>
-						</File>
-						<File
-							RelativePath="..\..\..\..\include\mw\tp.h"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="utils"
@@ -3442,50 +4074,50 @@
 				Name="tima-ipc"
 				>
 				<Filter
-					Name="ti"
+					Name="tima-api"
 					>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_eventq.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_command.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_eventq.h"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_command.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_pub.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_eventq.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_pub.h"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_eventq.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_rpc.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_pub.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_rpc.h"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_pub.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_rpcd.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_rpc.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_rpcd.h"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_rpc.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_sub.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_sub.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_sub.h"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_sub.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\ti\tima_typedef.h"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\tima-api\tima_typedef.h"
 						>
 					</File>
 				</Filter>
@@ -3549,15 +4181,27 @@
 					Name="sample"
 					>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\sample\sample_mq.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\sample\sample_cmd.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\sample\sample_pubsub.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\sample\sample_mq.c"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\..\tima-ipc\sample\sample_rpc.c"
+						RelativePath="..\..\..\..\..\dr\tima-ipc\sample\sample_mqsend.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\dr\tima-ipc\sample\sample_pubsub.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\dr\tima-ipc\sample\sample_reply.c"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\dr\tima-ipc\sample\sample_rpc.c"
 						>
 					</File>
 				</Filter>
@@ -6024,10 +6668,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\resource.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm\resource.h"
 					>
 				</File>
@@ -6041,6 +6681,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\sys\resource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\resource.h"
 					>
 				</File>
 				<File
@@ -6428,10 +7072,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\..\..\..\linux_include\linux\stat.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\asm\stat.h"
 					>
 				</File>
@@ -6445,6 +7085,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\..\..\..\linux_include\bits\stat.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\linux_include\linux\stat.h"
 					>
 				</File>
 				<File
@@ -7425,6 +8069,34 @@
 				</File>
 				<File
 					RelativePath="..\..\..\nvt\include\nvtuctrl.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="timapi"
+				>
+				<File
+					RelativePath="..\..\..\support\x86\install\include\tima_eventq.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\support\x86\install\include\tima_pub.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\support\x86\install\include\tima_rpc.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\support\x86\install\include\tima_rpcd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\support\x86\install\include\tima_sub.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\support\x86\install\include\tima_typedef.h"
 					>
 				</File>
 			</Filter>
