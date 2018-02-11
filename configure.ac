@@ -82,11 +82,12 @@ if test x$enable_x86 = xyes; then
 	#NANOMSG_LIB='$(project_dir)/x86/lib/libnanomsg.a'
 	JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
 	CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
+	CRYPTO_LIB='$(project_dir)/x86/lib/libcrypto.a'
 	#SQLITE3_LIB='$(project_dir)/x86/lib/libsqlite3.a'
     #AC_SUBST(CURL_LIB)
 	#AC_SUBST(JANSSON_LIB)
 
-    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
+    STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB $CRYPTO_LIB"
 
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
