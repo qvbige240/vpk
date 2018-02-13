@@ -99,27 +99,57 @@ static unsigned char cbc_iv[8] =
 { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 /* static char cbc_data[40]="7654321 Now is the time for \0001"; */
-static unsigned char cbc_data[40] = {
-	0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x20,
-	0x4E, 0x6F, 0x77, 0x20, 0x69, 0x73, 0x20, 0x74,
-	0x68, 0x65, 0x20, 0x74, 0x69, 0x6D, 0x65, 0x20,
-	0x66, 0x6F, 0x72, 0x20, 0x00, 0x31, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-};
+//static unsigned char cbc_data[40] = {
+//	0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x20,
+//	0x4E, 0x6F, 0x77, 0x20, 0x69, 0x73, 0x20, 0x74,
+//	0x68, 0x65, 0x20, 0x74, 0x69, 0x6D, 0x65, 0x20,
+//	0x66, 0x6F, 0x72, 0x20, 0x00, 0x31, 0x00, 0x00,
+//	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+//};
 
-static unsigned char cbc_ok[32] = {
-	0xcc, 0xd1, 0x73, 0xff, 0xab, 0x20, 0x39, 0xf4,
-	0xac, 0xd8, 0xae, 0xfd, 0xdf, 0xd8, 0xa1, 0xeb,
-	0x46, 0x8e, 0x91, 0x15, 0x78, 0x88, 0xba, 0x68,
-	0x1d, 0x26, 0x93, 0x97, 0xf7, 0xfe, 0x62, 0xb4
-};
+//
+//	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+//	0x38, 0x38, 0x38, 0x38, 0x38, 0x38, 0x38, 0x38,
+//static unsigned char cbc_data[100]="7654321 Now is the time for worl dsssssssssss i sfssdflovesdfdff fanxiaoqing";
+static unsigned char cbc_data[100]="tima0tg5device012345678912345";
+//static unsigned char cbc_ok[32] = {
+//	0xcc, 0xd1, 0x73, 0xff, 0xab, 0x20, 0x39, 0xf4,
+//	0xac, 0xd8, 0xae, 0xfd, 0xdf, 0xd8, 0xa1, 0xeb,
+//	0x46, 0x8e, 0x91, 0x15, 0x78, 0x88, 0xba, 0x68,
+//	0x1d, 0x26, 0x93, 0x97, 0xf7, 0xfe, 0x62, 0xb4
+//};
+
+#include "urlsafe_b64.h"
+
+char* memory_encode(const char* buf, const size_t size)
+{
+	const size_t len = urlsafe_b64_encode(buf, size, NULL, 0);
+	char* dst = (char*)malloc(len + 1);
+	const size_t len1 = urlsafe_b64_encode(buf, size, dst, len);
+	dst[len1] = '\0';
+	printf("len = %d, len1 = %d\n", (int)len, (int)len1);
+	return dst;
+}
+
+char* string_decode(const char* buf)
+{
+	const size_t len = strlen(buf);
+	const size_t dlen1 = urlsafe_b64_decode(buf, len, NULL, 0);
+	char* dst = (char*)malloc(dlen1 + 1);
+	const size_t dlen2 = urlsafe_b64_decode(buf, len, dst, dlen1);
+	dst[dlen2] = '\0';
+	printf("len = %d, dlen1 = %d, dlen2 = %d\n", (int)len, (int)dlen1, (int)dlen2);
+	return dst;
+}
+
+#if 0
 
 static int test_des_ncbc(const_DES_cblock *key)
 {
 	DES_cblock iv3;
 	DES_key_schedule ks;
 	unsigned char cbc_in[40];
-	unsigned char cbc_out[40];
+	unsigned char cbc_out[40] = {0};
 
 	int j, err = 0;
 
@@ -133,13 +163,27 @@ static int test_des_ncbc(const_DES_cblock *key)
 	memset(cbc_out, 0, 40);
 	memset(cbc_in, 0, 40);
 	memcpy(iv3, cbc_iv, sizeof(cbc_iv));
-	printf("before cbc_data: %s\n", cbc_data);
-	DES_ncbc_encrypt(cbc_data, cbc_out, strlen((char *)cbc_data) + 1, &ks, &iv3, DES_ENCRYPT);
-	if (memcmp(cbc_out, cbc_ok, 32) != 0) {
-		printf("cbc_encrypt encrypt error\n");
-		err = 1;
+
+	//printf("before cbc_data(len = %d): %s\n", (int)strlen((char *)cbc_data), cbc_data);
+	//DES_ncbc_encrypt(cbc_data, cbc_out, strlen((char *)cbc_data) + 1, &ks, &iv3, DES_ENCRYPT);
+	int len = (strlen((char *)cbc_data) / 8 + 1) * 8;
+	void *data = malloc(len);
+	memset(data, 0x00, len);
+	strcpy(data, cbc_data);
+	printf("before data(len = %d): %s\n", (int)strlen((char *)data), data);
+	DES_ncbc_encrypt(data, cbc_out, strlen((char *)data) + 1, &ks, &iv3, DES_ENCRYPT);
+	//if (memcmp(cbc_out, cbc_ok, 32) != 0) {
+	//	printf("cbc_encrypt encrypt error\n");
+	//	err = 1;
+	//}
+	printf("encrypt cbc_out(len = %d): %s\n", (int)strlen((char *)cbc_out), cbc_out);
+	for (j = 0; j < 40; j++)
+	{
+		printf(" 0x%02x", cbc_out[j]);
+		if ((j % 8) == 7)
+			printf("\n");
 	}
-	printf("encrypt cbc_out: %s\n", cbc_out);
+	printf("\n");
 
 	memcpy(iv3, cbc_iv, sizeof(cbc_iv));
 	DES_ncbc_encrypt(cbc_out, cbc_in, strlen((char *)cbc_data) + 1, &ks, &iv3, DES_DECRYPT);
@@ -147,7 +191,66 @@ static int test_des_ncbc(const_DES_cblock *key)
 		printf("cbc_encrypt decrypt error\n");
 		err = 1;
 	}
-	printf("decrypt cbc_in: %s\n", cbc_in);
+	printf("decrypt cbc_in (len = %d): %s\n", (int)strlen((char *)cbc_in), cbc_in);
+
+	if (err)
+		printf("have error\n");
+
+	printf("\n");
+
+	return 0;
+}
+#else
+static int test_des_ncbc(const_DES_cblock *key)
+{
+	DES_cblock iv3;
+	DES_key_schedule ks;
+	unsigned char* cbc_in = NULL;
+	unsigned char* cbc_out = NULL;
+
+	int j, err = 0;
+
+	printf("Doing cbc\n");
+	if ((j = DES_set_key_checked(key, &ks)) != 0) {
+		printf("Key error %d\n", j);
+		err = 1;
+	}
+
+	memcpy(iv3, cbc_iv, sizeof(cbc_iv));
+
+	int len = (strlen((char *)cbc_data) / 8 + 1) * 8;
+	printf("len = %d\n", len);
+	cbc_in = malloc(len + 1);
+	cbc_out = malloc(len + 1);
+	unsigned char *data = malloc(len);
+	memset(cbc_in, 0x00, len + 1);
+	memset(cbc_out, 0x00, len + 1);
+	memset(data, 0x00, len);
+	strcpy((char *)data, (char *)cbc_data);
+	printf("before data(len = %d): %s\n", (int)strlen((char *)data), data);
+	DES_ncbc_encrypt(data, cbc_out, len, &ks, &iv3, DES_ENCRYPT);
+	printf("encrypt cbc_out(len = %d):\n %s\n", (int)strlen((char *)cbc_out), cbc_out);
+	for (j = 0; j < len+8; j++)
+	{
+		printf(" 0x%02x", cbc_out[j]);
+		if ((j % 8) == 7)
+			printf("\n");
+	}
+	printf("\n");
+
+	char* encode = memory_encode((const char *)cbc_out, len);
+	//printf("encode: %s\n", encode);
+	char* decode = string_decode(encode);
+	printf("encode[%d]: %s\ndecode[%d]: %s\n", (int)strlen(encode), encode, (int)strlen(decode), decode);
+
+	memcpy(iv3, cbc_iv, sizeof(cbc_iv));
+	//DES_ncbc_encrypt(cbc_out, cbc_in, len, &ks, &iv3, DES_DECRYPT);
+	DES_ncbc_encrypt(decode, cbc_in, len, &ks, &iv3, DES_DECRYPT);
+	if (memcmp(cbc_in, cbc_data, strlen((char *)cbc_data)) != 0) {
+		printf("cbc_encrypt decrypt error\n");
+		err = 1;
+	}
+	printf("decrypt cbc_in (len = %d): %s\n", (int)strlen((char *)cbc_in), cbc_in);
 
 	if (err)
 		printf("have error\n");
@@ -157,6 +260,7 @@ static int test_des_ncbc(const_DES_cblock *key)
 	return 0;
 }
 
+#endif
 
 static int test_des_2(void)
 {
@@ -167,7 +271,7 @@ void key_gen(void)
 {
 	//DES_cblock key;
 	unsigned char key[8];
-	const char *str = "king1";
+	const char *str = "Qing.";
 	DES_string_to_key(str, &key);
 
 	printf("key: ");
