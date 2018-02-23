@@ -67,6 +67,7 @@ src/vpk_actions.c \
 src/vpk_actions.h \
 src/vpk_actuator.c \
 src/vpk_actuator.h \
+src/vpk_b64.c \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
 src/vpk_ieventq.c \
@@ -151,6 +152,7 @@ libipc_la_SOURCES=$(ipc_all_sources)
 include_HEADERS =\
 inc/macro_event.h \
 inc/vpk_action.h \
+inc/vpk_b64.h \
 inc/vpk_constants.h \
 inc/vpk_event.h \
 inc/vpk_events.h \

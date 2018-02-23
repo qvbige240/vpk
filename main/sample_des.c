@@ -119,13 +119,13 @@ static unsigned char cbc_data[100]="tima0tg5device012345678912345";
 //	0x1d, 0x26, 0x93, 0x97, 0xf7, 0xfe, 0x62, 0xb4
 //};
 
-#include "urlsafe_b64.h"
+#include "vpk_b64.h"
 
 char* memory_encode(const char* buf, const size_t size)
 {
-	const size_t len = urlsafe_b64_encode(buf, size, NULL, 0);
+	const size_t len = vpk_b64_encode(buf, size, NULL, 0);
 	char* dst = (char*)malloc(len + 1);
-	const size_t len1 = urlsafe_b64_encode(buf, size, dst, len);
+	const size_t len1 = vpk_b64_encode(buf, size, dst, len);
 	dst[len1] = '\0';
 	printf("len = %d, len1 = %d\n", (int)len, (int)len1);
 	return dst;
@@ -134,9 +134,9 @@ char* memory_encode(const char* buf, const size_t size)
 char* string_decode(const char* buf)
 {
 	const size_t len = strlen(buf);
-	const size_t dlen1 = urlsafe_b64_decode(buf, len, NULL, 0);
+	const size_t dlen1 = vpk_b64_decode(buf, len, NULL, 0);
 	char* dst = (char*)malloc(dlen1 + 1);
-	const size_t dlen2 = urlsafe_b64_decode(buf, len, dst, dlen1);
+	const size_t dlen2 = vpk_b64_decode(buf, len, dst, dlen1);
 	dst[dlen2] = '\0';
 	printf("len = %d, dlen1 = %d, dlen2 = %d\n", (int)len, (int)dlen1, (int)dlen2);
 	return dst;
@@ -245,7 +245,7 @@ static int test_des_ncbc(const_DES_cblock *key)
 
 	memcpy(iv3, cbc_iv, sizeof(cbc_iv));
 	//DES_ncbc_encrypt(cbc_out, cbc_in, len, &ks, &iv3, DES_DECRYPT);
-	DES_ncbc_encrypt(decode, cbc_in, len, &ks, &iv3, DES_DECRYPT);
+	DES_ncbc_encrypt((const unsigned char *)decode, cbc_in, len, &ks, &iv3, DES_DECRYPT);
 	if (memcmp(cbc_in, cbc_data, strlen((char *)cbc_data)) != 0) {
 		printf("cbc_encrypt decrypt error\n");
 		err = 1;

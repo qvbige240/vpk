@@ -1,5 +1,5 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        b64/urlsafe_b64.h
+ * File:        vpk_b64.h
  *
  * Purpose:     Header file for the b64 library
  *
@@ -111,7 +111,7 @@ typedef enum B64_FLAGS  B64_FLAGS;
  *
  * \see b64::encode()
  */
-size_t urlsafe_b64_encode(
+size_t vpk_b64_encode(
     void const* src
 ,   size_t      srcSize
 ,   char* dest
@@ -146,7 +146,7 @@ size_t urlsafe_b64_encode(
  *
  * \see b64::encode()
  */
-size_t urlsafe_b64_encode2(
+size_t vpk_b64_encode2(
     void const* src
 ,   size_t      srcSize
 ,   char* dest
@@ -189,7 +189,7 @@ size_t urlsafe_b64_encode2(
  *
  * \see b64::decode()
  */
-size_t urlsafe_b64_decode(
+size_t vpk_b64_decode(
     char const*   src
 ,   size_t              srcLen
 ,   void*               dest
@@ -236,7 +236,7 @@ size_t urlsafe_b64_decode(
  *
  * \see b64::decode()
  */
-size_t urlsafe_b64_decode2(
+size_t vpk_b64_decode2(
     char const*   src
 ,   size_t              srcLen
 ,   void*               dest
