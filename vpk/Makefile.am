@@ -12,9 +12,19 @@ src/platform/nt966x/nt966x_session.c \
 src/platform/nt966x/nt966x_session.h \
 src/platform/nt966x/nt966x_system.c \
 src/platform/nt966x/nt966x_system.h
-platform_x86_sources = \
+
+if TIMA_PROTOCOL
+protocol_sources = \
 src/platform/x86/hi35xx_actuator.c \
-src/platform/x86/hi35xx_actuator.h \
+src/platform/x86/hi35xx_actuator.h
+else
+protocol_sources = \
+src/platform/x86/x86_actuator.c \
+src/platform/x86/x86_actuator.h
+endif
+
+platform_x86_sources = \
+$(protocol_sources) \
 src/platform/x86/x86_eventq.c \
 src/platform/x86/x86_eventq.h \
 src/platform/x86/x86_log.c \
@@ -26,6 +36,8 @@ src/platform/x86/x86_session.h \
 src/platform/x86/x86_system.c \
 src/platform/x86/x86_system.h
 
+#src/platform/x86/hi35xx_actuator.c
+#src/platform/x86/hi35xx_actuator.h
 #src/platform/x86/x86_actuator.c 
 #src/platform/x86/x86_actuator.h 
 
@@ -103,6 +115,7 @@ src/database/sql/sql_sqlite3.h \
 src/database/sql/sql_sqlite3.c \
 src/database/sql/sql_impl.h \
 $(platform_sources)
+
 ipc_all_sources =\
 inc/vpk_filesys.h \
 inc/vpk_ipc.h \

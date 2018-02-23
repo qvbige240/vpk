@@ -18,16 +18,6 @@
 #include "vpk_constants.h"
 
 #include "jansson.h"
-#include "timapi/tima_eventq.h"
-
-#define MQUEUE_BUFFER_SIZE		EVENT_QUEUE_MSG_LEN_MAX
-#define MQUEUE_EVENT_PATH		"/tmp/tima.ipc"
-
-typedef struct queue_message
-{
-	long msg_type;
-	char msg_value[MQUEUE_BUFFER_SIZE];
-}queue_message_t;
 
 
 const vpk_keymap_t key_event_map[] =
@@ -101,7 +91,21 @@ const vpk_constants_t vpk = {
 	},
 };
 
-#if 0
+#ifdef TIMA_PROTOCOL
+#include "timapi/tima_eventq.h"
+#define MQUEUE_BUFFER_SIZE		EVENT_QUEUE_MSG_LEN_MAX
+#define MQUEUE_EVENT_PATH		"/tmp/tima.ipc"
+#else
+
+#define MQUEUE_BUFFER_SIZE		512
+#define MQUEUE_EVENT_PATH		"/tmp/tima.ipc"
+
+typedef struct queue_message
+{
+	long msg_type;
+	char msg_value[MQUEUE_BUFFER_SIZE];
+}queue_message_t;
+
 static int msg_queue_init(char* fname, int id)
 {
 	int qid;
@@ -176,7 +180,13 @@ static int msg_queue_recv(int qid, void* msg_value)
 
 	return 0;
 }
-#endif
+
+#define tima_mqueue_open()		msg_queue_init(".", 'a')
+#define tima_mqueue_is_empty	msg_queue_is_empty
+#define tima_mqueue_recv		msg_queue_recv
+#define tima_mqueue_post		msg_queue_post
+
+#endif // TIMA_PROTOCOL
 
 static int x86_eventq_destruct(void *queue)
 {
@@ -242,7 +252,7 @@ static int event_code_get(char* data)
 		if (!jobject) {
 			LOG_E("jobject[event] not exist, event data format error.");
 		} else {
-			char* event = json_string_value(jobject);
+			char* event = (char*)json_string_value(jobject);
 			if (event)
 				ret = HEXSTR_PARSE(event);
 		}
@@ -358,45 +368,6 @@ static int x86_eventq_recv(vpk_eventq_t *queue, vpk_event_t* e)
 
 	return ret;
 }
-
-//
-//typedef struct json_event_t
-//{
-//	char	event[8];
-//	char	key[8];
-//	int		id;
-//	int		rcode;
-//	char	value[512];
-//} json_event_t;
-//
-//json_event_t *e = NULL;
-//char *videos = "[{\"camera\":0,\"type\":1,\"file\":\"/xxx/01.mp4\"},{\"camera\":1,\"type\":1,\"file\":\"/xxx/02.mp4\"}]";
-//static int event_data_create(char* code, int id)
-//{
-//	json_t* json_msg = NULL;
-//	json_t* json_root = NULL;
-//
-//	json_msg = json_object();
-//	json_root = json_object();
-//	
-//	json_object_set_new(json_root, "event", json_string(code));
-//
-//	json_object_set_new(json_msg, "id", json_integer(e->id));
-//	json_object_set_new(json_msg, "key", json_string(e->key));
-//	json_object_set_new(json_msg, "rcode", json_integer(e->rcode));
-//	json_object_set_new(json_msg, "value", json_string(e->value));
-//
-//	json_object_set_new(json_root, "msg", json_msg);
-//
-//	char* data_dump = json_dumps(json_root, 0);			/* to buffer */
-//	LOG_D("event data: %s\n", data_dump);
-//
-//	free(data_dump);
-//	json_decref(json_msg);
-//	json_decref(json_root);
-//
-//	return 0;
-//}
 
 static int x86_eventq_post(vpk_eventq_t *queue, vpk_event_t* e)
 {

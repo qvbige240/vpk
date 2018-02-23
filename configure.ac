@@ -62,8 +62,21 @@ else
     ZLOG_LIB=''
 fi
 
+if test x$enable_protocol = xyes; then
+	TIMAPI_LIB='libtimapi.a'
+	NANOMSG_LIB='libnanomsg.a'
+    TIMA_PROTOCOL="LIBNANOMSG"
+    AC_DEFINE(TIMA_PROTOCOL, 1, [if protocol is enabled])
+    DEFINE_CFLAGS="$DEFINE_CFLAGS -DTIMA_PROTOCOL"
+else
+	TIMAPI_LIB=''
+	NANOMSG_LIB=''
+    TIMA_PROTOCOL=""
+fi
+
 CURL_LIB='libcurl.a'
 JANSSON_LIB='libjansson.a'
+CRYPTO_LIB='libcrypto.a'
     
 LIB_PATH='${FINAL_PATH}/lib'
 DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_TESTDEF"
@@ -92,9 +105,7 @@ if test x$platform = xx86; then
     #AC_SUBST(CURL_LIB)
 	#AC_SUBST(JANSSON_LIB)
 
-	TIMAPI_LIB='libtimapi.a'
-	NANOMSG_LIB='libnanomsg.a'
-    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB $LIB_PATH/$TIMAPI_LIB $LIB_PATH/$NANOMSG_LIB"
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB $LIB_PATH/$CRYPTO_LIB"
 
     if test X"$SQLITE3_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
@@ -102,6 +113,14 @@ if test x$platform = xx86; then
 
     if test X"$ZLOG_LIB" != X; then
         STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
+    fi
+
+    if test X"$TIMAPI_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$TIMAPI_LIB"
+    fi
+
+    if test X"$NANOMSG_LIB" != X; then
+        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$NANOMSG_LIB"
     fi
 
     echo "STATIC_LIBS: $STATIC_LIBS"
@@ -168,6 +187,7 @@ echo "platform11111: ${PLATFORMS}"
 echo 'platform22222: $(PLATFORMS)'
 AM_CONDITIONAL(X8666, test "${PLATFORMS}" = "_X86_")
 AM_CONDITIONAL(NT966X, test "${PLATFORMS}" = "_NT966X_")
+AM_CONDITIONAL(TIMA_PROTOCOL, test "${TIMA_PROTOCOL}" = "LIBNANOMSG")
 #AM_CONDITIONAL(USE_SHARED, test x$enable_shared = xyes)
 
 
