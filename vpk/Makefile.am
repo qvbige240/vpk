@@ -149,6 +149,8 @@ libipc_la_SOURCES=$(ipc_all_sources)
 #libipc_a_SOURCES=$(ipc_all_sources)
 #endif
 
+#src/database/sql/sql_impl.h
+
 include_HEADERS =\
 inc/macro_event.h \
 inc/vpk_action.h \
@@ -173,5 +175,4 @@ inc/vpk_typedef.h \
 inc/vpk_util.h \
 src/database/vpk_sql.h \
 src/database/vpk_iterator.h \
-src/database/sql_value.h \
-src/database/sql/sql_impl.h
+src/database/sql_value.h 

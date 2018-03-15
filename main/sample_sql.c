@@ -71,9 +71,6 @@ static void sql_database_done(vpk_database_t* database, const char* sql)
 		DB_LOGI("=========================================================================");
 		DB_LOGI("row, size: %d", vpk_iterator_size(result));
 
-		int have_table = vpk_iterator_size(result) > 0 ? 1 : 0;
-		printf("=== have_table: %d\n ", have_table);
-
 		vpk_for_each(vpk_iterator_t*, row, result)
 		{
 			DB_LOGI("[row: %d, col size: %d]: ", row_itor, vpk_iterator_size(row));
@@ -200,6 +197,7 @@ int sample_database_sql_main(int argc, char** argv)
 			sql_database_done(database, "select name from sqlite_master where name='table1'");
 			sql_database_done(database, "drop table if exists table1");
 			sql_database_done(database, "create table table1(id int, name text, number int)");
+			sql_database_done(database, "select count(*) from table1 where name='name7'");
 			sql_database_done(database, "insert into table1 values(NULL, 'name1', 52642)");
 			sql_database_done(database, "insert into table1 values(NULL, 'name2', 57127)");
 			sql_database_done(database, "insert into table1 values(NULL, 'name3', 9000)");
@@ -211,7 +209,7 @@ int sample_database_sql_main(int argc, char** argv)
 			sql_database_done(database, "select * from table1");
 			sql_database_done(database, "select * from table1 where name='name7'");
 			sql_database_done(database, "select count(*) from table1 where name='name7'");
-
+			sql_database_done(database, "select number from table1 where name='name7'");
 
 			DB_LOGI("================================ statement ================================");
 			sql_database_statement_done(database, "drop table if exists table2");
