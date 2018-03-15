@@ -295,6 +295,25 @@ void test_null(void)
 		//LOG_D("third free str, str[%p] = %s", str, str);
 	}
 
+	{
+
+		int count = 5;
+		char* version = "v1.01";
+		int *p[count];
+		p[0] = (int*)1;
+		p[1] = (int*)version;
+		LOG_D("p[0]: %d, p[1]: %s", (int)(p[0]), (char*)(p[1]));
+
+
+		char* wifiphrase = malloc(64);
+		memcpy(wifiphrase, "testhello", 10);
+		void** menu = malloc(count * sizeof(int *));
+		menu[0] = (int*)3;
+		menu[1] = (int*)version;
+		menu[2] = (int*)wifiphrase;
+		LOG_D("menu[0]: %d, menu[1]: %s, menu[2]: %s", (int)(menu[0]), (char*)(menu[1]), (char*)(menu[2]));
+
+	}
 	printf("\n");
 }
 

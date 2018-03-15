@@ -282,6 +282,8 @@ void key_gen(void)
 	}
 	printf("\n");
 
+	printf("key: %s\n", key);
+
 	DES_key_schedule ks;
 	if ((i = DES_set_key_checked(&key, &ks)) != 0) {
 		printf("Key error %d\n", i);
