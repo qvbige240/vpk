@@ -7,24 +7,25 @@
 #ifndef SQL_IMPL_H
 #define SQL_IMPL_H
 
-#include "../vpk_iterator.h"
-#include "../sql_value.h"
+//#include "../vpk_iterator.h"
+//#include "../sql_value.h"
+#include "../vpk_sql.h"
 
 TIMA_BEGIN_DELS
-
-#if 1
-#define DB_LOGD(x)	LOG_D x
-#define DB_LOGI		LOG_I
-#define DB_LOGW		LOG_W
-#define DB_LOGE		LOG_E
-#define DB_LOGF		LOG_F
-#else
-#define DB_LOGD(x)
-#define DB_LOGI		LOG_I
-#define DB_LOGW		LOG_W
-#define DB_LOGE		LOG_E
-#define DB_LOGF		LOG_F
-#endif
+//
+//#if 1
+//#define DB_LOGD(x)	LOG_D x
+//#define DB_LOGI		LOG_I
+//#define DB_LOGW		LOG_W
+//#define DB_LOGE		LOG_E
+//#define DB_LOGF		LOG_F
+//#else
+//#define DB_LOGD(x)
+//#define DB_LOGI		LOG_I
+//#define DB_LOGW		LOG_W
+//#define DB_LOGE		LOG_E
+//#define DB_LOGF		LOG_F
+//#endif
 
 
 typedef struct vpk_url_t
@@ -33,10 +34,10 @@ typedef struct vpk_url_t
 	unsigned char path[256];
 } vpk_url_t;
 
-typedef void vpk_sql_statement_t;
-
-struct vpk_database_t;
-typedef struct vpk_database_t vpk_database_t;
+//typedef void vpk_sql_statement_t;
+//
+//struct vpk_database_t;
+//typedef struct vpk_database_t vpk_database_t;
 
 struct vpk_database_t
 {

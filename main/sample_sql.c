@@ -79,6 +79,12 @@ static void sql_database_done(vpk_database_t* database, const char* sql)
 			{
 				printf(" [%s:%s]", vpk_sql_value_name(value), vpk_sql_value_text(value));
 			}
+
+			//const vpk_sql_value_t* number = (const vpk_sql_value_t*)vpk_iterator_item(row, 2);
+			//if (!number) break;
+			//printf("[%s:%d] ", vpk_sql_value_name(number), vpk_sql_value_int32(number));
+			//printf("[%s:%s] ", vpk_sql_value_name(number), vpk_sql_value_text(number));
+			//printf("[%s:%f] ", vpk_sql_value_name(number), vpk_sql_value_float(number));
 			printf("\n");
 		}
 
@@ -188,16 +194,23 @@ int sample_database_sql_main(int argc, char** argv)
 	{
 		if (vpk_database_sql_open(database))
 		{
+			sql_database_done(database, "select name from sqlite_master where name='table1'");
 			sql_database_done(database, "drop table if exists table1");
 			sql_database_done(database, "create table table1(id int, name text, number int)");
-			sql_database_done(database, "insert into table1 values(1, 'name1', 52642)");
-			sql_database_done(database, "insert into table1 values(2, 'name2', 57127)");
-			sql_database_done(database, "insert into table1 values(3, 'name3', 9000)");
-			sql_database_done(database, "insert into table1 values(4, 'name4', 29000)");
-			sql_database_done(database, "insert into table1 values(5, 'name5', 350000)");
-			sql_database_done(database, "insert into table1 values(6, 'name6', 21000)");
-			sql_database_done(database, "insert into table1 values(7, 'name7', 21600)");
+			sql_database_done(database, "select count(*) from table1 where name='name7'");
+			sql_database_done(database, "insert into table1 values(NULL, 'name1', 52642)");
+			sql_database_done(database, "insert into table1 values(NULL, 'name2', 57127)");
+			sql_database_done(database, "insert into table1 values(NULL, 'name3', 9000)");
+			sql_database_done(database, "insert into table1 values(NULL, 'name4', 29000)");
+			sql_database_done(database, "insert into table1 values(NULL, 'name5', 350000)");
+			sql_database_done(database, "insert into table1 values(NULL, 'name6', 21000)");
+			sql_database_done(database, "insert into table1 values(NULL, 'name7', 21600)");
+			sql_database_done(database, "insert into table1 values(NULL, 'name7', 11100)");
 			sql_database_done(database, "select * from table1");
+			sql_database_done(database, "select * from table1 where name='name7'");
+			sql_database_done(database, "select count(*) from table1");
+			sql_database_done(database, "select count(*) from table1 where name='name7'");
+			sql_database_done(database, "select number from table1 where name='name7'");
 
 			DB_LOGI("================================ statement ================================");
 			sql_database_statement_done(database, "drop table if exists table2");

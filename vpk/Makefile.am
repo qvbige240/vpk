@@ -67,6 +67,7 @@ src/vpk_actions.c \
 src/vpk_actions.h \
 src/vpk_actuator.c \
 src/vpk_actuator.h \
+src/vpk_b64.c \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
 src/vpk_ieventq.c \
@@ -149,10 +150,12 @@ libipc_la_SOURCES=$(ipc_all_sources)
 #endif
 
 #includedir=includedir/vpk
+#src/database/sql/sql_impl.h
 
 include_HEADERS =\
 inc/macro_event.h \
 inc/vpk_action.h \
+inc/vpk_b64.h \
 inc/vpk_constants.h \
 inc/vpk_event.h \
 inc/vpk_events.h \
@@ -173,5 +176,4 @@ inc/vpk_typedef.h \
 inc/vpk_util.h \
 src/database/vpk_sql.h \
 src/database/vpk_iterator.h \
-src/database/sql_value.h \
-src/database/sql/sql_impl.h
+src/database/sql_value.h 
