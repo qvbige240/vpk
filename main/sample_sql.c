@@ -208,6 +208,7 @@ int sample_database_sql_main(int argc, char** argv)
 			sql_database_done(database, "insert into table1 values(NULL, 'name7', 11100)");
 			sql_database_done(database, "select * from table1");
 			sql_database_done(database, "select * from table1 where name='name7'");
+			sql_database_done(database, "select count(*) from table1");
 			sql_database_done(database, "select count(*) from table1 where name='name7'");
 			sql_database_done(database, "select number from table1 where name='name7'");
 
