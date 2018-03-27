@@ -94,7 +94,7 @@ if test x$platform = xx86; then
 #	GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
 #	AC_SUBST(GOLBAL_CFLAGS)
 
-    VPK_CFLAGS="-g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
+    VPK_CFLAGS="-fPIC -g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
 	AC_SUBST(VPK_CFLAGS)
 
     #LIB_PATH='$(project_dir)/x86/lib'
