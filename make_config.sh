@@ -48,6 +48,11 @@ function project_config()
             enable_sqlite3=yes enable_zlog=yes \
             --prefix=$FINAL_PATH
             #--prefix=$WORKDIR/build_x86/install
+    elif [ "$platform" == nt966x_d048 ]; then
+        ./configure --host=mipsel-24kec-linux-uclibc \
+            enable_shared=yes platform=nt966x_d048 enable_x86=no \
+            enable_sqlite3=yes enable_zlog=yes \
+            --prefix=$FINAL_PATH
     else
         echo -e "\033[32m    platform unknown for configure   \033[0m"
         exit -1

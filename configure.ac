@@ -113,6 +113,7 @@ if test x$platform = xx86; then
     VPK_CFLAGS="-fPIC -g -O0 -DDEBUG -D$PLATFORMS $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
     AC_SUBST(VPK_CFLAGS)
 	
+    #LIB_PATH='$(project_dir)/x86/lib'
     #TIMAPI_LIB='$(project_dir)/x86/lib/libtimapi.a'
     #NANOMSG_LIB='$(project_dir)/x86/lib/libnanomsg.a'
     #JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
@@ -143,34 +144,45 @@ elif test x$platform = xnt966x; then
 #    GOLBAL_LDFLAGS="-L${GBASE_LIB}"
 #    AC_SUBST(GOLBAL_CFLAGS)
 
-    #LIB_PATH='$(project_dir)/mips/lib'
     VPK_CFLAGS="-g -O0 -DDEBUG -D$PLATFORMS $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
     AC_SUBST(VPK_CFLAGS)
 	
-    #JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
-    #CURL_LIB='$(project_dir)/mips/lib/libcurl.a'
-    #CURL_LIB=''
-    #SQLITE3_LIB='$(project_dir)/mips/lib/libsqlite3.a'
-    
-    #STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
     STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
     echo "STATIC_LIBS: $STATIC_LIBS"
     AC_SUBST(STATIC_LIBS)
 
     DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
-    #DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
     AC_SUBST(DYNAMIC_LIBS)
 
     EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
     AC_SUBST(EXTRA_LDFLAGS)
 
-    #CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/$(platform)/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
     CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
     CFLAGS+=' -I$(project_dir)/vpk/src/database'
-else 
+elif test x$platform = xnt966x_d048; then
+    PLATFORMS="_GENERIC_MIPS_"
+    echo '=========  nt966x_d048  ======='
+
+    VPK_CFLAGS="-g -O0 -DDEBUG -D$PLATFORMS $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
+    AC_SUBST(VPK_CFLAGS)
+
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
+    AC_SUBST(STATIC_LIBS)
+    echo "STATIC_LIBS: $STATIC_LIBS"
+
+    DYNAMIC_LIBS="-lcrypto -lcurl -lssl -ldl -lpthread -lrt -lm"
+    AC_SUBST(DYNAMIC_LIBS)
+
+    EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
+    AC_SUBST(EXTRA_LDFLAGS)
+
+    CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+    CFLAGS+=' -I$(project_dir)/vpk/src/database'
+    echo "CFLAGS: $CFLAGS"
+else
     echo '=========  unknown platform  ========'
 fi
-echo "platform: $PLATFORMS"
+echo "platform00000: $PLATFORMS"
 echo "platform11111: ${PLATFORMS}"
 echo 'platform22222: $(PLATFORMS)'
 AM_CONDITIONAL(PF_X86, test "${PLATFORMS}" = "_X86_")
