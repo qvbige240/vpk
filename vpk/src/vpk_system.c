@@ -15,6 +15,10 @@ extern system_kset x86_system_kset;
 //extern system_kset hi35xx_system_kset;
 #elif defined(_NT966X_)
 extern system_kset nt966x_system_kset;
+#elif defined(_GENERIC_MIPS_)
+extern system_kset generic_system_kset;
+#elif defined(_GENERIC_ARM_)
+extern system_kset generic_system_kset;
 #else
 extern system_kset x86_system_kset;
 #endif
@@ -28,6 +32,10 @@ const system_kset* const systems[] =
 	&nt966x_system_kset,
 #elif defined(_HI35XX_)
 //	&hi35xx_system_kset,
+#elif defined(_GENERIC_MIPS_)
+	&generic_system_kset,
+#elif defined(_GENERIC_ARM_)
+	&generic_system_kset,
 #else
 	&x86_system_kset,
 #endif
@@ -44,6 +52,10 @@ const char* vpk_chip_architecture(void) {
 #elif defined(_NT966X_)
 	arch = archs[1];
 #elif defined(_HI35XX_)
+	arch = archs[2];
+#elif defined(_GENERIC_MIPS_)
+	arch = archs[1];
+#elif defined(_GENERIC_ARM_)
 	arch = archs[2];
 #else
 	arch = archs[3];

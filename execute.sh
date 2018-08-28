@@ -6,28 +6,32 @@ autoheader
 automake --add-missing
 #./configure --host=arm-hismall-linux
 #./configure --host=mipsel-24kec-linux-uclibc
-export PLATFORMS=
+export platform=
+export model=
 WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )"
 echo "WORKDIR: $WORKDIR "
 
-if [ ! "$1"x == x ]; then 
+
+if [ x"$1" == xnt966x_d018 ] || [ x"$1" == xnt966x_d048 ] ; then
+    platform=nt966x
+    model=$1
+    #platform=mips
+elif [ ! "$1"x == x ]; then 
     echo "$1"
-    PLATFORMS=$1
-else
-    #PLATFORMS=nt966x
-    PLATFORMS=mips
+    platform=$1
+    model=$1
 fi
-if [ "$PLATFORMS" == mips ]; then
+if [ "$platform" == nt966x ]; then
     ./configure --host=mipsel-24kec-linux-uclibc enable_shared=yes enable_x86=no enable_sqlite3=yes \
-        enable_zlog=yes enable_protocol=no --prefix=$WORKDIR/build_nt966x/install
+        enable_zlog=yes enable_protocol=no --prefix=$WORKDIR/build_$platform/install
 else
     ./configure --host=x86_64-unknown-linux-gnu enable_shared=yes enable_x86=yes enable_sqlite3=yes \
-        enable_zlog=yes enable_protocol=no --prefix=$WORKDIR/build_x86/install
+        enable_zlog=yes enable_protocol=no --prefix=$WORKDIR/build_$platform/install
 fi
 make
 #make install
 
-outdir=${WORKDIR}/build_$PLATFORMS
+outdir=${WORKDIR}/build_$platform
 if [ -d $outdir ]; then
     rm $outdir -rf
 fi

@@ -1,7 +1,9 @@
 compile
 nt966x:
     make clean
-    ./execute.sh mips
+    #./execute.sh mips
+    ./execute.sh nt966x_d048
+    ./execute.sh nt966x_d018
 
 x86:
     make clean

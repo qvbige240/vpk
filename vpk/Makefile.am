@@ -1,4 +1,16 @@
 AUTOMAKE_OPTIONS=foreign
+platform_generic_sources = \
+src/platform/generic/generic_actuator.c \
+src/platform/generic/generic_actuator.h \
+src/platform/generic/generic_eventq.c \
+src/platform/generic/generic_eventq.h \
+src/platform/generic/generic_log.c \
+src/platform/generic/generic_log.h \
+src/platform/generic/generic_session.c \
+src/platform/generic/generic_session.h \
+src/platform/generic/generic_system.c \
+src/platform/generic/generic_system.h
+
 platform_nt966x_sources = \
 src/platform/nt966x/nt966x_eventq.c \
 src/platform/nt966x/nt966x_eventq.h \
@@ -41,11 +53,32 @@ src/platform/x86/x86_system.h
 #src/platform/x86/x86_actuator.c 
 #src/platform/x86/x86_actuator.h 
 
-if X8666
-platform_sources = $(platform_x86_sources)
-else
-platform_sources = $(platform_nt966x_sources)
+#ifeq ("_X86_", $(PLATFORMS))
+#    platform_sources = $(platform_x86_sources)
+#else ifeq ("_NT966X_", $(PLATFORMS))
+#    platform_sources = $(platform_nt966x_sources)
+#else ifeq ("_GENERIC_MIPS_", $(PLATFORMS))
+#    platform_sources = $(platform_generic_sources)
+#else
+#    platform_sources = $(platform_generic_sources)
+#endif
+
+if PF_X86
+    platform_sources = $(platform_x86_sources)
 endif
+
+if PF_NT966X
+    platform_sources = $(platform_nt966x_sources)
+endif
+
+if PF_GENERIC_MIPS
+    platform_sources = $(platform_generic_sources)
+endif
+
+#if PF_GENERIC_ARM
+#    platform_sources = $(platform_generic_sources)
+#endif
+
 vpk_all_sources = \
 inc/vpk_action.h \
 inc/vpk_constants.h \

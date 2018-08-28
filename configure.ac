@@ -21,7 +21,7 @@ AC_CHECK_LIB([vpk], [main])
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h inttypes.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h])
 # project_dir=/media/zouqing/9d0165e6-5910-46c0-9389-cb9a7e7b899b/zouqing/work/project/vpk
-echo "========PLATFORMS: $PLATFORMS"
+echo "========platform: $platform"
 
 includedir="$includedir/vpk"
 echo "====== includedir: $includedir"
@@ -69,11 +69,31 @@ JANSSON_LIB='libjansson.a'
 CRYPTO_LIB='libcrypto.a'
     
 #LIB_PATH='${FINAL_PATH}/lib'
+LIB_PATH='$(project_dir)/$(platform)/lib'
 DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_TESTDEF"
 echo "DEFINE_CFLAGS: $DEFINE_CFLAGS"
 echo "sqlite lib: $SQLITE3_LIB"
 
-if test x$enable_x86 = xyes; then
+if test X"$SQLITE3_LIB" != X; then
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
+fi
+
+if test X"$ZLOG_LIB" != X; then
+     STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
+fi
+
+if test X"$TIMAPI_LIB" != X; then
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$TIMAPI_LIB"
+fi
+
+if test X"$NANOMSG_LIB" != X; then
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$NANOMSG_LIB"
+fi
+
+PLATFORMS=
+
+#if test x$enable_x86 = xyes; then
+if test x$platform = xx86; then
     PLATFORMS="_X86_"
     echo "====== x86 ======== use gcc to compile"
     GBASE_INCLUDE="/usr/include"
@@ -84,8 +104,8 @@ if test x$enable_x86 = xyes; then
     GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
     AC_SUBST(GOLBAL_CFLAGS)
 
-    LIB_PATH='$(project_dir)/x86/lib'
-    AC_SUBST(LIB_PATH)
+    #LIB_PATH='$(project_dir)/x86/lib'
+    #AC_SUBST(LIB_PATH)
 	
     #TIMAPI_LIB='$(project_dir)/x86/lib/libtimapi.a'
     #NANOMSG_LIB='$(project_dir)/x86/lib/libnanomsg.a'
@@ -93,82 +113,63 @@ if test x$enable_x86 = xyes; then
     #CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
     #CRYPTO_LIB='$(project_dir)/x86/lib/libcrypto.a'
     #SQLITE3_LIB='$(project_dir)/x86/lib/libsqlite3.a'
-    #AC_SUBST(CURL_LIB)
-    #AC_SUBST(JANSSON_LIB)
 
     STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB $LIB_PATH/$CRYPTO_LIB"
-
-    if test X"$SQLITE3_LIB" != X; then
-        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
-    fi
-
-    if test X"$ZLOG_LIB" != X; then
-        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
-    fi
-
-    if test X"$TIMAPI_LIB" != X; then
-        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$TIMAPI_LIB"
-    fi
-
-    if test X"$NANOMSG_LIB" != X; then
-        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$NANOMSG_LIB"
-    fi
-
     echo "STATIC_LIBS: $STATIC_LIBS"
     AC_SUBST(STATIC_LIBS)
 	
     DYNAMIC_LIBS="-lanl -ldl -lpthread -lrt -lz"
     AC_SUBST(DYNAMIC_LIBS)
-    CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/x86/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
-    CFLAGS+=' -I$(project_dir)/vpk/src/database'
+
     EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS) -L$(project_dir)/vpk/.libs'
     AC_SUBST(EXTRA_LDFLAGS)
-else
-    PLATFORMS="_NT966X_"
+
+    CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/$(platform)/include/ -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+    CFLAGS+=' -I$(project_dir)/vpk/src/database'
+elif test x$platform = xnt966x; then
+    if test x$model = xnt966x_d018; then
+        PLATFORMS="_NT966X_"
+    elif test x$model = xnt966x_d048; then
+        PLATFORMS="_GENERIC_MIPS_"
+    else
+        PLATFORMS="_GENERIC_MIPS_"
+    fi
     GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/usr/include"
     GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/lib"
-    GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
-    GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
+    GOLBAL_CFLAGS="-g -O0 -DDEBUG -D$PLATFORMS $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
+    GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D$PLATFORMS -I${GBASE_INCLUDE}"
     GOLBAL_LDFLAGS="-L${GBASE_LIB}"
     AC_SUBST(GOLBAL_CFLAGS)
 
-    LIB_PATH='$(project_dir)/mips/lib'
+    #LIB_PATH='$(project_dir)/mips/lib'
 	
     #JANSSON_LIB='$(project_dir)/mips/lib/libjansson.a'
     #CURL_LIB='$(project_dir)/mips/lib/libcurl.a'
     #CURL_LIB=''
     #SQLITE3_LIB='$(project_dir)/mips/lib/libsqlite3.a'
-    #AC_SUBST(SQLITE3_LIB)
-    #AC_SUBST(JANSSON_LIB)
-    #AC_SUBST(CURL_LIB)
     
     #STATIC_LIBS="$STATIC_LIBS $JANSSON_LIB $CURL_LIB"
     STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
-
-    if test X"$SQLITE3_LIB" != X; then
-        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$SQLITE3_LIB"
-    fi
-
-    if test X"$ZLOG_LIB" != X; then
-        STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
-    fi
-
     echo "STATIC_LIBS: $STATIC_LIBS"
-	AC_SUBST(STATIC_LIBS)
+    AC_SUBST(STATIC_LIBS)
 
-	DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
-	#DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
-	AC_SUBST(DYNAMIC_LIBS)
-	CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/mips/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
-	CFLAGS+=' -I$(project_dir)/vpk/src/database'
-	EXTRA_LDFLAGS='-L$(project_dir)/mips/lib -L$(project_dir)/vpk/.libs'
-	AC_SUBST(EXTRA_LDFLAGS)
+    DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
+    #DYNAMIC_LIBS="-lnvtuctrl -lpthread -lrt -lm"
+    AC_SUBST(DYNAMIC_LIBS)
+
+    EXTRA_LDFLAGS='-L$(project_dir)/$(platform)/lib -L$(project_dir)/vpk/.libs'
+    AC_SUBST(EXTRA_LDFLAGS)
+
+    CFLAGS='-Wall $(GOLBAL_CFLAGS) -I$(project_dir)/$(platform)/include -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
+    CFLAGS+=' -I$(project_dir)/vpk/src/database'
 fi
+
 echo "platform: $PLATFORMS"
 echo "platform11111: ${PLATFORMS}"
 echo 'platform22222: $(PLATFORMS)'
-AM_CONDITIONAL(X8666, test "${PLATFORMS}" = "_X86_")
-AM_CONDITIONAL(NT966X, test "${PLATFORMS}" = "_NT966X_")
+AM_CONDITIONAL(PF_X86, test "${PLATFORMS}" = "_X86_")
+AM_CONDITIONAL(PF_NT966X, test "${PLATFORMS}" = "_NT966X_")
+AM_CONDITIONAL(PF_GENERIC_MIPS, test "${PLATFORMS}" = "_GENERIC_MIPS_")
 AM_CONDITIONAL(TIMA_PROTOCOL, test "${TIMA_PROTOCOL}" = "LIBNANOMSG")
 #AM_CONDITIONAL(USE_SHARED, test x$enable_shared = xyes)
 
