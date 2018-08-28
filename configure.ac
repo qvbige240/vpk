@@ -70,7 +70,7 @@ if test x$enable_x86 = xyes; then
     GBASE_LIB="/usr/lib"
     echo "use gcc to compile"
     #AM_CFLAGS="-Wall -Wextra -Wdeclaration-after-statement"
-	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
+	GOLBAL_CFLAGS="-fPIC -g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
 	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
 	GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
 	AC_SUBST(GOLBAL_CFLAGS)
@@ -118,7 +118,7 @@ else
     PLATFORMS="_NT966X_"
 	GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/usr/include"
 	GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/lib"
-	GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_NT966X_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
+	GOLBAL_CFLAGS="-fPIC -g -O0 -DDEBUG -D_NT966X_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
 	GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_NT966X_ -I${GBASE_INCLUDE}"
 	GOLBAL_LDFLAGS="-L${GBASE_LIB}"
 	AC_SUBST(GOLBAL_CFLAGS)
