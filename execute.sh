@@ -6,18 +6,18 @@ autoheader
 automake --add-missing
 #./configure --host=arm-hismall-linux
 #./configure --host=mipsel-24kec-linux-uclibc
-platform=
+export PLATFORMS=
 WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )"
 echo "WORKDIR: $WORKDIR "
 
 if [ ! "$1"x == x ]; then 
     echo "$1"
-    platform=$1
+    PLATFORMS=$1
 else
-    #platform=nt966x
-    platform=mips
+    #PLATFORMS=nt966x
+    PLATFORMS=mips
 fi
-if [ "$platform" == mips ]; then
+if [ "$PLATFORMS" == mips ]; then
     ./configure --host=mipsel-24kec-linux-uclibc enable_shared=yes enable_x86=no enable_sqlite3=yes \
         enable_zlog=yes enable_protocol=no --prefix=$WORKDIR/build_nt966x/install
 else
@@ -27,7 +27,7 @@ fi
 make
 #make install
 
-outdir=${WORKDIR}/build_$platform
+outdir=${WORKDIR}/build_$PLATFORMS
 if [ -d $outdir ]; then
     rm $outdir -rf
 fi

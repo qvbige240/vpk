@@ -212,7 +212,7 @@ void test_str(void)
 		//sscanf(cur_ver, TIMA_PROJECT".%[0-9].%[0-9]", p1, p2);
 		char tmp[16];
 		sscanf(cur_ver, "%[^.].%[0-9].%[0-9]", tmp, p1, p2);
-		LOG_D("cur_ver: %s", cur_ver);
+		LOG_D("cur_ver: %s, tmp=%s", cur_ver, tmp);
 		LOG_D("p1(len=%d): %s, p2(len=%d): %s", strlen(p1), p1, strlen(p2), p2);
 	}
 
