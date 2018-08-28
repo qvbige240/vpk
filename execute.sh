@@ -120,6 +120,11 @@ else
     make
     exit 0
 fi
+#mkdir $outdir
+#if [ -d $outdir ]; then
+#    cp ${WORKDIR}/main/test $outdir
+#    cp ${WORKDIR}/vpk/*.a $outdir
+#fi
 
 function project_config()
 {
