@@ -21,7 +21,8 @@ sample.c tqueue_demo.c sample_jasson.c sample_download.c \
 sample_string.c sample_md5.c md5.c sample_mq_send.c \
 sample_filesys.c sample_consumer.c sample_timer.c sample_sort.c \
 sample_sqlite.c sample_minheap.c sample_socket.c sample_epoll.c \
-sample_actions.c sample_condition.c sample_mock.c sample_des.c
+sample_actions.c sample_condition.c sample_mock.c sample_des.c \
+sample_aes.c
 #sample_download.c
 #sample_semaphore.c
 #sample_mq_recv.c
@@ -66,3 +67,20 @@ sql_LDFLAGS=$(EXTRA_LDFLAGS)
 sql_SOURCES =\
 sample_sql.c
 
+bin_PROGRAMS += net
+net_LDADD =\
+$(project_dir)/vpk/.libs/libvpk.a \
+$(STATIC_LIBS)
+LIBS=$(DYNAMIC_LIBS)
+net_LDFLAGS=$(EXTRA_LDFLAGS)
+net_SOURCES =\
+sample_net.c
+
+bin_PROGRAMS += ttl
+ttl_LDADD =\
+$(project_dir)/vpk/.libs/libvpk.a \
+$(STATIC_LIBS)
+LIBS=$(DYNAMIC_LIBS)
+ttl_LDFLAGS=$(EXTRA_LDFLAGS)
+ttl_SOURCES =\
+sample_ttl.c

@@ -12,6 +12,7 @@
 
 #include "vpk.h"
 
+extern int aes_main(int argc, char *argv[]);
 extern int encrypt_main(int argc, char *argv[]);
 extern int mock_main(int argc, char *argv[]);
 extern int condition_main(int argc, char *argv[]);
@@ -102,7 +103,7 @@ static void help(FILE *f) {
 		"    -d --sample        Target sample demo which will be running(mqsend, \n"
 		"                       queue, download, md5, json, filesys, ipc, sort,\n"
 		"                       timer, string, sqlite3, minheap, socket, epoll,\n"
-		"                       actions, condition, mock, encrypt).\n"
+		"                       actions, condition, mock, encrypt, aes).\n"
 		"    -t --type          Event type for keycode\n"
 		"    -k --keycode       Key code value(4 bytes long, such as: 1001, 3001)\n"
 		"    -u --url           Target remote url.\n"
@@ -136,6 +137,7 @@ typedef enum {
 	SAMPLE_DEMO_CONDITION,
 	SAMPLE_DEMO_MOCK,
 	SAMPLE_DEMO_ENCRYPT,
+	SAMPLE_DEMO_AES,
 } SampleDemo;
 
 typedef struct _demo_exec
@@ -164,6 +166,7 @@ static const demo_exec demo_tables[] = {
 	{SAMPLE_DEMO_CONDITION,	"condition"},
 	{SAMPLE_DEMO_MOCK,		"mock"},
 	{SAMPLE_DEMO_ENCRYPT,	"encrypt"},
+	{SAMPLE_DEMO_AES,		"aes"},
 };
 
 static int find_demo(const char* demo)
@@ -331,6 +334,8 @@ int main(int argc, char *argv[])
 		mock_main(argc, argv);
 	} else if (index == SAMPLE_DEMO_ENCRYPT) {
 		encrypt_main(argc, argv);
+	} else if (index == SAMPLE_DEMO_AES) {
+		aes_main(argc, argv);
 	} else {
 		fprintf(stderr, "\n\n-d --sample without arguments error\n");
 		vpk_testbyte();
