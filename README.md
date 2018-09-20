@@ -1,8 +1,11 @@
+platforms are as follow:
+    x86, nt966x, nt966x_d048
 compile
 nt966x:
     ./execute.sh nt966x 1
     or
     ./premake.sh nt966x 1 true 
+    ./premake.sh nt966x_d048 1 true 
 
 x86:
     ./execute.sh x86 1
