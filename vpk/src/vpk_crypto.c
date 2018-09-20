@@ -114,15 +114,15 @@ char* vpk_decrypt_aes(unsigned char *key, char* data)
 	}
 
 	size_t size = strlen(data);
-	printf("b64 data[%d]: %s\n", (int)size, data);
 	unsigned char* decode = b64_decode_new(data, size, (size_t*)&length);
-	printf("b64 decode[%d]: %s\n", length, decode);
-	for (i = 0; i < length; i++) {
-		printf(" 0x%02x", decode[i]);
-		if ((i % 8) == 7)
-			printf("\n");
-	}
-	printf("\n");
+	//printf("b64 data[%d]: %s\n", (int)size, data);
+	//printf("b64 decode[%d]: %s\n", length, decode);
+	//for (i = 0; i < length; i++) {
+	//	printf(" 0x%02x", decode[i]);
+	//	if ((i % 8) == 7)
+	//		printf("\n");
+	//}
+	//printf("\n");
 
 	if (length % AES_BLOCK_SIZE != 0) {
 		printf("decode data format error!!!\n");
@@ -137,7 +137,7 @@ char* vpk_decrypt_aes(unsigned char *key, char* data)
 		len += AES_BLOCK_SIZE;
 	}
 	padding5_reverse(data_out, length);
-	printf("decrypt string(len = %d):\n %s\n", (int)strlen((char*)data_out), data_out);
+	//printf("decrypt string(len = %d):\n %s\n", (int)strlen((char*)data_out), data_out);
 	if (decode)
 		VPK_FREE(decode);
 
