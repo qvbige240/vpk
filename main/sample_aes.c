@@ -358,10 +358,18 @@ int aes_main(int argc, char *argv[])
 		//test_aes_ncbc(key, text);
 	} else if (strcasecmp(type, "decode") == 0) {
 		//test_aes_decode(key, text);
-	} else if (strcasecmp(type, "en-ecb") == 0) {
+	} else if (strcasecmp(type, "en-ecb") == 0) {	
+		/** ./test -d aes -t en-ecb -f timastartest **/
 		aes_ecb_encrypt((unsigned char*)key, text);
+		printf("\n\n");
+		char* str = vpk_encrypt_aes((unsigned char*)key, text);
+		free(str);
 	} else if (strcasecmp(type, "de-ecb") == 0) {
+		/** ./test -d aes -t de-ecb -f hluI5fxFOTRZ8rS5cfreEg== **/
 		aes_ecb_decrypt((unsigned char*)key, text);
+		printf("\n\n");
+		char* str = vpk_decrypt_aes((unsigned char*)key, text);
+		free(str);
 	} else {
 		//test_aes_ncbc(key, text);
 	}
