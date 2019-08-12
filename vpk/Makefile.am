@@ -1,4 +1,29 @@
 AUTOMAKE_OPTIONS=foreign
+
+include_HEADERS =\
+inc/macro_event.h \
+inc/vpk_action.h \
+inc/vpk_b64.h \
+inc/vpk_constants.h \
+inc/vpk_crypto.h \
+inc/vpk_event.h \
+inc/vpk_events.h \
+inc/vpk_filesys.h \
+inc/vpk.h \
+inc/vpk_heap.h \
+inc/vpk_ipc.h \
+inc/vpk_libc.h \
+inc/vpk_list.h \
+inc/vpk_logging.h \
+inc/vpk_md5.h \
+inc/vpk_minheap.h \
+inc/vpk_mmap.h \
+inc/vpk_nvtuctrlc.h \
+inc/vpk_queues.h \
+inc/vpk_serialc.h \
+inc/vpk_typedef.h \
+inc/vpk_util.h
+
 platform_generic_sources = \
 src/platform/generic/generic_actuator.c \
 src/platform/generic/generic_actuator.h \
@@ -79,6 +104,23 @@ endif
 #    platform_sources = $(platform_generic_sources)
 #endif
 
+if HAVE_SQLITE3
+    sqlite3_sources = \    
+    src/database/vpk_sql.h \
+    src/database/vpk_sql.c \
+    src/database/vpk_iterator.h \
+    src/database/vpk_iterator.c \
+    src/database/sql_value.h \
+    src/database/sql_value.c \
+    src/database/sql/sql_sqlite3.h \
+    src/database/sql/sql_sqlite3.c \
+    src/database/sql/sql_impl.h
+    include_HEADERS +=\
+    src/database/vpk_sql.h \
+    src/database/vpk_iterator.h \
+    src/database/sql_value.h 
+endif
+
 vpk_all_sources = \
 inc/vpk_action.h \
 inc/vpk_constants.h \
@@ -140,16 +182,7 @@ src/events/event_msg.c \
 src/events/event_msg.h \
 src/events/event_thread.c \
 src/events/event_thread.h \
-src/database/vpk_sql.h \
-src/database/vpk_sql.c \
-src/database/vpk_iterator.h \
-src/database/vpk_iterator.c \
-src/database/sql_value.h \
-src/database/sql_value.c \
-src/database/sql/sql_sqlite3.h \
-src/database/sql/sql_sqlite3.c \
-src/database/sql/sql_impl.h \
-$(platform_sources)
+$(platform_sources) $(sqlite3_sources)
 
 ipc_all_sources =\
 inc/vpk_filesys.h \
@@ -163,11 +196,14 @@ src/vpk_ipc_shm.c \
 src/vpk_ipc_shm.h \
 src/vpk_libc.c
 
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/vpk/inc -I$(top_srcdir)/vpk/src
+
 lib_LTLIBRARIES=libvpk.la
 libvpk_la_LDFLAGS = -fPIC
 #libvpk_la_LIBADD =\
 #$(project_dir)/x86/lib/libjansson.a
 libvpk_la_SOURCES=$(vpk_all_sources)
+
 lib_LTLIBRARIES += libipc.la
 libipc_la_SOURCES=$(ipc_all_sources)
 
@@ -186,29 +222,3 @@ libipc_la_SOURCES=$(ipc_all_sources)
 #includedir=includedir/vpk
 #src/database/sql/sql_impl.h
 
-include_HEADERS =\
-inc/macro_event.h \
-inc/vpk_action.h \
-inc/vpk_b64.h \
-inc/vpk_constants.h \
-inc/vpk_crypto.h \
-inc/vpk_event.h \
-inc/vpk_events.h \
-inc/vpk_filesys.h \
-inc/vpk.h \
-inc/vpk_heap.h \
-inc/vpk_ipc.h \
-inc/vpk_libc.h \
-inc/vpk_list.h \
-inc/vpk_logging.h \
-inc/vpk_md5.h \
-inc/vpk_minheap.h \
-inc/vpk_mmap.h \
-inc/vpk_nvtuctrlc.h \
-inc/vpk_queues.h \
-inc/vpk_serialc.h \
-inc/vpk_typedef.h \
-inc/vpk_util.h \
-src/database/vpk_sql.h \
-src/database/vpk_iterator.h \
-src/database/sql_value.h 
