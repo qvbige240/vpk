@@ -130,14 +130,12 @@ function project_config()
 {
     if [ "$platform" == nt966x ]; then
         ./configure --host=mipsel-24kec-linux-uclibc \
-            enable_shared=yes platform=nt966x enable_x86=no \
-            enable_sqlite3=yes enable_zlog=yes enable_protocol=no \
+             platform=nt966x --enable-sqlite3 --enable-protocol \
             --prefix=$FINAL_PATH
             #--prefix=$WORKDIR/build_nt966x/install
     elif [ "$platform" == x86 ]; then
         ./configure --host=x86_64-unknown-linux-gnu \
-            enable_shared=yes platform=x86 enable_x86=yes \
-            enable_sqlite3=yes enable_zlog=yes enable_protocol=yes \
+             platform=x86 --enable-sqlite3 --enable-protocol \
             --prefix=$FINAL_PATH
             #--prefix=$WORKDIR/build_x86/install
     else

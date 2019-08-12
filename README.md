@@ -28,4 +28,19 @@ sample use
 $ ./test -d mqsend -k 2001
 $ ./test -h
 
+Then link your C program against sample:
+ export FINAL_PATH=/home/zouqing/work/carnet/linux/auto/premake/x86/install
+ export GOLBAL_CFLAGS="-I/usr/include -I$FINAL_PATH/include"
+ export GOLBAL_CPPFLAGS="-I/usr/include -I$FINAL_PATH/include"
+ export GOLBAL_LDFLAGS="-L/usr/lib -L$FINAL_PATH/lib"
+# export GOLBAL_CFLAGS="-I/usr/include -I/home/zouqing/work/carnet/linux/auto/premake/x86/install/include"
+# export GOLBAL_CPPFLAGS="-I/usr/include -I/home/zouqing/work/carnet/linux/auto/premake/x86/install/include"
+# export GOLBAL_LDFLAGS="-L/usr/lib -L/home/zouqing/work/carnet/linux/auto/premake/x86/install/lib"
+$ make distclean
+$ mkdir build
+$ cd build
+$ ../configure --prefix=$PWD/install platform=x86 --enable-sqlite3 --enable-protocol
+
+export FINAL_PATH=xxxx
+$ ../configure --prefix=$PWD/install platform=nt966x --enable-sqlite3
 
