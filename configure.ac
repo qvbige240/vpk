@@ -134,28 +134,18 @@ echo "sqlite lib: $SQLITE3_LIBS"
 CURL_LIB='libcurl.a'
 JANSSON_LIB='libjansson.a'
 CRYPTO_LIB='libcrypto.a'
+#STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB $LIB_PATH/$CRYPTO_LIB"
 
 if test x$platform = xx86; then
     PLATFORMS="_X86_"
     echo "====== x86 ======== use gcc to compile"
 
-    #STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB $LIB_PATH/$CRYPTO_LIB"
-    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB"
-    echo "STATIC_LIBS: $STATIC_LIBS"
-    AC_SUBST(STATIC_LIBS)
-	
-    #DYNAMIC_LIBS="-lanl -ldl -lpthread -lrt -lz"
     DYNAMIC_LIBS="-lanl"
-    #AC_SUBST(DYNAMIC_LIBS)
 
 elif test x$platform = xnt966x; then
     PLATFORMS="_NT966X_"
     echo '=========  nt966x ======='
 	
-    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
-    echo "STATIC_LIBS: $STATIC_LIBS"
-    AC_SUBST(STATIC_LIBS)
-
     #DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
     DYNAMIC_LIBS="-lnvtuctrl"
     #AC_SUBST(DYNAMIC_LIBS)
@@ -167,9 +157,9 @@ elif test x$platform = xnt966x_d048; then
     #VPK_CFLAGS="-fPIC -g -O0 -DDEBUG -D$PLATFORMS $DEFINE_CFLAGS ${GOLBAL_CFLAGS} "
     #AC_SUBST(VPK_CFLAGS)
 
-    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
-    AC_SUBST(STATIC_LIBS)
-    echo "STATIC_LIBS: $STATIC_LIBS"
+    #STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
+    #AC_SUBST(STATIC_LIBS)
+    #echo "STATIC_LIBS: $STATIC_LIBS"
 
     #DYNAMIC_LIBS="-lcrypto -lcurl -lssl -ldl -lpthread -lrt -lm"
     #AC_SUBST(DYNAMIC_LIBS)
@@ -177,18 +167,33 @@ elif test x$platform = xnt966x_d048; then
     #CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
     #CFLAGS+=' -I$(project_dir)/vpk/src/database'
     #echo "CFLAGS: $CFLAGS"
+
+elif test x$platform = xubuntu; then
+    PLATFORMS="_GENERIC_X86_"   #PLATFORMS="_UBUNTU_"
+    echo '=========  ubuntu  ======='
+
+    DYNAMIC_LIBS="-lanl"
+
+elif test x$platform = xcentos; then
+    PLATFORMS="_GENERIC_X86_"   #PLATFORMS="_CENTOS_"
+    echo '=========  centos  ======='
+
+    DYNAMIC_LIBS="-lanl"
 else
     echo '=========  unknown platform  ========'
 fi
 
+STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB"
+AC_SUBST(STATIC_LIBS)
+
 DYNAMIC_LIBS="$DYNAMIC_LIBS -lcurl -lssl -lcrypto -ldl -lpthread -lrt -lm"
 AC_SUBST(DYNAMIC_LIBS)
+echo "STATIC_LIBS: $STATIC_LIBS"
 echo "DYNAMIC_LIBS: $DYNAMIC_LIBS"
 
 EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS)'
 #AC_SUBST(EXTRA_LDFLAGS)
 LDFLAGS="$EXTRA_LDFLAGS"
-echo "LDFLAGS: $LDFLAGS"
 
 EXTRA_CFLAGS="-fPIC -g -O0 -DDEBUG -D$PLATFORMS $BUILD_CFLAGS ${GOLBAL_CFLAGS} "
 #AC_SUBST(EXTRA_CFLAGS)
@@ -196,6 +201,7 @@ EXTRA_CFLAGS="-fPIC -g -O0 -DDEBUG -D$PLATFORMS $BUILD_CFLAGS ${GOLBAL_CFLAGS} "
 CFLAGS="-Wall ${EXTRA_CFLAGS}"
 echo "BUILD_CFLAGS: $BUILD_CFLAGS"
 echo "CFLAGS: $CFLAGS"
+echo "LDFLAGS: $LDFLAGS"
 
 echo "platform00000: $PLATFORMS"
 echo "platform11111: ${PLATFORMS}"
@@ -203,6 +209,8 @@ echo 'platform22222: $(PLATFORMS)'
 AM_CONDITIONAL(PF_X86, test "${PLATFORMS}" = "_X86_")
 AM_CONDITIONAL(PF_NT966X, test "${PLATFORMS}" = "_NT966X_")
 AM_CONDITIONAL(PF_GENERIC_MIPS, test "${PLATFORMS}" = "_GENERIC_MIPS_")
+#AM_CONDITIONAL(PF_GENERIC_X86, test "${PLATFORMS}" = "_UBUNTU_" || test "${PLATFORMS}" = "_CENTOS_")
+AM_CONDITIONAL(PF_GENERIC_X86, test "${PLATFORMS}" = "_GENERIC_X86_")
 AM_CONDITIONAL(TIMA_PROTOCOL, test "${TIMA_PROTOCOL}" = "LIBNANOMSG")
 #AM_CONDITIONAL(USE_SHARED, test x$enable_shared = xyes)
 

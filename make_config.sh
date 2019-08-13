@@ -50,6 +50,11 @@ function project_config()
         ./configure --host=mipsel-24kec-linux-uclibc \
             platform=nt966x_d048 --enable-sqlite3 \
             --prefix=$FINAL_PATH
+    elif [ "$platform" == ubuntu ]; then
+        ./configure --host=x86_64-unknown-linux-gnu \
+            --prefix=$FINAL_PATH platform=ubuntu
+    elif [ "$platform" == centos ]; then
+        ./configure --prefix=$FINAL_PATH platform=centos
     else
             #enable_shared=yes platform=nt966x_d048 enable_x86=no
             #enable_sqlite3=yes enable_zlog=yes

@@ -100,6 +100,10 @@ if PF_GENERIC_MIPS
     platform_sources = $(platform_generic_sources)
 endif
 
+if PF_GENERIC_X86
+    platform_sources = $(platform_generic_sources)
+endif
+
 #if PF_GENERIC_ARM
 #    platform_sources = $(platform_generic_sources)
 #endif

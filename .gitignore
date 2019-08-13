@@ -11,7 +11,7 @@
 *.swp
 *.db
 *.log
-build_*
+build*
 main/mqrecv
 main/ev*
 main/menu_setting_pc.json
