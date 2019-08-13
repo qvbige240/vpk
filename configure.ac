@@ -27,7 +27,6 @@ AC_CHECK_LIB([vpk], [main])
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h inttypes.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h])
 
-
 if test x$FINAL_PATH = x; then
     AC_MSG_ERROR([
 *** dependency libraries env path missing: export \$FINAL_PATH=    ***
@@ -39,16 +38,6 @@ fi
 #export GOLBAL_CPPFLAGS="-I/usr/include -I/home/zouqing/work/carnet/linux/auto/premake/x86/install/include"
 #export GOLBAL_LDFLAGS="-L/usr/lib -L/home/zouqing/work/carnet/linux/auto/premake/x86/install/lib"
 #export platform=x86
-
-LIB_PATH='${FINAL_PATH}/lib'
-library_dir="$FINAL_PATH/lib"
-topsrcdir=$(top_srcdir)
-echo "srcdir: $srcdir"
-echo "exec_prefix: $exec_prefix"
-echo "libdir: $libdir"
-echo "topsrcdir: $topsrcdir"
-echo "top_srcdir: $top_srcdir"
-echo "library_dir: $library_dir"
 
 INCLUDE="-I$srcdir/include"
 if test x$srcdir != x.; then
@@ -66,6 +55,16 @@ if test "x$global_CFLAGS" = x; then
 fi
 
 WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )"
+
+LIB_PATH='${FINAL_PATH}/lib'
+library_dir="$FINAL_PATH/lib"
+echo "srcdir: $srcdir"
+echo "exec_prefix: $exec_prefix"
+echo "libdir: $libdir"
+echo 'top_srcdir: $(top_srcdir)'
+echo "top_srcdir: $top_srcdir"
+echo "library_dir: $library_dir"
+
 echo "======WORKDIR: $WORKDIR "
 echo "======DIR_PREMAKE: $DIR_PREMAKE"
 echo "========BUILD_PATH: $BUILD_PATH "
@@ -79,52 +78,6 @@ echo "========platform: $platform"
 
 includedir="$includedir/vpk"
 echo "====== includedir: $includedir"
-
-# deprecated
-if false; then
-
-    project_dir=$PWD
-    echo "project dir: $project_dir"
-    AC_SUBST(project_dir)
-
-
-    #if test x$enable_shared = xyes; then
-    #    #VPK_LIB='-lvpk'
-    #    #VPK_LIB='$(project_dir)/vpk/.libs/libvpk.so'
-    #else
-    #    VPK_LIB=''
-    #fi
-
-    if test x$enable_sqlite3 = xyes; then
-        SQLITE3_LIB='libsqlite3.a'
-        AC_DEFINE(USE_SQLITE3, 1, [if sqlite3 is enabled])
-        DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_SQLITE3"
-    else
-        SQLITE3_LIB=''
-    fi
-
-    if test x$enable_zlog = xyes; then
-        ZLOG_LIB='libzlog.a'
-        AC_DEFINE(USE_ZLOG, 1, [if zlog is enabled])
-        DEFINE_CFLAGS="$DEFINE_CFLAGS -DUSE_ZLOG"
-    else
-        ZLOG_LIB=''
-    fi
-
-    if test x$enable_protocol = xyes; then
-        TIMAPI_LIB='libtimapi.a'
-        NANOMSG_LIB='libnanomsg.a'
-        TIMA_PROTOCOL="LIBNANOMSG"
-        AC_DEFINE(TIMA_PROTOCOL, 1, [if protocol is enabled])
-        DEFINE_CFLAGS="$DEFINE_CFLAGS -DTIMA_PROTOCOL"
-    else
-        TIMAPI_LIB=''
-        NANOMSG_LIB=''
-        TIMA_PROTOCOL=""
-    fi
-
-fi
-
 
 ## zlog config
 AC_ARG_ENABLE(zlog,
@@ -185,46 +138,27 @@ CRYPTO_LIB='libcrypto.a'
 if test x$platform = xx86; then
     PLATFORMS="_X86_"
     echo "====== x86 ======== use gcc to compile"
- #   GBASE_INCLUDE="/usr/include"
- #   GBASE_LIB="/usr/lib"
- #   #AM_CFLAGS="-Wall -Wextra -Wdeclaration-after-statement"
- #   GOLBAL_CFLAGS="-g -O0 -DDEBUG -D_X86_ $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
- #   GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D_X86_ -I${GBASE_INCLUDE}"
- #   GOLBAL_LDFLAGS="-L${GBASE_LIB} -L/lib"
- #   AC_SUBST(GOLBAL_CFLAGS)
 
-
-    #LIB_PATH='$(project_dir)/x86/lib'
-    #TIMAPI_LIB='$(project_dir)/x86/lib/libtimapi.a'
-    #NANOMSG_LIB='$(project_dir)/x86/lib/libnanomsg.a'
-    #JANSSON_LIB='$(project_dir)/x86/lib/libjansson.a'
-    #CURL_LIB='$(project_dir)/x86/lib/libcurl.a'
-    #CRYPTO_LIB='$(project_dir)/x86/lib/libcrypto.a'
-    #SQLITE3_LIB='$(project_dir)/x86/lib/libsqlite3.a'
-
-    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB $LIB_PATH/$CRYPTO_LIB"
+    #STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB $LIB_PATH/$CURL_LIB $LIB_PATH/$CRYPTO_LIB"
+    STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB"
     echo "STATIC_LIBS: $STATIC_LIBS"
     AC_SUBST(STATIC_LIBS)
 	
-    DYNAMIC_LIBS="-lanl -ldl -lpthread -lrt -lz"
-    AC_SUBST(DYNAMIC_LIBS)
+    #DYNAMIC_LIBS="-lanl -ldl -lpthread -lrt -lz"
+    DYNAMIC_LIBS="-lanl"
+    #AC_SUBST(DYNAMIC_LIBS)
 
 elif test x$platform = xnt966x; then
     PLATFORMS="_NT966X_"
     echo '=========  nt966x ======='
-#    GBASE_INCLUDE="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/usr/include"
-#    GBASE_LIB="/opt/mipsel-24kec-linux-uclibc/usr/mipsel-24kec-linux-uclibc/sysroot/lib"
-#    GOLBAL_CFLAGS="-g -O0 -DDEBUG -D$PLATFORMS $DEFINE_CFLAGS -I${GBASE_INCLUDE}"
-#    GOLBAL_CPPFLAGS="-g -O0 -DDEBUG -D$PLATFORMS -I${GBASE_INCLUDE}"
-#    GOLBAL_LDFLAGS="-L${GBASE_LIB}"
-#    AC_SUBST(GOLBAL_CFLAGS)
 	
     STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB "
     echo "STATIC_LIBS: $STATIC_LIBS"
     AC_SUBST(STATIC_LIBS)
 
-    DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
-    AC_SUBST(DYNAMIC_LIBS)
+    #DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
+    DYNAMIC_LIBS="-lnvtuctrl"
+    #AC_SUBST(DYNAMIC_LIBS)
 
 elif test x$platform = xnt966x_d048; then
     PLATFORMS="_GENERIC_MIPS_"
@@ -237,8 +171,8 @@ elif test x$platform = xnt966x_d048; then
     AC_SUBST(STATIC_LIBS)
     echo "STATIC_LIBS: $STATIC_LIBS"
 
-    DYNAMIC_LIBS="-lcrypto -lcurl -lssl -ldl -lpthread -lrt -lm"
-    AC_SUBST(DYNAMIC_LIBS)
+    #DYNAMIC_LIBS="-lcrypto -lcurl -lssl -ldl -lpthread -lrt -lm"
+    #AC_SUBST(DYNAMIC_LIBS)
 
     #CFLAGS='-Wall ${VPK_CFLAGS} -I$(project_dir)/vpk/inc -I$(project_dir)/vpk/src'
     #CFLAGS+=' -I$(project_dir)/vpk/src/database'
@@ -246,6 +180,10 @@ elif test x$platform = xnt966x_d048; then
 else
     echo '=========  unknown platform  ========'
 fi
+
+DYNAMIC_LIBS="$DYNAMIC_LIBS -lcurl -lssl -lcrypto -ldl -lpthread -lrt -lm"
+AC_SUBST(DYNAMIC_LIBS)
+echo "DYNAMIC_LIBS: $DYNAMIC_LIBS"
 
 EXTRA_LDFLAGS='$(GOLBAL_LDFLAGS)'
 #AC_SUBST(EXTRA_LDFLAGS)
@@ -258,13 +196,10 @@ EXTRA_CFLAGS="-fPIC -g -O0 -DDEBUG -D$PLATFORMS $BUILD_CFLAGS ${GOLBAL_CFLAGS} "
 CFLAGS="-Wall ${EXTRA_CFLAGS}"
 echo "BUILD_CFLAGS: $BUILD_CFLAGS"
 echo "CFLAGS: $CFLAGS"
-#CFLAGS='-Wall ${EXTRA_CFLAGS}'
-#echo "CFLAGS: $CFLAGS"
 
 echo "platform00000: $PLATFORMS"
 echo "platform11111: ${PLATFORMS}"
 echo 'platform22222: $(PLATFORMS)'
-echo "TIMA_PROTOCOL: ${TIMA_PROTOCOL}"
 AM_CONDITIONAL(PF_X86, test "${PLATFORMS}" = "_X86_")
 AM_CONDITIONAL(PF_NT966X, test "${PLATFORMS}" = "_NT966X_")
 AM_CONDITIONAL(PF_GENERIC_MIPS, test "${PLATFORMS}" = "_GENERIC_MIPS_")

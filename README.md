@@ -36,6 +36,13 @@ Then link your C program against sample:
 # export GOLBAL_CFLAGS="-I/usr/include -I/home/zouqing/work/carnet/linux/auto/premake/x86/install/include"
 # export GOLBAL_CPPFLAGS="-I/usr/include -I/home/zouqing/work/carnet/linux/auto/premake/x86/install/include"
 # export GOLBAL_LDFLAGS="-L/usr/lib -L/home/zouqing/work/carnet/linux/auto/premake/x86/install/lib"
+
+ libtoolize
+ aclocal
+ autoconf
+ autoheader
+ automake --add-missing
+
 $ make distclean
 $ mkdir build
 $ cd build
