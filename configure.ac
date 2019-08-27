@@ -85,7 +85,7 @@ AC_ARG_ENABLE(zlog,
     enable_zlog="yes")
 if test x$enable_zlog = xyes; then    
     AC_DEFINE(HAVE_ZLOG, 1, [if zlog is enabled])
-    EXTRA_CFLAGS="$EXTRA_CFLAGS -DUSE_ZLOG"
+    BUILD_CFLAGS="$BUILD_CFLAGS -DUSE_ZLOG"
     ZLOG_LIB='libzlog.a'
     STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$ZLOG_LIB"
 else

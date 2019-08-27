@@ -109,7 +109,7 @@ endif
 #endif
 
 if HAVE_SQLITE3
-    sqlite3_sources = \    
+    sqlite3_sources = \
     src/database/vpk_sql.h \
     src/database/vpk_sql.c \
     src/database/vpk_iterator.h \

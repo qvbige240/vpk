@@ -33,6 +33,7 @@ Then link your C program against sample:
  export GOLBAL_CFLAGS="-I/usr/include -I$FINAL_PATH/include"
  export GOLBAL_CPPFLAGS="-I/usr/include -I$FINAL_PATH/include"
  export GOLBAL_LDFLAGS="-L/usr/lib -L$FINAL_PATH/lib"
+ export platform=x86
 # export GOLBAL_CFLAGS="-I/usr/include -I/home/zouqing/work/carnet/linux/auto/premake/x86/install/include"
 # export GOLBAL_CPPFLAGS="-I/usr/include -I/home/zouqing/work/carnet/linux/auto/premake/x86/install/include"
 # export GOLBAL_LDFLAGS="-L/usr/lib -L/home/zouqing/work/carnet/linux/auto/premake/x86/install/lib"
