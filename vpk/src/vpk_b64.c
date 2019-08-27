@@ -476,25 +476,25 @@ size_t vpk_b64_encode2(
         rc = &rc_;
     }
 
-    switch(B64_F_LINE_LEN_MASK & flags)
+    switch (B64_F_LINE_LEN_MASK & flags)
     {
-        case    B64_F_LINE_LEN_USE_PARAM:
-            if(lineLen >= 0)
-            {
-                break;
-            }
-            /* Fall through to 64 */
-        case    B64_F_LINE_LEN_64:
-            lineLen = 64;
+    case B64_F_LINE_LEN_USE_PARAM:
+        if (lineLen >= 0)
+        {
             break;
-        case    B64_F_LINE_LEN_76:
-            lineLen = 76;
-            break;
-        default:
-            B64_ENFORCE_PRECONDITION(0, "Bad line length flag specified to b64_encode2()");
-        case    B64_F_LINE_LEN_INFINITE:
-            lineLen = 0;
-            break;
+        }
+        /* Fall through to 64 */
+    case B64_F_LINE_LEN_64:
+        lineLen = 64;
+        break;
+    case B64_F_LINE_LEN_76:
+        lineLen = 76;
+        break;
+    default:
+        B64_ENFORCE_PRECONDITION(0, "Bad line length flag specified to b64_encode2()");
+    case B64_F_LINE_LEN_INFINITE:
+        lineLen = 0;
+        break;
     }
 
     B64_ENFORCE_PRECONDITION(0 == (lineLen % 4), "Bad line length flag specified to b64_encode2()");
