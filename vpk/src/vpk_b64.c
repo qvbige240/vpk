@@ -546,4 +546,27 @@ size_t vpk_b64_decode2(
     return vpk_b64_decode_(src, srcLen, (unsigned char*)dest, destSize, flags, badChar, rc);
 }
 
+
+char *b64_encode_new(const char *src, size_t size, size_t *outsize)
+{
+    size_t len1 = vpk_b64_encode(src, size, NULL, 0);
+    char *dst = (char *)malloc(len1 + 1);
+    size_t out = vpk_b64_encode(src, size, dst, len1);
+    dst[out] = '\0';
+    if (outsize) *outsize = out;
+    printf("in = %d, len1 = %d, out = %d\n", (int)size, (int)len1, (int)out);
+    return dst;
+}
+
+unsigned char *b64_decode_new(const char *src, size_t size, size_t *outsize)
+{
+    size_t dlen1 = vpk_b64_decode(src, size, NULL, 0);
+    unsigned char *dst = (unsigned char *)calloc(dlen1 + 1, sizeof(unsigned char));
+    size_t dlen2 = vpk_b64_decode(src, size, dst, dlen1);
+    dst[dlen2] = '\0';
+    if (outsize) *outsize = dlen2;
+    printf("in = %d, dlen1 = %d, dlen2(out) = %d\n", (int)size, (int)dlen1, (int)dlen2);
+    return dst;
+}
+
 /* ///////////////////////////// end of file //////////////////////////// */

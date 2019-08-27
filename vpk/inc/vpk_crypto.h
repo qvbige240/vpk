@@ -38,12 +38,13 @@ char* vpk_decrypt_aes(unsigned char *key, char* data);
  * @param path		The target file
  * @param convert_hex	whether convert to hex string
  *
+ * @return 0 on success, -1 on failure.
  */
-void vpk_sha1_file_gen(unsigned char *output, const char *path, int convert_hex);
+int vpk_sha1_file_gen(unsigned char *output, const char *path, int convert_hex);
 
-void vpk_sha1_split_file_gen(unsigned char *output, const char *path, size_t split, int convert_hex);
+int vpk_sha1_split_file_gen(unsigned char *output, const char *path, size_t split, int convert_hex);
 
-void vpk_sha1_data_gen(unsigned char *output, const unsigned char *data, size_t len);
+int vpk_sha1_data_gen(unsigned char *output, const unsigned char *data, size_t len);
 
 TIMA_END_DELS
 

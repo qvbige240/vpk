@@ -123,7 +123,9 @@ libipc_la_SOURCES=$(ipc_all_sources)
 
 include_HEADERS =\
 inc/vpk_action.h \
+inc/vpk_b64.h \
 inc/vpk_constants.h \
+inc/vpk_crypto.h \
 inc/vpk_event.h \
 inc/vpk_filesys.h \
 inc/vpk.h \

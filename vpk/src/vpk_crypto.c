@@ -33,30 +33,6 @@ static INLINE void padding5_reverse(unsigned char *src, size_t len)
 	src[len-pad_num] = '\0';
 }
 
-static char* b64_encode_new(const char* src, size_t size, size_t *outsize)
-{
-	size_t len1 = vpk_b64_encode(src, size, NULL, 0);
-	char* dst = (char*)VPK_MALLOC(len1 + 1);
-	size_t out = vpk_b64_encode(src, size, dst, len1);
-	dst[out] = '\0';
-	if (outsize)
-		*outsize = out;
-	printf("in = %d, len1 = %d, out = %d\n", (int)size, (int)len1, (int)out);
-	return dst;
-}
-
-static unsigned char* b64_decode_new(const char* src, size_t size, size_t *outsize)
-{
-	size_t dlen1 = vpk_b64_decode(src, size, NULL, 0);
-	unsigned char* dst = (unsigned char*)calloc(dlen1 + 1, sizeof(unsigned char));
-	size_t dlen2 = vpk_b64_decode(src, size, dst, dlen1);
-	dst[dlen2] = '\0';
-	if (outsize)
-		*outsize = dlen2;
-	printf("in = %d, dlen1 = %d, dlen2(out) = %d\n", (int)size, (int)dlen1, (int)dlen2);
-	return dst;
-}
-
 char* vpk_encrypt_aes(unsigned char *key, char* data)
 {
 	AES_KEY aes;
@@ -344,16 +320,18 @@ static int sha1_gen_file(const char *filename, size_t split, unsigned char *hash
     return 0;
 }
 
-void vpk_sha1_file_gen(unsigned char *output, const char *path, int convert_hex)
+int vpk_sha1_file_gen(unsigned char *output, const char *path, int convert_hex)
 {
-    return_if_fail(output && path);
-    sha1_gen_file(path, 0, output, convert_hex);
+    return_val_if_fail(output && path, -1);
+
+    return sha1_gen_file(path, 0, output, convert_hex);
 }
 
-void vpk_sha1_split_file_gen(unsigned char *output, const char *path, size_t split, int convert_hex)
+int vpk_sha1_split_file_gen(unsigned char *output, const char *path, size_t split, int convert_hex)
 {
-    return_if_fail(output && path);
-    sha1_gen_file(path, split, output, convert_hex);
+    return_val_if_fail(output && path, -1);
+
+    return sha1_gen_file(path, split, output, convert_hex);
 }
 
 static int sha1_gen_block(const unsigned char *d, size_t n, unsigned char *hash_hex)
@@ -375,9 +353,9 @@ static int sha1_gen_block(const unsigned char *d, size_t n, unsigned char *hash_
     return 0;
 }
 
-void vpk_sha1_data_gen(unsigned char *output, const unsigned char *data, size_t len)
+int vpk_sha1_data_gen(unsigned char *output, const unsigned char *data, size_t len)
 {
-    return_if_fail(output && data && len > 0);
+    return_val_if_fail(output && data && len > 0, -1);
 
-    sha1_gen_block(data, len, output);
+    return sha1_gen_block(data, len, output);
 }

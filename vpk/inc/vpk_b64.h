@@ -246,6 +246,9 @@ size_t vpk_b64_decode2(
 ,   B64_RC*             rc      /* = NULL */
 );
 
+char *b64_encode_new(const char *src, size_t size, size_t *outsize);
+unsigned char *b64_decode_new(const char *src, size_t size, size_t *outsize);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif /* __cplusplus */
