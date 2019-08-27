@@ -267,7 +267,7 @@ static int test_des_2(void)
 	return test_des_ncbc(&cbc_key);
 }
 
-void key_gen(void)
+static void key_gen(void)
 {
 	//DES_cblock key;
 	unsigned char key[8];
@@ -293,6 +293,85 @@ void key_gen(void)
 	test_des_ncbc(&key);
 }
 
+/* sha1 */
+
+static char *memory_encode_b64(const char *src, size_t size, size_t *outsize)
+{
+    size_t len = vpk_b64_encode(src, size, NULL, 0);
+    char *dst = (char *)malloc(len + 1);
+    size_t len1 = vpk_b64_encode(src, size, dst, len);
+    dst[len1] = '\0';
+    if (outsize)
+        *outsize = len1;
+    printf("len = %d, len1 = %d\n", (int)len, (int)len1);
+    return dst;
+}
+
+static void sha1_gen(const char *file, int convert)
+{
+    char ha_hex[64] = {0};
+
+    struct timeval result, prev, next;
+    gettimeofday(&prev, 0);
+
+    if (convert)
+    {
+        vpk_sha1_file_gen(ha_hex, file, convert);
+        LOG_D("file(%s) sha1 string: %s", file, ha_hex);
+    }
+    else
+    {
+        if (vpk_file_length(file) > 2 << 21) {
+            ha_hex[0] = 0x96;
+        } else {
+            ha_hex[0] = 0x16;
+        }
+        vpk_sha1_file_gen(ha_hex + 1, file, convert);
+        LOG_D("file(%s) sha1 hex: %s", file, ha_hex);
+
+        size_t b64_size = 0;
+        char *encode = memory_encode_b64(ha_hex, 21, &b64_size);
+        LOG_D("b64 encode(%d): %s\n", (int)b64_size, encode);
+    }
+
+    gettimeofday(&next, 0);
+    vpk_timersub(&next, &prev, &result);
+    LOG_D("sha1 elapsed: %d(s), %d(us)\n", result.tv_sec, result.tv_usec);
+}
+static void sha1_split_gen(const char *file, int convert)
+{
+    size_t size = (2 << 21);
+    char ha_hex[64] = {0};
+
+    struct timeval result, prev, next;
+    gettimeofday(&prev, 0);
+
+    if (convert)
+    {
+        vpk_sha1_split_file_gen(ha_hex, file, size, convert);
+        LOG_D("file(%s) spilt(%d KB) sha1 string: %s", file, size / 1024, ha_hex);
+    }
+    else
+    {
+        if (vpk_file_length(file) > 2 << 21) {
+            ha_hex[0] = 0x96;
+        }
+        else {
+            ha_hex[0] = 0x16;
+        }
+        vpk_sha1_split_file_gen(ha_hex + 1, file, size, convert);
+        LOG_D("file(%s) spilt(%d KB) sha1 hex: %s", file, size / 1024, ha_hex);
+
+        size_t b64_size = 0;
+        char *encode = memory_encode_b64(ha_hex, 21, &b64_size);
+        LOG_D("b64 encode(%d): %s\n", (int)b64_size, encode);
+    }
+
+    gettimeofday(&next, 0);
+    vpk_timersub(&next, &prev, &result);
+    LOG_D("sha1 elapsed: %d(s), %d(us)\n", result.tv_sec, result.tv_usec);
+}
+
 int encrypt_main(int argc, char *argv[])
 {
  	//int ret = 0;
@@ -301,6 +380,7 @@ int encrypt_main(int argc, char *argv[])
  	//vpk_logging_level_set("DEBUG");
 
 	char* type = "cbc";
+	char* file = NULL;
 	//if (argc > 1)
 	//{
 	//	type = argv[1];
@@ -330,6 +410,9 @@ int encrypt_main(int argc, char *argv[])
 			case 't':
 				type = optarg;
 				break;
+			case 'f':
+				file = optarg;
+				break;
 			default:
 				break;
 		}
@@ -337,17 +420,25 @@ int encrypt_main(int argc, char *argv[])
 
 	LOG_D("type = %s", type);
 
+	if (file) {
+		sha1_gen(file, 1);
+		printf("\n");
+		sha1_gen(file, 0);
+		printf("\n");
+		sha1_split_gen(file, 1);
+		printf("\n");
+		sha1_split_gen(file, 0);
+		printf("\n");
+	}
+
 	double elapsed;
 	struct timeval result, prev, next;	
 
 	gettimeofday(&prev, 0);
 
 	//test_des_1();
-
 	test_des_2();
-
 	key_gen();
-
 
 	gettimeofday(&next, 0);
 	vpk_timersub(&next, &prev, &result);

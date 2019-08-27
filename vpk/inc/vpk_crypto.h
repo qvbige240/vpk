@@ -31,6 +31,20 @@ char* vpk_encrypt_aes(unsigned char *key, char* data);
  */
 char* vpk_decrypt_aes(unsigned char *key, char* data);
 
+/**
+ * Generate sha1 for file.
+ *
+ * @param output	The sha1 hex string buffer
+ * @param path		The target file
+ * @param convert_hex	whether convert to hex string
+ *
+ */
+void vpk_sha1_file_gen(unsigned char *output, const char *path, int convert_hex);
+
+void vpk_sha1_split_file_gen(unsigned char *output, const char *path, size_t split, int convert_hex);
+
+void vpk_sha1_data_gen(unsigned char *output, const unsigned char *data, size_t len);
+
 TIMA_END_DELS
 
 #endif //VPK_CRYPTO_H

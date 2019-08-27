@@ -4,7 +4,9 @@
  * 2018-9-19 qing.zou created
  *
  */
+
 #include "openssl/aes.h"
+#include "openssl/sha.h"
 
 #include "vpk_b64.h"
 #include "vpk_crypto.h"
@@ -142,4 +144,240 @@ char* vpk_decrypt_aes(unsigned char *key, char* data)
 		VPK_FREE(decode);
 
 	return (char*)data_out;
+}
+
+/** sha1 **/
+static INLINE unsigned char *sha1_gen(const unsigned char *d, size_t n, unsigned char *digest)
+{
+    if (1) {
+        SHA1(d, n, digest);
+    } else {
+        SHA_CTX c;
+
+        if (!SHA1_Init(&c))
+            return NULL;
+        SHA1_Update(&c, d, n);
+        SHA1_Final(digest, &c);
+        //OPENSSL_cleanse(&c, sizeof(c));
+    }
+    return digest;
+}
+
+#define DATA_CHUNK_SIZE (4 * 1024 * 1024)
+static int hash_data_fp(FILE *input, unsigned char *digest)
+{
+    int ret = 0;
+    FILE *fp = input;
+    size_t n = 0;
+    long file_size = 0, offset = 0, size = DATA_CHUNK_SIZE;
+    unsigned char *data = NULL;
+    //return_val_if_fail(filename != NULL, -1);
+    //fp = fopen(filename, "r");
+    return_val_if_fail(fp != NULL && digest, -1);
+
+    data = calloc(1, DATA_CHUNK_SIZE + 1);
+
+    fseek(fp, 0, SEEK_END);
+    file_size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    //size = (offset + size) <= file_size ? size : file_size;
+    //LOG_I("file size: %ld, chunk size: %d", file_size, size);
+
+    size_t nchunk = file_size / size + 1;
+
+    LOG_I("file size: %ld, chunk size: %d, nchunk: %d", file_size, size, nchunk);
+    if (!data) {
+        ret = -1;
+        LOG_E("memory calloc error.");
+        goto end;
+    }
+
+    SHA_CTX c;
+    if (!SHA1_Init(&c)) {
+        ret = -1;
+        LOG_E("SHA1_Init failed.");
+        goto end;
+    }
+
+    //int cnt = 0;
+    while (offset < file_size)
+    {
+        fseek(fp, offset, SEEK_SET);
+        //n = fread(data, size, 1, fp);
+        n = fread(data, 1, size, fp);
+        if (n < 0)
+        {
+            LOG_E("file read error.");
+            break;
+        }
+        //*((char *)data + size) = '\0';
+
+        SHA1_Update(&c, data, n);
+
+        //LOG_D("offset: %d, n: %d, file size: %d, cnt: %d", offset, n, file_size, cnt++);
+        offset += n;
+    }
+
+    SHA1_Final(digest, &c);
+    OPENSSL_cleanse(&c, sizeof(c));
+
+end:
+    if (data)
+        free(data);
+    //fclose(fp);
+
+    return ret;
+}
+
+static int hash_data_fp_split4m(FILE *input, size_t split, unsigned char *digest)
+{
+    int ret = 0;
+    FILE *fp = input;
+    size_t n = 0;
+    long file_size = 0, offset = 0;
+    long size = split > DATA_CHUNK_SIZE ? DATA_CHUNK_SIZE : split;
+    unsigned char *data = NULL;
+    //return_val_if_fail(filename != NULL, -1);
+    //fp = fopen(filename, "r");
+    return_val_if_fail(fp != NULL && digest, -1);
+
+    data = calloc(1, DATA_CHUNK_SIZE + 1);
+
+    fseek(fp, 0, SEEK_END);
+    file_size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    //size = (offset + size) <= file_size ? size : file_size;
+    //LOG_I("file size: %ld, chunk size: %d", file_size, size);
+
+    size_t digest_len = 0;
+    size_t nchunk = file_size / size + 1;
+    //unsigned char digest[SHA_DIGEST_LENGTH];
+    unsigned char *digest_data = calloc(1, nchunk * SHA_DIGEST_LENGTH + 1);
+
+    LOG_I("file size: %ld, chunk size: %d, nchunk: %d", file_size, size, nchunk);
+    if (!data || !digest_data)
+    {
+        ret = -1;
+        LOG_E("memory calloc error.");
+        goto end;
+    }
+
+    while (offset < file_size)
+    {
+        fseek(fp, offset, SEEK_SET);
+        //n = fread(data, size, 1, fp);
+        n = fread(data, 1, size, fp);
+        if (n < 0)
+        {
+            LOG_E("file read error.");
+            break;
+        }
+        //*((char *)data + size) = '\0';
+
+        sha1_gen((const unsigned char *)data, n, digest);
+        memcpy(digest_data + digest_len, digest, SHA_DIGEST_LENGTH);
+        digest_len += SHA_DIGEST_LENGTH;
+
+        //LOG_D("offset: %d, n: %d, file size: %d, cnt: %d", offset, n, file_size, cnt++);
+        offset += n;
+    }
+
+    if (nchunk > 1)
+        sha1_gen((const unsigned char *)digest_data, digest_len, digest);
+
+end:
+    if (digest_data)
+        free(digest_data);
+
+    if (data)
+        free(data);
+    //fclose(fp);
+
+    return ret;
+}
+
+static INLINE int sha1_data_file(const char *filename, size_t split, unsigned char *digest)
+{
+    int ret = 0;
+    FILE *fp = 0;
+    return_val_if_fail(filename != NULL, -1);
+
+    fp = fopen(filename, "r");
+
+    if (split > 0)
+        ret = hash_data_fp_split4m(fp, split, digest);
+    else
+        ret = hash_data_fp(fp, digest);
+
+    fclose(fp);
+
+    return ret;
+}
+
+static int sha1_gen_file(const char *filename, size_t split, unsigned char *hash, int convert_hex)
+{
+    int i = 0;
+    unsigned char digest[SHA_DIGEST_LENGTH];
+    char hex_string[2 * SHA_DIGEST_LENGTH + 1];
+
+    sha1_data_file(filename, split, digest);
+
+    if (convert_hex)
+    {
+        for (i = 0; i < SHA_DIGEST_LENGTH; i++)
+        {
+            snprintf(&hex_string[2 * i], 3, "%02X", digest[i]);
+            //printf("%02X ", digest[i]);
+        }
+        //printf("\n");
+
+        LOG_D("SHA1: %s", hex_string);
+        strcpy((char *)hash, hex_string);
+    }
+    else
+    {
+        memcpy((char *)hash, digest, SHA_DIGEST_LENGTH);
+    }
+
+    return 0;
+}
+
+void vpk_sha1_file_gen(unsigned char *output, const char *path, int convert_hex)
+{
+    return_if_fail(output && path);
+    sha1_gen_file(path, 0, output, convert_hex);
+}
+
+void vpk_sha1_split_file_gen(unsigned char *output, const char *path, size_t split, int convert_hex)
+{
+    return_if_fail(output && path);
+    sha1_gen_file(path, split, output, convert_hex);
+}
+
+static int sha1_gen_block(const unsigned char *d, size_t n, unsigned char *hash_hex)
+{
+    int i = 0;
+    unsigned char digest[SHA_DIGEST_LENGTH];
+    char hex_string[2 * SHA_DIGEST_LENGTH + 1];
+
+    sha1_gen(d, n, digest);
+
+    for (i = 0; i < SHA_DIGEST_LENGTH; i++)
+    {
+        snprintf(&hex_string[2 * i], 3, "%02X", digest[i]);
+        //printf("%02X", digest[i]);
+    }
+    LOG_D("SHA1: %s", hex_string);
+    strcpy((char *)hash_hex, hex_string);
+
+    return 0;
+}
+
+void vpk_sha1_data_gen(unsigned char *output, const unsigned char *data, size_t len)
+{
+    return_if_fail(output && data && len > 0);
+
+    sha1_gen_block(data, len, output);
 }
