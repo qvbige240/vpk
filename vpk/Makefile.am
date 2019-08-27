@@ -32,7 +32,9 @@ platform_sources = $(platform_nt966x_sources)
 endif
 vpk_all_sources = \
 inc/vpk_action.h \
+inc/vpk_b64.h \
 inc/vpk_constants.h \
+inc/vpk_crypto.h \
 inc/vpk_event.h \
 inc/vpk_filesys.h \
 inc/vpk.h \
@@ -49,8 +51,10 @@ inc/vpk_typedef.h \
 inc/vpk_util.h \
 src/vpk_actions.c \
 src/vpk_actions.h \
+src/vpk_b64.c \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
+src/vpk_crypto.c \
 src/vpk_ieventq.c \
 src/vpk_ieventq.h \
 src/vpk_ifilesys.c \
