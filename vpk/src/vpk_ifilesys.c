@@ -14,8 +14,8 @@
 #include <sys/types.h>
 
 #include "vpk_filesys.h"
-#include "vpk_logging.h"
-#include "vpk_ifilesys.h"
+//#include "vpk_logging.h"
+//#include "vpk_ifilesys.h"
 
 /*
 static vpk_filesys_t* filesys = NULL;

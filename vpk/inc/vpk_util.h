@@ -49,6 +49,7 @@ TIMA_BEGIN_DELS
 	 ((tvp)->tv_usec cmp (uvp)->tv_usec) :				\
 	 ((tvp)->tv_sec cmp (uvp)->tv_sec))
 
+#define vpk_gettimeofday(tv, tz)  gettimeofday((tv), (tz))
 
 #define TO_HEX_CHAR(c)	((c) > 9 ? (c) + 55 : (c) + 48)
 
@@ -65,9 +66,11 @@ VPKAPI int vpk_hex_to_int(char c);
  */
 VPKAPI int vpk_strcntstr(const char *s1, const char *s2);
 
-VPKAPI void vpk_snprintf(char *buf, unsigned int *pos, int len, const char *format, ...);
+VPKAPI void vpk_snprintf(char *buf, unsigned int *pos, size_t len, const char *format, ...);
 
 VPKAPI char* vpk_strstrip(char* str, char c);
+
+VPKAPI char *vpk_bcdtostr(char *buf, unsigned char *bcd, int length, int flag);
 
 #define VPK_HAVE_GETTIMEOFDAY
 #ifdef VPK_HAVE_GETTIMEOFDAY
@@ -77,8 +80,14 @@ struct timezone;
 VPKAPI int vpk_gettimeofday(struct timeval *tv, struct timezone *tz);
 #endif
 
-VPKAPI int vpk_socket_closeonexec(int fd);
-VPKAPI int vpk_socket_nonblocking(int fd);
+
+static INLINE unsigned int hash_int32(unsigned int a)
+{
+	a = a ^ (a>>4);
+	a = (a^0xdeadbeef) + (a<<5);
+	a = a ^ (a>>11);
+	return a;
+}
 
 TIMA_END_DELS
 

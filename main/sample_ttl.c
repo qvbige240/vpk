@@ -42,7 +42,7 @@ typedef union {
 	struct sockaddr ss;
 	struct sockaddr_in s4;
 	struct sockaddr_in6 s6;
-} vpk_sockaddr;
+} vpk_sockaddr_test;
 
 char cmsg[65536];
 

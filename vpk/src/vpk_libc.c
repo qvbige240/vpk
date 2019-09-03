@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 
 static int mysystem(char *cmdstring, char *buf, int size);
-static int SystemEx(const char *cmdstring, unsigned int timeout);
+static int system_exec(const char *cmdstring, unsigned int timeout);
 
 /* Byte-wise swap two items of size SIZE. */
 #define SWAP(a, b, size)						      \
@@ -76,9 +76,27 @@ void *vpk_bsearch(const void *key, const void *base, size_t nmemb, size_t size, 
 	return NULL;
 }
 
+VPKAPI size_t vpk_numproc(void)
+{
+#if defined(_SC_NPROCESSORS_ONLN)
+	return (size_t)sysconf(_SC_NPROCESSORS_ONLN);
+#elif defined(CTL_HW) && defined(HW_AVAILCPU)
+	int name[] = {CTL_HW, HW_AVAILCPU};
+	int ncpu;
+	size_t ncpu_sz = sizeof(ncpu);
+	if (sysctl(name, sizeof(name) / sizeof(name[0]), &ncpu, &ncpu_sz, NULL, 0) != 0 || sizeof(ncpu) != ncpu_sz) {
+		fprintf(stderr, "[ERROR] failed to obtain number of CPU cores, assuming as one\n");
+		ncpu = 1;
+	}
+	return ncpu;
+#else
+	return 1;
+#endif
+}
+
 VPKAPI int vpk_system_ex(const char *cmd, unsigned int timout)
 {
-	return SystemEx(cmd, timout);
+	return system_exec(cmd, timout);
 }
 
 VPKAPI int vpk_system_exval(char* cmd, char* buf, int size)
@@ -89,7 +107,7 @@ VPKAPI int vpk_system_exval(char* cmd, char* buf, int size)
 
 //system函数扩展，加入超时值(0表示永久等待)
 //超时时返回-2，其他情况返回不变。
-static int SystemEx(const char *cmdstring, unsigned int timeout)   /* with appropriate signal handling */
+static int system_exec(const char *cmdstring, unsigned int timeout)   /* with appropriate signal handling */
 {
 	pid_t               pid;
 	int                 status;
@@ -159,7 +177,7 @@ static int SystemEx(const char *cmdstring, unsigned int timeout)   /* with appro
 *@param[out]     
 *@return         >0 :命令执行结果字节数 ; -1: Failed
 *@remark         
-*@author         lky
+*@author         qing.zou
 *@version        V2.1.1
 *@date           2014.02.12  18:20:15
 *@note     	
@@ -192,7 +210,7 @@ static int mysystem(char *cmdstring, char *buf, int size)
 	sprintf(cmd_string, "%s > %s", cmdstring, tmpfile);
 
 	//if(system(cmd_string) < 0){
-	if(SystemEx(cmd_string, 20) < 0){
+	if(system_exec(cmd_string, 20) < 0){
 		printf("run \"%s\" failed!\n", cmd_string);
 		nbytes = -1;
 	}
@@ -210,7 +228,7 @@ static int mysystem(char *cmdstring, char *buf, int size)
 	memset(cmd_string, 0, sizeof(cmd_string));
 	sprintf(cmd_string, "rm -rf /tmp/%s-*", tmp_buf);
 	//system(cmd_string);
-	SystemEx(cmd_string, 20);
+	system_exec(cmd_string, 20);
 
 	return nbytes;
 }

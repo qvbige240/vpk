@@ -42,6 +42,11 @@ static INLINE void vpk_ssort(void *base, size_t nsize, size_t el_size, compare_f
 VPKAPI void *vpk_bsearch(const void *key, const void *base, size_t nmemb, size_t size, compare_func_t cmp);
 
 /**
+ *	system function, number of cores currently available in the system.
+ */
+VPKAPI size_t vpk_numproc(void);
+
+/**
  *	system call function with time out.
  */
 VPKAPI int vpk_system_ex(const char *cmd, unsigned int timout);

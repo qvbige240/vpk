@@ -6,6 +6,7 @@
  */
 #include <stdarg.h>
 #include <fcntl.h>
+
 #include "vpk_util.h"
 
 int vpk_hex_to_int(char c)
@@ -110,7 +111,7 @@ int vpk_strcntstr(const char *s1, const char *s2)
 	return cnt;
 }
 
-void vpk_snprintf(char *buf, unsigned int *pos, int len, const char *format, ...)
+void vpk_snprintf(char *buf, unsigned int *pos, size_t len, const char *format, ...)
 {
 	va_list va;
 	va_start(va, format);
@@ -121,6 +122,47 @@ void vpk_snprintf(char *buf, unsigned int *pos, int len, const char *format, ...
 		*pos = len;
 	}
 }
+
+char *vpk_bcdtostr(char *buf, unsigned char *bcd, int length, int flag)
+{
+    int i = 0, base = 16;
+
+    int slen = length * 2;
+    char *str = buf;
+
+    int blen = length;
+    unsigned char *ptr = bcd;
+
+    char c = 0;
+    i = slen - 1;
+
+    while (blen-- > 0)
+    {
+        c = ptr[blen] % base;
+        if (c >= 0 && c < 10)
+        {
+            str[i--] = c + '0';
+        }
+        else if (c >= 10 && c < 16)
+        {
+            str[i--] = c - 10 + 'a';
+        }
+
+        c = ptr[blen] / base;
+        if (c >= 0 && c < 10)
+        {
+            str[i--] = c + '0';
+        }
+        else if (c >= 10 && c < 16)
+        {
+            str[i--] = c - 10 + 'a';
+        }
+    }
+    str[slen] = '\0';
+
+    return str;
+}
+
 /*
 static char* strcat_arg(char* str, unsigned int len, const char* first, va_list arg)
 {
@@ -180,48 +222,3 @@ int vpk_gettimeofday(struct timeval *tv, struct timezone *tz)
 	return 0;
 }
 #endif
-
-int vpk_socket_closeonexec(int fd)
-{
-	int flags;
-	if ((flags = fcntl(fd, F_GETFD, NULL)) < 0) {
-		printf("fcntl(%d, F_GETFD)", fd);
-		return -1;
-	}
-	if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1) {
-		printf("fcntl(%d, F_SETFD)", fd);
-		return -1;
-	}
-
-	return 0;
-}
-
-int vpk_socket_nonblocking(int fd)
-{
-	int flags;
-	if ((flags = fcntl(fd, F_GETFL, NULL)) < 0) {
-		printf("fcntl(%d, F_GETFL)", fd);
-		return -1;
-	}
-	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
-		printf("fcntl(%d, F_GETFL)", fd);
-		return -1;
-	}
-
-	return 0;
-}
-
-#if 0
-int main(int argc, char* argv[])
-{
-	int cnt_num = 0;
-	const char *ptr = "/dev/ttyUSB0  /dev/ttyUSB1  /dev/ttyUSB2  /dev/ttyUSB3";
-
-	cnt_num = vpk_strcntstr(ptr, "ttyUSB");
-	printf("cnt_num = %d\n", cnt_num);
-
-	return 0;
-}
-#endif
-
-

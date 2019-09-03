@@ -10,6 +10,7 @@ inc/vpk_event.h \
 inc/vpk_events.h \
 inc/vpk_filesys.h \
 inc/vpk.h \
+inc/vpk_hash.h \
 inc/vpk_heap.h \
 inc/vpk_ipc.h \
 inc/vpk_libc.h \
@@ -21,8 +22,10 @@ inc/vpk_mmap.h \
 inc/vpk_nvtuctrlc.h \
 inc/vpk_queues.h \
 inc/vpk_serialc.h \
+inc/vpk_sock.h \
 inc/vpk_typedef.h \
-inc/vpk_util.h
+inc/vpk_util.h \
+inc/vpk_workqueue.h
 
 platform_generic_sources = \
 src/platform/generic/generic_actuator.c \
@@ -150,6 +153,7 @@ src/vpk_b64.c \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
 src/vpk_crypto.c \
+src/vpk_hash.c \
 src/vpk_ieventq.c \
 src/vpk_ieventq.h \
 src/vpk_ifilesys.c \
@@ -172,11 +176,13 @@ src/vpk_serial.c \
 src/vpk_serial.h \
 src/vpk_session.c \
 src/vpk_session.h \
+src/vpk_sock.c \
 src/vpk_system.c \
 src/vpk_system.h \
 src/vpk_tqueue.c \
 src/vpk_tqueue.h \
 src/vpk_util.c \
+src/vpk_workqueue.c \
 src/events/epoll.c \
 src/events/event.c \
 src/events/event.h \

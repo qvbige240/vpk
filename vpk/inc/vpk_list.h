@@ -1,13 +1,13 @@
 /**
  * History:
  * ================================================================
- * 2017-6-27 qing.zou modified from linux kernel
+ * 2017-6-27 qing.zou modified from linux kernel linux-3.10.99
  *
  */
 #ifndef VPK_LIST_H
 #define VPK_LIST_H
 
-//#include <stddef.h>	/* offsetof require */
+#include <stddef.h>	/* offsetof require */
 
 #ifdef __cplusplus
 extern "C" {
@@ -136,8 +136,8 @@ static inline void __list_del_entry(struct list_head *entry)
 static inline void list_del(struct list_head *entry)
 {
 	__list_del(entry->prev, entry->next);
-	//entry->next = LIST_POISON1;
-	//entry->prev = LIST_POISON2;
+	entry->next = NULL; //LIST_POISON1;
+	entry->prev = NULL; //LIST_POISON2;
 }
 #else
 extern void __list_del_entry(struct list_head *entry);
@@ -629,7 +629,6 @@ static inline void list_splice_tail_init(struct list_head *list,
 #define list_safe_reset_next(pos, n, type, member)				\
 	n = list_entry(pos->member.next, type, member)
 
-#if 0
 /*
  * Double linked lists with a single pointer list head.
  * Mostly useful for hash tables where the two pointer list head is
@@ -637,6 +636,13 @@ static inline void list_splice_tail_init(struct list_head *list,
  * You lose the ability to access the tail in O(1).
  */
 
+struct hlist_head {
+	struct hlist_node *first;
+};
+
+struct hlist_node {
+	struct hlist_node *next, **pprev;
+};
 #define HLIST_HEAD_INIT { .first = NULL }
 #define HLIST_HEAD(name) struct hlist_head name = {  .first = NULL }
 #define INIT_HLIST_HEAD(ptr) ((ptr)->first = NULL)
@@ -668,8 +674,8 @@ static inline void __hlist_del(struct hlist_node *n)
 static inline void hlist_del(struct hlist_node *n)
 {
 	__hlist_del(n);
-	n->next = LIST_POISON1;
-	n->pprev = LIST_POISON2;
+	n->next = NULL; //LIST_POISON1;
+	n->pprev = NULL; //LIST_POISON2;
 }
 
 static inline void hlist_del_init(struct hlist_node *n)
@@ -785,7 +791,6 @@ static inline void hlist_move_list(struct hlist_head *old,
 	for (pos = hlist_entry_safe((head)->first, typeof(*pos), member);\
 	     pos && ({ n = pos->member.next; 1; });			\
 	     pos = hlist_entry_safe(n, typeof(*pos), member))
-#endif
 
 #ifdef __cplusplus
 }
