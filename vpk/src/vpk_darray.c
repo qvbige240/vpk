@@ -76,7 +76,6 @@ int vpk_darray_add(vpk_darray_t *thiz, size_t *out_index, void *data)
         }
     }
 
-    //thiz->data[thiz->cursor] = data;
     if (out_index)
         *out_index = thiz->cursor;
 
@@ -229,7 +228,6 @@ int vpk_darray_foreach(vpk_darray_t *thiz, VpkDataVisit visit, void *ctx)
     return_val_if_fail(thiz && visit, -1);
     for (i = 0; i < thiz->capacity; i++)
     {
-        //if (thiz->data[i] > thiz->capacity)
         if (valid_index(thiz, i))
             visit(ctx, thiz->data[i]);
     }
@@ -242,7 +240,6 @@ int vpk_darray_find(vpk_darray_t *thiz, VpkDataCompare cmp, void *ctx)
     return_val_if_fail(thiz && cmp, -1);
     for (i = 0; i < thiz->capacity; i++)
     {
-        //if (thiz->data[i] > thiz->capacity)
         if (valid_index(thiz, i))
             if (cmp(ctx, thiz->data[i]) == 0)
                 break;
@@ -257,7 +254,6 @@ void vpk_darray_destroy(vpk_darray_t *thiz)
     {
         for (i = 0; i < thiz->capacity; i++)
         {
-            //if (thiz->data[i] > thiz->capacity)  //..
             if (valid_index(thiz, i))
                 darray_destroy_data(thiz, thiz->data[i]);
         }
