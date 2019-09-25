@@ -7,6 +7,7 @@
 
 #include "openssl/aes.h"
 #include "openssl/sha.h"
+#include "openssl/crypto.h"
 
 #include "vpk_b64.h"
 #include "vpk_crypto.h"
@@ -105,7 +106,7 @@ char* vpk_encrypt_aes(unsigned char *key, char* data)
 char* vpk_decrypt_aes(unsigned char *key, char* data)
 {
 	AES_KEY aes;
-	int i, length, len = 0;
+	int length, len = 0;
 	unsigned char* data_in = NULL;
 	unsigned char* data_out = NULL;
 
