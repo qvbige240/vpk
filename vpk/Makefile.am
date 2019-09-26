@@ -8,6 +8,7 @@ inc/vpk_constants.h \
 inc/vpk_crypto.h \
 inc/vpk_event.h \
 inc/vpk_events.h \
+inc/vpk_darray_list.h \
 inc/vpk_darray.h \
 inc/vpk_filesys.h \
 inc/vpk.h \
@@ -155,6 +156,7 @@ src/vpk_b64.c \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
 src/vpk_crypto.c \
+src/vpk_darray_list.c \
 src/vpk_darray.c \
 src/vpk_hash.c \
 src/vpk_ieventq.c \

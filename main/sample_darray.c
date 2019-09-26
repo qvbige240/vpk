@@ -213,9 +213,185 @@ static void test_int_darray(void)
     return;
 }
 
+/******************** darray list ********************/
+struct sample_server_info
+{
+    unsigned int        id;
+    char                name[64];
+    char                system[64];     /* system release type */
+    char                location[64];   /* place */
+    char                processor[64];  /* cpu model */
+    unsigned long       bandwidth;      /* network */
+    unsigned long       memory;         /* memory total KB */
+};
+
+typedef struct _PrivInfo
+{
+    struct sample_server_info info;
+} PrivInfo;
+
+static void print_object(da_object_t *object)
+{
+    if (object)
+    {
+        DECL_PRIV(object, priv);
+        LOG_D("object  id name memory  slot[%d]( %d %s %lu )",
+              object->slot, priv->info.id, priv->info.name, priv->info.memory);
+    }
+}
+static int data_destroy(void *ctx, void *data)
+{
+    da_object_t *object = data;
+    if (object)
+    {
+        LOG_D("free object %p slot[%d]", object, object->slot);
+        free(object);
+    }
+
+    return 0;
+}
+static int data_visit(void *ctx, void *data)
+{
+    da_object_t *object = data;
+    if (object)
+    {
+        DECL_PRIV(object, priv);
+        LOG_D("object  id name memory  slot[%d]( %d %s %lu )",
+              object->slot, priv->info.id, priv->info.name, priv->info.memory);
+    }
+    return 0;
+}
+static int data_modified(void *ctx, void *data)
+{
+    da_object_t *object = data;
+    if (object)
+    {
+        DECL_PRIV(object, priv);
+        strcat(priv->info.name, "modified first");
+        LOG_D("object  id name memory  slot[%d]( %d %s %lu )",
+              object->slot, priv->info.id, priv->info.name, priv->info.memory);
+    }
+    return 0;
+}
+static int list_data_destroy(void *ctx, void *data)
+{
+    da_object_t *object = data;
+    if (object)
+    {
+        LOG_D("list free object %p slot[%d]", object, object->slot);
+        vpk_dalist_delete(ctx, object->slot);
+        printf("=========free\n");
+        //free(object);
+    }
+
+    return 0;
+}
+#define SAMPLE_LIST_COUNT_AND_FOREACH                  \
+    {                                                  \
+        count = vpk_dalist_count(list);                \
+        LOG_D("list count %d\n ==> for each:", count); \
+        vpk_dalist_foreach(list, data_visit, NULL);    \
+    }
+
+static void test_darray_list()
+{
+    vpk_dalist_t *list = vpk_dalist_create(32, data_destroy, NULL);
+    int i = 0;
+    int n = 10;
+    da_object_t *object[10];
+
+    for (i = 0; i < n; i++)
+    {
+        object[i] = calloc(1, sizeof(da_object_t) + sizeof(PrivInfo));
+        DECL_PRIV(object[i], priv);
+        priv->info.id = i;
+        sprintf(priv->info.name, "%s%d", "server", i);
+        priv->info.memory = ((2UL + i) << 30);
+
+        size_t slot = 0;
+        vpk_dalist_add(list, &slot, object[i]);
+        LOG_D("add object %p to slot %d", object[i], slot);
+        object[i]->slot = slot;
+    }
+
+    size_t count;
+    SAMPLE_LIST_COUNT_AND_FOREACH;
+
+    printf("\n");
+    da_object_t *target;
+    size_t slot = 5;
+    vpk_dalist_get_by_index(list, slot, &target);
+    print_object(target);
+    vpk_dalist_modify_by_index(list, slot, data_modified, NULL);
+
+    da_object_t *tmp_object = calloc(1, sizeof(da_object_t) + sizeof(PrivInfo));
+    memcpy(tmp_object, object[2], sizeof(da_object_t) + sizeof(PrivInfo));
+
+    vpk_dalist_delete(list, object[7]->slot);
+    vpk_dalist_delete(list, object[7]->slot);
+    vpk_dalist_delete(list, object[2]->slot);
+    vpk_dalist_delete(list, object[9]->slot);
+
+    target = NULL;
+    slot = object[2]->slot;
+    if (vpk_dalist_get_by_index(list, slot, &target) == 0)
+        print_object(target);
+    else
+        printf("=== get by index(%d) failed.\n\n", slot);
+
+    SAMPLE_LIST_COUNT_AND_FOREACH;
+
+    slot = 0;
+    vpk_dalist_add(list, &slot, tmp_object);
+    LOG_D("add object %p to slot %d", tmp_object, slot);
+    tmp_object->slot = slot;
+
+    SAMPLE_LIST_COUNT_AND_FOREACH;
+
+    LOG_D("list count %d\n ==> for each destroy", count);
+    vpk_dalist_foreach(list, list_data_destroy, list);
+
+    for (i = 0; i < n; i++)
+    {
+        object[i] = calloc(1, sizeof(da_object_t) + sizeof(PrivInfo));
+        DECL_PRIV(object[i], priv);
+        priv->info.id = i;
+        sprintf(priv->info.name, "%s%d", "server2", i);
+        priv->info.memory = ((2UL + i) << 30);
+
+        size_t slot = 0;
+        vpk_dalist_add(list, &slot, object[i]);
+        LOG_D("add object %p to slot %d", object[i], slot);
+        object[i]->slot = slot;
+    }
+
+    SAMPLE_LIST_COUNT_AND_FOREACH;
+
+    {
+        list_t *head = vpk_dalist_clone_list(list, sizeof(da_object_t) + sizeof(PrivInfo));
+        da_object_t *obj;
+        list_t *pos, *n;
+        list_for_each_safe(pos, n, head)
+        {
+            obj = container_of(pos, da_object_t, node);
+            if (obj)
+            {
+                list_del(pos);
+                print_object(obj);
+                free(obj);
+            }
+        }
+    }
+
+    vpk_dalist_destroy(list);
+}
+
 static int main_linear(int argc, char *argv[])
 {
     test_int_darray();
+    printf("\n\n");
+    printf(" ========== darray list test ==========\n");
+    test_darray_list();
     return 0;
 }
 

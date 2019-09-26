@@ -28,6 +28,7 @@
 #include "vpk_hash.h"
 #include "vpk_workqueue.h"
 #include "vpk_darray.h"
+#include "vpk_darray_list.h"
 
 TIMA_BEGIN_DELS
 
