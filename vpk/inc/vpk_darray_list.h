@@ -16,22 +16,22 @@
 extern "C" {
 #endif
 
-typedef struct 
+typedef struct da_object_s
 {
-    list_t      node;
-    
-    size_t      slot;
+    list_t              node;
 
-    char        priv[ZERO_LEN_ARRAY];
+    size_t              slot;
+
+    char                priv[ZERO_LEN_ARRAY];
 } da_object_t;
 
 typedef struct vpk_dalist_s
 {
-    vpk_darray_t *array;
-    list_t head;
+    vpk_darray_t        *array;
+    list_t              head;
 
-    void *ctx;
-    VpkDataDestroy destroy;
+    void                *ctx;
+    VpkDataDestroy      destroy;
 } vpk_dalist_t;
 
 vpk_dalist_t *vpk_dalist_create(size_t size, VpkDataDestroy destroy, void *ctx);

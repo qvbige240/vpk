@@ -45,7 +45,7 @@ static void test_int_darray(void)
 {
 	int i = 0;
 	int n = 100;
-	int data = 0;
+	long data = 0;
 	vpk_darray_t* darray = vpk_darray_create(32, NULL, NULL);
 
     // for (i = 0; i < n; i++)
@@ -59,8 +59,8 @@ static void test_int_darray(void)
 
     // for (i = 0; i < n; i++)
     // {
-    //     if (i == 0)
-    //     assert(vpk_darray_delete(darray, 0) == RET_OK);
+    //     //if (i == 0)
+    //     //assert(vpk_darray_delete(darray, 0) == RET_OK);
     //     assert(vpk_darray_get_by_index(darray, i, (void **)&data) == RET_OK);
     //     printf("%d[%d] %s", data, i, (i+1)%8 ? " " : "\n");
     // }
@@ -367,6 +367,7 @@ static void test_darray_list()
 
     SAMPLE_LIST_COUNT_AND_FOREACH;
 
+    printf("\n\nclone list:\n");
     {
         list_t *head = vpk_dalist_clone_list(list, sizeof(da_object_t) + sizeof(PrivInfo));
         da_object_t *obj;
@@ -382,8 +383,74 @@ static void test_darray_list()
             }
         }
     }
+    printf("\n\n");
 
     vpk_dalist_destroy(list);
+}
+
+/******************** struct test ********************/
+typedef struct _test_placeholder
+{
+    int a;
+    char b[5];
+    char priv[0];
+} test_placeholder;
+
+#define test_svr_info_object()       \
+    char c[6]; \
+    unsigned int        id;                                             \
+    char                name[16];                                       \
+    char                system[15];     /* system release type */       \
+    char                processor[14];  /* cpu model */                 \
+    unsigned long       bandwidth;      /* network */                   \
+    unsigned long       memory;         /* memory total KB */
+
+    //char                location[64];   /* place */
+
+#pragma pack(1)
+struct test_server_info1
+{
+    test_svr_info_object();
+};
+#pragma pack()
+
+typedef struct _MyPrivInfo
+{
+    struct test_server_info1 info;
+} MyPrivInfo;
+
+#pragma pack(1)
+typedef struct test_server_info
+{
+    char b[5];
+    test_svr_info_object();
+} test_server_info;
+#pragma pack()
+
+void print_server_info(test_server_info *s)
+{
+    printf("addr: %p\n", s);
+    printf("id: %d,\nname: %s,\nsystem: %s,\n"
+           "processor: %s,\nbandwidth: %ld,\nmemory: %ld\n",
+           s->id, s->name, s->system, s->processor, s->bandwidth, s->memory);
+}
+void test_place_holder()
+{
+    test_placeholder *obj = calloc(1, sizeof(test_placeholder) + sizeof(MyPrivInfo));
+    obj->a = 1;
+    strcpy(obj->b, "bbbb");
+    MyPrivInfo *priv = obj->priv;
+
+    strcpy(priv->info.c, "ccccc");
+    priv->info.id = 1;
+    strcpy(priv->info.name, "server1");
+    strcpy(priv->info.system, "ubuntu");
+    strcpy(priv->info.processor, "i7 9900k");
+    priv->info.bandwidth = 200ul << 20;
+    priv->info.memory = 8ul << 30;
+
+    print_server_info((void *)obj + sizeof(int));
+    //print_server_info(obj->priv);
 }
 
 static int main_linear(int argc, char *argv[])
@@ -392,6 +459,9 @@ static int main_linear(int argc, char *argv[])
     printf("\n\n");
     printf(" ========== darray list test ==========\n");
     test_darray_list();
+    printf("\n\n");
+    test_place_holder();
+    printf("\n");
     return 0;
 }
 

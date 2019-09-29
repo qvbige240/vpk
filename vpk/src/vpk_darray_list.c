@@ -79,7 +79,7 @@ int vpk_dalist_modify_by_index(vpk_dalist_t *thiz, size_t slot, VpkDataVisit mod
     ret = vpk_dalist_get_by_index(thiz, slot, &object);
     if (ret == 0)
     {
-        modify(args, object);
+        ret = modify(args, object);
     }
 
     return ret;
@@ -95,6 +95,8 @@ list_t *vpk_dalist_clone_list(vpk_dalist_t *thiz, size_t el_size)
     list_t *head = calloc(1, sizeof(list_t));
     if (head)
     {
+        INIT_LIST_HEAD(head);
+
         da_object_t *obj;
         list_t *pos, *n;
         list_for_each_safe(pos, n, &thiz->head)

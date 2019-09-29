@@ -51,7 +51,8 @@ BUILD_CFLAGS="$CFLAGS $CPPFLAGS -DUSING_GENERATED_CONFIG_H"
 echo "CFLAGS: $CFLAGS"
 # The default optimization for RL is -O3
 if test "x$global_CFLAGS" = x; then
-    BUILD_CFLAGS=`echo $BUILD_CFLAGS | sed 's/-O2/-O3/'`
+    BUILD_CFLAGS=`echo $BUILD_CFLAGS | sed 's/-O2/-O0/'`
+#    BUILD_CFLAGS=`echo $BUILD_CFLAGS | sed 's/-O2/-O3/'`
 fi
 
 WORKDIR="$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )"
