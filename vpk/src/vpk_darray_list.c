@@ -160,6 +160,29 @@ int vpk_dalist_foreach(vpk_dalist_t *thiz, VpkDataVisit visit, void *ctx)
     return ret;
 }
 
+int vpk_dalist_find(vpk_dalist_t *thiz, VpkDataCompare cmp, void *ctx)
+{
+    int ret = -1;
+    da_object_t *object = NULL;
+    return_val_if_fail(thiz && thiz->array, -1);
+
+    list_t *pos, *n;
+    list_for_each_safe(pos, n, &thiz->head)
+    {
+        object = container_of(pos, da_object_t, node);
+        if (object)
+        {
+            if ((ret=cmp(ctx, object)) == 0)
+            {
+                ret = object->slot;
+                break;
+            }
+        }
+    }
+
+    return ret;
+}
+
 size_t vpk_dalist_count(vpk_dalist_t *thiz)
 {
     return_val_if_fail(thiz && thiz->array, 0);

@@ -430,8 +430,7 @@ typedef struct test_server_info
 void print_server_info(test_server_info *s)
 {
     printf("addr: %p\n", s);
-    printf("id: %d,\nname: %s,\nsystem: %s,\n"
-           "processor: %s,\nbandwidth: %ld,\nmemory: %ld\n",
+    printf("id: %d,\nname: %s,\nsystem: %s,\nprocessor: %s,\nbandwidth: %ld,\nmemory: %ld\n",
            s->id, s->name, s->system, s->processor, s->bandwidth, s->memory);
 }
 void test_place_holder()

@@ -44,6 +44,7 @@ list_t *vpk_dalist_clone_list(vpk_dalist_t *thiz, size_t el_size);
 void vpk_dalist_destroy(vpk_dalist_t *thiz);
 
 int vpk_dalist_foreach(vpk_dalist_t *thiz, VpkDataVisit visit, void *ctx);
+int vpk_dalist_find(vpk_dalist_t *thiz, VpkDataCompare cmp, void *ctx);
 size_t vpk_dalist_count(vpk_dalist_t *thiz);
 
 #ifdef __cplusplus
