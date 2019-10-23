@@ -122,6 +122,7 @@ CheckSqlite3()
         AC_DEFINE(HAVE_SQLITE3, 1, [ if sqlite3 is enabled ])
         SQLITE3_CFLAGS="-DUSE_SQLITE3 "
         SQLITE3_LIBS="$LIB_PATH/libsqlite3.a"
+        STATIC_LIBS="$STATIC_LIBS $SQLITE3_LIBS "
         AC_SUBST(SQLITE3_CFLAGS)
         AC_SUBST(SQLITE3_LIBS)
     fi
