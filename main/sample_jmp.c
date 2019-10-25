@@ -155,6 +155,7 @@ static int setjmp_test1()
     return 0;
 }
 
+/* gcc -g -O0 -o aaa sample_jmp.c */
 static int main_jump(int argc, char *argv[])
 {
     setjmp_test1();
