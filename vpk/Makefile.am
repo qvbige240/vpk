@@ -173,6 +173,7 @@ src/vpk_logger.c \
 src/vpk_logger.h \
 src/vpk_md5.c \
 src/vpk_mmap.c \
+src/vpk_mqueue.c \
 src/vpk_nvtuctrl.c \
 src/vpk_nvtuctrl.h \
 src/vpk_object.c \
