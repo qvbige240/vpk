@@ -210,6 +210,7 @@ src/vpk_ipc_sem.c \
 src/vpk_ipc_sem.h \
 src/vpk_ipc_shm.c \
 src/vpk_ipc_shm.h \
+src/vpk_mqueue.c \
 src/vpk_libc.c
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/vpk/inc -I$(top_srcdir)/vpk/src

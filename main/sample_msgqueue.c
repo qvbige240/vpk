@@ -133,7 +133,7 @@ void *vpk_test3(void* arg)
 	while(1)
 	{
 		LOG_D("test3 thread run.\n");
-		test_msg_post(".");
+		test_msg_post("/tmp");
 		sleep(1);
 	}
 }
@@ -145,7 +145,7 @@ void *vpk_test2(void* arg)
 	while(1)
 	{
 		LOG_D("test2 thread run.");
-		test_msg_recv(".");
+		test_msg_recv("/tmp");
 		sleep(1);
 	}
 }
