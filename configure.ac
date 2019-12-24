@@ -144,13 +144,17 @@ if test x$platform = xx86; then
 
     DYNAMIC_LIBS="-lanl"
 
-elif test x$platform = xnt966x; then
+elif test x$platform = xnt966x_d018; then
     PLATFORMS="_NT966X_"
-    echo '=========  nt966x ======='
+    echo '=========  nt966x_d018 ======='
 	
     #DYNAMIC_LIBS="-lcrypto -lcurl -lssl -lnvtuctrl -ldl -lpthread -lrt -lm"
     DYNAMIC_LIBS="-lnvtuctrl"
     #AC_SUBST(DYNAMIC_LIBS)
+
+elif test x$platform = xnt966x; then
+    PLATFORMS="_GENERIC_MIPS_"
+    echo '=========  nt966x  ======='
 
 elif test x$platform = xnt966x_d048; then
     PLATFORMS="_GENERIC_MIPS_"
@@ -188,7 +192,7 @@ fi
 STATIC_LIBS="$STATIC_LIBS $LIB_PATH/$JANSSON_LIB"
 AC_SUBST(STATIC_LIBS)
 
-DYNAMIC_LIBS="$DYNAMIC_LIBS -lcurl -lssl -lcrypto -ldl -lpthread -lrt -lm"
+DYNAMIC_LIBS="$DYNAMIC_LIBS -lcurl -lcrypto -lssl -ldl -lpthread -lrt -lm"
 AC_SUBST(DYNAMIC_LIBS)
 echo "STATIC_LIBS: $STATIC_LIBS"
 echo "DYNAMIC_LIBS: $DYNAMIC_LIBS"
