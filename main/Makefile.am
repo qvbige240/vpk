@@ -5,7 +5,7 @@ LDADD = $(top_builddir)/vpk/libvpk.la $(STATIC_LIBS)
 AM_LDFLAGS = -L$(top_builddir)/vpk/.libs
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/vpk/inc -I$(top_srcdir)/vpk/src
 
-noinst_PROGRAMS = test mqrecv evioevent evmsgevent net ttl darray jump
+noinst_PROGRAMS = test mqrecv evioevent evmsgevent net ttl darray jump msgqueue
 LIBS = $(DYNAMIC_LIBS)
 
 test_SOURCES =\
@@ -22,6 +22,7 @@ net_SOURCES = sample_net.c
 ttl_SOURCES = sample_ttl.c
 darray_SOURCES = sample_darray.c
 jump_SOURCES = sample_jmp.c
+msgqueue_SOURCES = sample_msgqueue.c
 
 #sql_LDADD = $(SQLITE3_LIBS) $(LDADD)
 if HAVE_SQLITE3
