@@ -82,6 +82,26 @@ VPKAPI int vpk_shmdt(const void* shmaddr);
  */
 VPKAPI int vpk_shmctl(int shmid, int cmd, struct shmid_ds *buf);
 
+/** msg queue **/
+#define VPK_MQ_MSG_NUM_MAX	    10
+#define VPK_MQ_MSG_LEN_MAX	    512
+
+typedef struct vpk_msg_t
+{
+    unsigned int    type;
+    int             keycode;
+    char            *data;
+} vpk_msg_t;
+
+struct vpk_mqueue;
+typedef struct vpk_mqueue vpk_mqueue_t;
+
+vpk_mqueue_t *vpk_mqueue_open(const char *name, int id);
+int vpk_mqueue_empty(vpk_mqueue_t *thiz);
+int vpk_mqueue_recv(vpk_mqueue_t *thiz, vpk_msg_t *m);
+int vpk_mqueue_post(vpk_mqueue_t *thiz, vpk_msg_t *m);
+int vpk_mqueue_close(vpk_mqueue_t *thiz);
+
 
 TIMA_END_DELS
 
