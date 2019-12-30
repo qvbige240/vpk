@@ -118,10 +118,12 @@ int test_msg_recv(const char* name)
 		memset(&msg, 0x00, sizeof(vpk_msg_t));
 		ret = vpk_mqueue_recv(mqueue, &msg);
 		LOG_I("[%s] ret = %d, recv %s\n", name, ret, msg.data);
+        if (ret < 0)
+            break;
 		sleep(1);
 	}
 
-	vpk_mqueue_close(mqueue);
+	vpk_mqueue_delete(mqueue);
 
 	return ret;
 }
@@ -133,7 +135,7 @@ void *vpk_test3(void* arg)
 	while(1)
 	{
 		LOG_D("test3 thread run.\n");
-		test_msg_post("/tmp");
+		test_msg_post("/tmp/zlog.lock");
 		sleep(1);
 	}
 }
@@ -145,7 +147,7 @@ void *vpk_test2(void* arg)
 	while(1)
 	{
 		LOG_D("test2 thread run.");
-		test_msg_recv("/tmp");
+		test_msg_recv("/tmp/zlog.lock");
 		sleep(1);
 	}
 }
