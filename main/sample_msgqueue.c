@@ -94,6 +94,8 @@ int test_msg_post(const char* name)
 	{
 		ret = vpk_mqueue_post(mqueue, &msg);
 		LOG_I("[%s] ret = %d, post \n", name, ret);
+        if (ret < 0)
+            break;
 		sleep(1);
 	}
 

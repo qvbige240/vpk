@@ -112,6 +112,15 @@ int vpk_mqueue_post(vpk_mqueue_t *thiz, vpk_msg_t *m)
 
 int vpk_mqueue_close(vpk_mqueue_t *thiz)
 {
+    if (thiz)
+    {
+        free(thiz);
+    }
+    return 0;
+}
+
+int vpk_mqueue_delete(vpk_mqueue_t *thiz)
+{
     int ret = -1;
     if (thiz && thiz->destruct)
     {
@@ -119,7 +128,6 @@ int vpk_mqueue_close(vpk_mqueue_t *thiz)
     }
     return ret;
 }
-
 
 /* xsi ipc, message queue */
 typedef struct queue_message
