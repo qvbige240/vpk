@@ -100,8 +100,24 @@ vpk_mqueue_t *vpk_mqueue_open(const char *name, int id);
 int vpk_mqueue_empty(vpk_mqueue_t *thiz);
 int vpk_mqueue_recv(vpk_mqueue_t *thiz, vpk_msg_t *m);
 int vpk_mqueue_post(vpk_mqueue_t *thiz, vpk_msg_t *m);
+
+/**
+ *  Message queue close and without exec ipcrm.
+ *
+ * @param thiz	 The Message queue object.
+ *
+ * @return other on success, -1 on error.
+ */
 int vpk_mqueue_close(vpk_mqueue_t *thiz);
 
+/**
+ *  Message queue delete.
+ *
+ * @param thiz	 The Message queue object.
+ *
+ * @return other on success, -1 on error.
+ */
+int vpk_mqueue_delete(vpk_mqueue_t *thiz);
 
 TIMA_END_DELS
 
