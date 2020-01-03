@@ -4,6 +4,7 @@ include_HEADERS =\
 inc/macro_event.h \
 inc/vpk_action.h \
 inc/vpk_b64.h \
+inc/vpk_barrier.h \
 inc/vpk_constants.h \
 inc/vpk_crypto.h \
 inc/vpk_event.h \
@@ -153,6 +154,7 @@ src/vpk_actions.h \
 src/vpk_actuator.c \
 src/vpk_actuator.h \
 src/vpk_b64.c \
+src/vpk_barrier.c \
 src/vpk_cdevice.c \
 src/vpk_cdevice.h \
 src/vpk_crypto.c \
