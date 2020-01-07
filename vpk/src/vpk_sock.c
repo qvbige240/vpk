@@ -45,6 +45,32 @@ int vpk_socket_nonblocking(int fd)
 	return 0;
 }
 
+void *vpk_sockaddr_cmp(const vpk_sockaddr *addr1, const vpk_sockaddr *addr2)
+{
+    const vpk_sockaddr *a1 = addr1;
+    const vpk_sockaddr *a2 = addr2;
+    int port1, port2;
+    int result;
+
+    if (a1->ss.sa_family < a2->ss.sa_family)
+        return -1;
+    else if (a1->ss.sa_family < a2->ss.sa_family)
+        return 1;
+
+    result = memcmp(vpk_sockaddr_get_addr(a1), vpk_sockaddr_get_addr(a2), get_sockaddr_len(a1));
+    if (result != 0)
+        return result;
+
+    port1 = vpk_sockaddr_get_port(a1);
+    port2 = vpk_sockaddr_get_port(a2);
+    if (port1 < port2)
+        return -1;
+    else if (port1 > port2)
+        return 1;
+
+    return 0;
+}
+
 void* vpk_sockaddr_get_addr(const vpk_sockaddr *addr)
 {
 	const vpk_sockaddr *a = (const vpk_sockaddr*)addr;
