@@ -45,7 +45,101 @@ int vpk_socket_nonblocking(int fd)
 	return 0;
 }
 
-void *vpk_sockaddr_cmp(const vpk_sockaddr *addr1, const vpk_sockaddr *addr2)
+int vpk_sockaddr_in_set_str_addr(struct sockaddr_in *addr, const char *str_addr)
+{
+    return_val_if_fail(addr, -1);
+
+    //int slen = strlen(str_addr);
+    addr->sin_family = AF_INET;
+    memset(addr->sin_zero, 0x00, sizeof(addr->sin_zero));
+
+    if (str_addr && strlen(str_addr))
+    {
+        addr->sin_addr.s_addr = inet_addr(str_addr);
+        if (addr->sin_addr.s_addr == VPK_INADDR_NONE)
+        {
+            vpk_addrinfo ai;
+            unsigned count = 1;
+            int status = vpk_getaddrinfo(AF_INET, str_addr, &count, &ai);
+            if (status == 0)
+                memcpy(&addr->sin_addr, &ai.ai_addr.s4.sin_addr, sizeof(addr->sin_addr));
+            else
+                return status;
+        }
+    }
+    else
+    {
+        addr->sin_addr.s_addr = 0;
+    }
+
+    return 0;
+}
+
+int vpk_sockaddr_set_str_addr(int af, vpk_sockaddr *addr, const char *str_addr)
+{
+    int status = 0;
+
+    if (af == AF_INET)
+        return vpk_sockaddr_in_set_str_addr(&addr->s4, str_addr);
+
+    return_val_if_fail(af == AF_INET6, -2);
+
+    addr->s6.sin6_family = AF_INET6;
+
+    if (str_addr && strlen(str_addr))
+    {
+#if defined(VPK_SOCKADDR_USE_GETADDRINFO) && VPK_SOCKADDR_USE_GETADDRINFO != 0
+        if (1)
+        {
+#else
+        status = vpk_inet_pton(AF_INET6, str_addr, &addr->s6.sin6_addr);
+        if (status != 0)
+        {
+#endif
+            vpk_addrinfo ai;
+            unsigned count = 1;
+
+            status = vpk_getaddrinfo(AF_INET6, str_addr, &count, &ai);
+            if (status == 0)
+            {
+                memcpy(&addr->s6.sin6_addr, &ai.ai_addr.s6.sin6_addr, sizeof(addr->s6.sin6_addr));
+                addr->s6.sin6_scope_id = ai.ai_addr.s6.sin6_scope_id;
+            }
+        }
+    }
+
+    return status;
+}
+
+int vpk_sockaddr_in_init(struct sockaddr_in *addr, const char *str_addr, unsigned short port)
+{
+    addr->sin_family = AF_INET;
+    memset(addr->sin_zero, 0x00, sizeof(addr->sin_zero));
+    addr->sin_port = htons(port);
+    return vpk_sockaddr_in_set_str_addr(addr, str_addr);
+}
+
+int vpk_sockaddr_init(int af, vpk_sockaddr *addr, const char *str, unsigned short port)
+{
+    int status = 0;
+    if (af == AF_INET)
+    {
+        return vpk_sockaddr_in_init(&addr->s4, str, port);
+    }
+
+    memset(addr, 0x00, sizeof(struct sockaddr_in6));
+    addr->ss.sa_family = AF_INET6;
+
+    status = vpk_sockaddr_set_str_addr(af, addr, str);
+    if (status != 0)
+        return status;
+
+    addr->s6.sin6_port = htons(port);
+
+    return 0;
+}
+
+int vpk_sockaddr_cmp(const vpk_sockaddr *addr1, const vpk_sockaddr *addr2)
 {
     const vpk_sockaddr *a1 = addr1;
     const vpk_sockaddr *a2 = addr2;
@@ -106,6 +200,30 @@ int vpk_sockaddr_set_port(vpk_sockaddr *addr, unsigned short port)
 		a->s6.sin6_port = htons(port);
 
 	return 0;
+}
+
+int vpk_inet_pton(int af, const char *src, void *dst)
+{
+    //char tempaddr[VPK_INET6_ADDRSTRLEN];
+    return_val_if_fail(src && dst, -1);
+    return_val_if_fail(af == AF_INET || af == AF_INET6, -1);
+
+    if (af == AF_INET)
+    {
+        ((struct in_addr*)dst)->s_addr = VPK_INADDR_NONE;
+    }
+
+    if (strlen(src) > VPK_INET6_ADDRSTRLEN)
+        return -1;
+
+    if (inet_pton(af, src, dst) != 1) {
+		int status = errno;
+		if (status == 0)
+			status = -3;
+
+		return status;
+	}
+    return 0;
 }
 
 int vpk_inet_ntop(int af, const void *src, char *dst, int size)
@@ -169,7 +287,7 @@ typedef unsigned char recv_ttl_t;
 typedef unsigned char recv_tos_t;
 
 
-int vpk_sock_buf_size_set(int fd, int sz0)
+int vpk_socket_set_bufsize(int fd, int sz0)
 {
 	int ret = 0, sz = sz0;
 	while (sz > 0) {
@@ -308,30 +426,53 @@ int vpk_socket_set_reusable(int fd, int flag)
 	}
 }
 
-static int set_socket_options_fd(int fd, vpk_prototype_t type, int family)
+// static int set_socket_options_fd(int fd, vpk_prototype_t type, int family)
+// {
+// 	if (fd < 0)
+// 		return 0;
+
+// 	//vpk_socket_set_bufsize(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
+
+// 	//vpk_socket_nonblocking(fd);
+
+// 	if (type == VPK_PROTOTYPE_UDP)
+// 	{
+// 		set_socket_ttl_options(fd, family);
+// 		set_socket_tos_options(fd, family);
+// 	}
+
+// 	return 0;
+// }
+
+// static int set_socket_options(vpk_socket_t *s)
+// {
+// 	if(!s || (s->fd < 0))
+// 		return -1;
+
+// 	//set_socket_options_fd(s->fd, s->protocol, s->family);
+
+// 	if (s->protocol == VPK_PROTOTYPE_UDP)
+// 	{
+// 		set_socket_ttl_options(s->fd, s->family);
+// 		set_socket_tos_options(s->fd, s->family);
+// 	}
+
+// 	s->current_ttl = get_raw_socket_ttl(s->fd, s->family);
+// 	s->current_tos = get_raw_socket_tos(s->fd, s->family);
+
+// 	return 0;
+// }
+
+int vpk_socket_set_ttltos(vpk_socket_t *s)
 {
-	if (fd < 0)
-		return 0;
+	if(!s || (s->fd < 0))
+		return -1;
 
-	vpk_sock_buf_size_set(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
-
-	vpk_socket_nonblocking(fd);
-
-	if (type == VPK_PROTOTYPE_UDP)
+	if (s->protocol == VPK_PROTOTYPE_UDP)
 	{
-		set_socket_ttl_options(fd, family);
-		set_socket_tos_options(fd, family);
+		set_socket_ttl_options(s->fd, s->family);
+		set_socket_tos_options(s->fd, s->family);
 	}
-
-	return 0;
-}
-
-static int set_socket_options(vpk_socketio_t *s)
-{
-	if(!s || (s->parent_sock))
-		return 0;
-
-	set_socket_options_fd(s->fd, s->protocol, s->family);
 
 	s->current_ttl = get_raw_socket_ttl(s->fd, s->family);
 	s->current_tos = get_raw_socket_tos(s->fd, s->family);
@@ -339,67 +480,129 @@ static int set_socket_options(vpk_socketio_t *s)
 	return 0;
 }
 
-void* vpk_socket_ioa_create(void *e, int family, vpk_prototype_t type, vpk_socketio_t *sock)
+int vpk_socket_sock(void *e, int family, vpk_prototype_t type, vpk_socket_t *sock)
 {
-	int fd = -1;
-	vpk_socketio_t *s = sock;
+    int fd = -1;
+    vpk_socket_t *s = sock;
 
-	switch (type) {
-		case VPK_PROTOTYPE_UDP:
-			fd = socket(/*PF_INET*/ family, SOCK_DGRAM, IPPROTO_IP);
-			if (fd < 0) {
-				perror("UDP socket");
-				return NULL;
-			}
-			vpk_sock_buf_size_set(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
-			break;
-		case VPK_PROTOTYPE_TCP:
-			fd = socket(family, SOCK_STREAM, IPPROTO_IP);
-			if (fd < 0) {
-				perror("TCP socket");
-				return NULL;
-			}
-			vpk_sock_buf_size_set(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
-			break;
-		default:break;
-	}
+    switch (type)
+    {
+    case VPK_PROTOTYPE_UDP:
+        fd = socket(/*PF_INET*/ family, SOCK_DGRAM, IPPROTO_IP);
+        if (fd < 0) {
+            perror("UDP socket");
+            return -1;
+        }
+        break;
+    case VPK_PROTOTYPE_TCP:
+        fd = socket(family, SOCK_STREAM, IPPROTO_IP);
+        if (fd < 0) {
+            perror("TCP socket");
+            return -1;
+        }
+        //vpk_socket_set_nosigpipe(s);
+        break;
+    default:
+        break;
+    }
 
-	s->magic	= VPK_SOCKET_MAGIC;
-	s->fd		= fd;
-	s->family	= family;
-	s->e		= e;
+    s->magic      = VPK_SOCKET_MAGIC;
+    s->fd         = fd;
+    s->family     = family;
+    s->e          = e;
 
-	set_socket_options(s);
+    // vpk_socket_set_bufsize(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
+    // vpk_socket_nonblocking(fd);
+    // vpk_socket_set_ttltos(s);
 
-	return s;
+    return 0;
 }
 
-int vpk_addr_to_string(const vpk_sockaddr* addr, unsigned char* saddr)
+int vpk_socket_connect(long fd, const vpk_sockaddr *addr, int len)
 {
-	if (addr && saddr) {
+    if (connect(fd, (struct sockaddr*)addr, len) != 0)
+        return -1;
 
-		char addrtmp[VPK_MAX_ADDR_STRING];
+    return 0;
+}
 
-		if (addr->ss.sa_family == AF_INET) {
-			inet_ntop(AF_INET, &addr->s4.sin_addr, addrtmp, INET_ADDRSTRLEN);
-			if(vpk_sockaddr_get_port(addr) > 0)
-				snprintf((char*)saddr, VPK_MAX_ADDR_STRING, "%s:%d", addrtmp, vpk_sockaddr_get_port(addr));
-			else
-				strncpy((char*)saddr, addrtmp, VPK_MAX_ADDR_STRING);
-		} else if (addr->ss.sa_family == AF_INET6) {
-			inet_ntop(AF_INET6, &addr->s6.sin6_addr, addrtmp, INET6_ADDRSTRLEN);
-			if(vpk_sockaddr_get_port(addr) > 0)
-				snprintf((char*)saddr, VPK_MAX_ADDR_STRING, "[%s]:%d", addrtmp, vpk_sockaddr_get_port(addr));
-			else
-				strncpy((char*)saddr, addrtmp, VPK_MAX_ADDR_STRING);
-		} else {
-			return -1;
-		}
+int vpk_socket_close(long fd)
+{
+    return close(fd);
+}
 
-		return 0;
-	}
+void *vpk_socket_ioa_create(void *e, int family, vpk_prototype_t type, vpk_socket_t *sock)
+{
+    int fd = -1;
+    vpk_socket_t *s = sock;
 
-	return -1;
+    switch (type)
+    {
+    case VPK_PROTOTYPE_UDP:
+        fd = socket(/*PF_INET*/ family, SOCK_DGRAM, IPPROTO_IP);
+        if (fd < 0) {
+            perror("UDP socket");
+            return NULL;
+        }
+        //vpk_socket_set_bufsize(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
+        break;
+    case VPK_PROTOTYPE_TCP:
+        fd = socket(family, SOCK_STREAM, IPPROTO_IP);
+        if (fd < 0) {
+            perror("TCP socket");
+            return NULL;
+        }
+        //vpk_socket_set_bufsize(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
+        break;
+    default:
+        break;
+    }
+
+    s->magic      = VPK_SOCKET_MAGIC;
+    s->fd         = fd;
+    s->family     = family;
+    s->e          = e;
+
+    vpk_socket_set_bufsize(fd, DEFAULT_CLIENT_SOCK_BUF_SIZE);
+    vpk_socket_nonblocking(fd);
+    vpk_socket_set_ttltos(s);
+    //vpk_socket_set_nosigpipe(s);
+
+    return s;
+}
+
+int vpk_addr_to_string(const vpk_sockaddr *addr, char *saddr)
+{
+    if (addr && saddr)
+    {
+        char addrtmp[VPK_MAX_ADDR_STRING];
+
+        if (addr->ss.sa_family == AF_INET) {
+            inet_ntop(AF_INET, &addr->s4.sin_addr, addrtmp, INET_ADDRSTRLEN);
+            if (vpk_sockaddr_get_port(addr) > 0)
+                snprintf(saddr, VPK_MAX_ADDR_STRING, "%s:%d", addrtmp, vpk_sockaddr_get_port(addr));
+            else
+                strncpy(saddr, addrtmp, VPK_MAX_ADDR_STRING);
+        } else if (addr->ss.sa_family == AF_INET6) {
+            inet_ntop(AF_INET6, &addr->s6.sin6_addr, addrtmp, INET6_ADDRSTRLEN);
+            if (vpk_sockaddr_get_port(addr) > 0)
+                snprintf(saddr, VPK_MAX_ADDR_STRING, "[%s]:%d", addrtmp, vpk_sockaddr_get_port(addr));
+            else
+                strncpy(saddr, addrtmp, VPK_MAX_ADDR_STRING);
+        } else {
+            return -1;
+        }
+
+        return 0;
+    }
+
+    return -1;
+}
+
+char *vpk_addr_to_string2(const vpk_sockaddr *addr, char *saddr)
+{
+    int status = vpk_addr_to_string(addr, saddr);
+    return (status == 0) ? saddr : NULL;
 }
 
 int vpk_addr_bind(int fd, const vpk_sockaddr* addr, int reusable)
@@ -437,7 +640,7 @@ int vpk_addr_bind(int fd, const vpk_sockaddr* addr, int reusable)
 			int err = errno;
 			perror("bind");
 			char str[129];
-			vpk_addr_to_string(addr,(unsigned char*)str);
+			vpk_addr_to_string(addr, str);
 			printf("Trying to bind fd %d to <%s>: errno=%d\n", fd, str, err);
 
 		}

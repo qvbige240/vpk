@@ -184,6 +184,8 @@ src/vpk_serial.c \
 src/vpk_serial.h \
 src/vpk_session.c \
 src/vpk_session.h \
+src/vpk_sock_if.c \
+src/vpk_sock_resolv.c \
 src/vpk_sock.c \
 src/vpk_system.c \
 src/vpk_system.h \
