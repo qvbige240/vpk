@@ -22,6 +22,64 @@ typedef struct pj_str_t
     long        slen;
 } pj_str_t;
 
+
+static int enum_ip_interface()
+{
+    unsigned i, count;
+    enum
+    {
+        CAND_CNT = 8,
+
+        /* Weighting to be applied to found addresses */
+        WEIGHT_HOSTNAME = 1, /* hostname IP is not always valid! */
+        WEIGHT_DEF_ROUTE = 2,
+        WEIGHT_INTERFACE = 1,
+        WEIGHT_LOOPBACK = -5,
+        WEIGHT_LINK_LOCAL = -4,
+        WEIGHT_DISABLED = -50,
+
+        MIN_WEIGHT = WEIGHT_DISABLED + 1 /* minimum weight to use */
+    };
+    /* candidates: */
+    vpk_sockaddr cand_addr[CAND_CNT];
+    count = CAND_CNT;
+
+    int status = vpk_enum_ip_interface(AF_INET, &count, &cand_addr[0]);
+    printf("status %d, %d\n", status, count);
+    if (status == 0 && count)
+    {
+        for (i = 0; i < count; i++)
+        {
+            char txt[64];
+            memset(txt, 0x00, sizeof(txt));
+            vpk_addr_to_string(&cand_addr[i], txt);
+            printf("enum ip: %s\n", txt);
+        }
+    }
+
+    return 0;
+}
+
+static int get_default_ipinterface()
+{
+    vpk_sockaddr addr;
+
+    int status = vpk_default_ipinterface(AF_INET, &addr);
+    if (status == 0)
+    {
+        char txt[64];
+        memset(txt, 0x00, sizeof(txt));
+        vpk_addr_to_string(&addr, txt);
+        printf("default ip: %s\n", txt);
+    }
+    else
+    {
+        printf(" vpk_default_ipinterface error\n");
+    }
+
+    return 0;
+}
+
 /*
  * Get hostname.
  */
@@ -42,7 +100,7 @@ static const pj_str_t *pj_gethostname(void)
         else
         {
             hostname.slen = strlen(buf);
-            printf("buf[%d]: %s\n", strlen(buf), buf);
+            printf("buf[%ld]: %s\n", strlen(buf), buf);
         }
     }
 #else
@@ -101,6 +159,11 @@ static int main_net(int argc, char *argv[])
 {
     pj_gethostname();
     test_getaddrinfo(argc, argv);
+
+    enum_ip_interface();
+    printf("\n");
+    get_default_ipinterface();
+    printf("\n");
 
     return 0;
 }
