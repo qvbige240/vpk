@@ -84,3 +84,18 @@ int vpk_getaddrinfo(int af, const char *nodename, unsigned *count, vpk_addrinfo 
     /* Done */
     return (*count > 0 ? 0 : -1);
 }
+
+char *vpk_gethostname(char *hostname)
+{
+    char buf[VPK_MAX_HOSTNAME];
+
+    if (gethostname(buf, sizeof(buf)) != 0)
+    {
+        printf("gethostname error\n");
+        return NULL;
+    }
+
+    strncpy(hostname, buf, sizeof(buf));
+
+    return hostname;
+}

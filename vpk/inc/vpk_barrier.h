@@ -15,7 +15,7 @@ VPK_BEGIN_DELS
 struct vpk_barrier;
 typedef struct vpk_barrier vpk_barrier_t;
 
-vpk_barrier_t *vpk_barrier_create();
+vpk_barrier_t *vpk_barrier_create(void);
 int vpk_barrier_init(vpk_barrier_t *barrier, int nthread);
 int vpk_barrier_wait(vpk_barrier_t *barrier);
 int vpk_barrier_destroy(vpk_barrier_t *barrier);

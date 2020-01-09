@@ -15,7 +15,7 @@ struct vpk_barrier
     pthread_barrier_t   b;
 };
 
-vpk_barrier_t *vpk_barrier_create()
+vpk_barrier_t *vpk_barrier_create(void)
 {
     vpk_barrier_t *thiz = calloc(1, sizeof(vpk_barrier_t));
     return thiz;

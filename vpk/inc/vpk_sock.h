@@ -153,6 +153,7 @@ int vpk_udp_recvfrom(int fd, vpk_sockaddr *orig_addr, const vpk_sockaddr *like_a
 
 /** addrinfo resolv **/
 int vpk_getaddrinfo(int af, const char *nodename, unsigned *count, vpk_addrinfo ai[]);
+char *vpk_gethostname(char *hostname);
 
 /** ip interface **/
 int vpk_getipinterface(int af, const char *dst, vpk_sockaddr *if_addr, int allow_resolve, vpk_sockaddr *p_dst_addr);
