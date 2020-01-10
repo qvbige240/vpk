@@ -23,8 +23,6 @@ typedef struct pj_str_t
     long        slen;
 } pj_str_t;
 
-static const pj_str_t *pj_gethostname(void);
-
 /* Resolve IPv4/IPv6 address */
 int pj_getaddrinfo(int af, const pj_str_t *nodename, unsigned *count, vpk_addrinfo ai[])
 {
@@ -427,7 +425,7 @@ int test_gethostip(int af, vpk_sockaddr *addr)
     return 0;
 }
 
-static void get_hostip()
+static void test_gethostip2()
 {
     vpk_sockaddr hostip;
     int status = test_gethostip(AF_INET, &hostip);
@@ -511,37 +509,22 @@ static int get_default_ipinterface()
 /*
  * Get hostname.
  */
-static const pj_str_t *pj_gethostname(void)
+static void test_gethostip1(void)
 {
-    static char buf[128];
-    static pj_str_t hostname;
+    vpk_sockaddr addr;
 
-#if 1
-    if (hostname.ptr == NULL)
+    int status = vpk_gethostip(AF_INET, &addr);
+    if (status == 0)
     {
-        hostname.ptr = buf;
-        if (gethostname(buf, sizeof(buf)) != 0)
-        {
-            hostname.ptr[0] = '\0';
-            hostname.slen = 0;
-        }
-        else
-        {
-            hostname.slen = strlen(buf);
-            printf("buf[%ld]: %s\n", strlen(buf), buf);
-        }
-    }
-#else
-    if (gethostname(buf, sizeof(buf)) != 0)
-    {
-        printf("gethostname error\n");
+        char txt[64];
+        memset(txt, 0x00, sizeof(txt));
+        vpk_addr_to_string(&addr, txt);
+        printf("get host ip: %s\n", txt);
     }
     else
     {
-        printf("buf: %s\n", buf);
+        printf(" vpk_gethostip error\n");
     }
-#endif
-    return &hostname;
 }
 
 static void test_getaddrinfo(int argc, char *argv[])
@@ -582,15 +565,21 @@ static void test_getaddrinfo(int argc, char *argv[])
     //exit(0);
 }
 
-
 static int main_net(int argc, char *argv[])
 {
-    pj_gethostname();
     test_getaddrinfo(argc, argv);
-
-    get_hostip();
-
+    printf("\n");
     get_hostname();
+    printf("\n");
+
+    test_gethostip1();
+    printf("\n");
+    printf("\n");
+
+    test_gethostip2();
+    printf("\n");
+    printf("\n");
+
     enum_ip_interface();
     printf("\n");
     get_default_ipinterface();

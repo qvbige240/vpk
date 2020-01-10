@@ -79,7 +79,7 @@ int vpk_getipinterface(int af, const char *dst, vpk_sockaddr *if_addr, int allow
     vpk_socket_close(sock.fd);
 
     memset(zero, 0x00, sizeof(zero));
-    if (memcmp(vpk_sockaddr_get_addr(if_addr), zero, get_sockaddr_len(if_addr)) == 0)
+    if (memcmp(vpk_sockaddr_get_addr(if_addr), zero, vpk_sockaddr_get_addr_len(if_addr)) == 0)
         return -1;
 
     if (p_dst_addr)
