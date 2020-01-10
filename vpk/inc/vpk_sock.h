@@ -14,7 +14,8 @@
 
 VPK_BEGIN_DELS
 
-#define VPK_SOCK_HAS_GETADDRINFO 0
+#define VPK_SOCK_HAS_GETADDRINFO                    0
+#define VPK_GETHOSTIP_DISABLE_LOCAL_RESOLUTION      0
 
 /** Address to accept any incoming messages. */
 #define VPK_INADDR_ANY              ((unsigned int)0)
@@ -115,7 +116,6 @@ typedef struct vpk_socket_s
 
 #define vpk_socketio_t  vpk_socket_t
 
-
 int vpk_sockaddr_in_set_str_addr(struct sockaddr_in *addr, const char *str_addr);
 int vpk_sockaddr_set_str_addr(int af, vpk_sockaddr *addr, const char *str_addr);
 int vpk_sockaddr_in_init(struct sockaddr_in *addr, const char *str_addr, unsigned short port);
@@ -127,7 +127,10 @@ int vpk_sockaddr_set_port(vpk_sockaddr *addr, unsigned short port);
 VPKAPI int vpk_inet_pton(int af, const char *src, void *dst);
 VPKAPI int vpk_inet_ntop(int af, const void *src, char *dst, int size);
 
-unsigned int get_sockaddr_len(const vpk_sockaddr *addr);
+//unsigned int get_sockaddr_len(const vpk_sockaddr *addr);
+unsigned int vpk_sockaddr_get_len(const vpk_sockaddr *addr);
+unsigned int vpk_sockaddr_get_addr_len(const vpk_sockaddr *addr);
+#define get_sockaddr_len    vpk_sockaddr_get_len
 
 void vpk_addr_copy(vpk_sockaddr *dst, const vpk_sockaddr *src);
 int vpk_addr_bind(int fd, const vpk_sockaddr *addr, int reusable);
@@ -154,12 +157,13 @@ int vpk_udp_recvfrom(int fd, vpk_sockaddr *orig_addr, const vpk_sockaddr *like_a
 /** addrinfo resolv **/
 int vpk_getaddrinfo(int af, const char *nodename, unsigned *count, vpk_addrinfo ai[]);
 char *vpk_gethostname(char *hostname);
+int vpk_gethostip(int af, vpk_sockaddr *addr);
 
 /** ip interface **/
 int vpk_getipinterface(int af, const char *dst, vpk_sockaddr *if_addr, int allow_resolve, vpk_sockaddr *p_dst_addr);
 int vpk_default_ipinterface(int af, vpk_sockaddr *addr);
 
-#define VPK_SOCK_IGNORE_LOOPBACK_IF     0
+#define VPK_SOCK_IGNORE_LOOPBACK_IF         0
 int vpk_enum_if_by_af(int af, unsigned *count, vpk_sockaddr ifs[]);
 int vpk_enum_ip_interface(int af, unsigned *count, vpk_sockaddr ifs[]);
 

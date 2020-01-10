@@ -189,11 +189,12 @@ int test_gethostip(int af, vpk_sockaddr *addr)
     //     PJ_GETHOSTIP_DISABLE_LOCAL_RESOLUTION == 0
     /* Get hostname's IP address */
     {
-        const pj_str_t *hostname = pj_gethostname();
+        char hostname[128];
         count = 1;
-printf("=============11, hostname %s\n", hostname->ptr);
-        if (hostname->slen > 0)
-            status = pj_getaddrinfo(af, hostname, &count, &ai);
+
+        char *nodename = vpk_gethostname(hostname);
+        if (nodename)
+            status = vpk_getaddrinfo(af, nodename, &count, &ai);
         else
             status = -18;
 
@@ -283,6 +284,12 @@ printf("=============11, hostname %s\n", hostname->ptr);
                 }
             }
 
+            for (i = 0; i < cand_cnt; ++i)
+            {
+                vpk_addr_to_string(&cand_addr[i], strip);
+                printf("candidate list IP is %s\n", strip);
+            }
+
             /* Add remaining interface to candidate list. */
             for (i = 0; i < count; ++i)
             {
@@ -296,6 +303,10 @@ printf("=============11, hostname %s\n", hostname->ptr);
                 if (j == cand_cnt)
                 {
                     //pj_sockaddr_copy_addr(&cand_addr[cand_cnt], &cand_addr[start_if + i]);
+
+                    vpk_addr_to_string(&cand_addr[start_if + i], strip);
+                    printf("add IP (%s) to candidate list.\n", strip);
+
                     vpk_addr_copy(&cand_addr[cand_cnt], &cand_addr[start_if + i]);
                     cand_weight[cand_cnt] += WEIGHT_INTERFACE;
                     ++cand_cnt;
@@ -618,6 +629,7 @@ int sample_zlog_init(int procname)
 }
 #endif
 
+// ./net baidu.com
 int main(int argc, char *argv[])
 {
     //int ret = 0;

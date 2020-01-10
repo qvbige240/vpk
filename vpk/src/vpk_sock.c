@@ -154,7 +154,7 @@ int vpk_sockaddr_cmp(const vpk_sockaddr *addr1, const vpk_sockaddr *addr2)
     else if (a1->ss.sa_family < a2->ss.sa_family)
         return 1;
 
-    result = memcmp(vpk_sockaddr_get_addr(a1), vpk_sockaddr_get_addr(a2), get_sockaddr_len(a1));
+    result = memcmp(vpk_sockaddr_get_addr(a1), vpk_sockaddr_get_addr(a2), vpk_sockaddr_get_addr_len(a1));
     if (result != 0)
         return result;
 
@@ -256,12 +256,21 @@ void vpk_addr_copy(vpk_sockaddr *dst, const vpk_sockaddr *src)
         vpk_bcopy(src, dst, sizeof(vpk_sockaddr));
 }
 
-unsigned int get_sockaddr_len(const vpk_sockaddr *addr)
+unsigned int vpk_sockaddr_get_len(const vpk_sockaddr *addr)
 {
     if (addr->ss.sa_family == AF_INET)
         return sizeof(struct sockaddr_in);
     else if (addr->ss.sa_family == AF_INET6)
         return sizeof(struct sockaddr_in6);
+    return 0;
+}
+
+unsigned int vpk_sockaddr_get_addr_len(const vpk_sockaddr *addr)
+{
+    if (addr->ss.sa_family == AF_INET)
+        return sizeof(struct in_addr);
+    else if (addr->ss.sa_family == AF_INET6)
+        return sizeof(struct in6_addr);
     return 0;
 }
 
