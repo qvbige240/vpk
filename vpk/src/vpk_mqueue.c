@@ -11,7 +11,7 @@
 #include "vpk_object.h"
 #include "vpk_logging.h"
 #include "vpk_ipc.h"
-//#include "vpk_mqueue.h"
+#include "vpk_filesys.h"
 
 // #define VPK_MQ_MSG_NUM_MAX	    10
 // #define VPK_MQ_MSG_LEN_MAX	    512
@@ -55,6 +55,22 @@ vpk_mqueue_t *vpk_mqueue_open(const char *name, int id)
     vpk_mqueue_t *thiz = calloc(1, sizeof(vpk_mqueue_t));
     if (thiz)
     {
+        if (!vpk_exists(name))
+        {
+            int ret = 0;
+            char tmp[256] = {0};
+            vpk_pathname_get(name, tmp);
+            LOG_D("full: %s, pathname: %s", name, tmp);
+            ret = vpk_mkdir_mult(tmp);
+            LOG_D("vpk_mkdir_mult \'%s\' ret = %d\n", tmp, ret);
+            if (vpk_create_file(name) < 0)
+            {
+                LOG_E("create ipc file \'%s\' error!", name);
+                free(thiz);
+                return NULL;
+            }
+        }
+
         thiz->destruct  = msg_queue_destruct;
         thiz->fd        = msg_queue_init(name, id);
         strncpy(thiz->name, name, sizeof(thiz->name));
