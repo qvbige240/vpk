@@ -559,7 +559,7 @@ static void test_getaddrinfo(int argc, char *argv[])
     for (cur = res; cur != NULL; cur = cur->ai_next)
     {
         addr = (struct sockaddr_in *)cur->ai_addr;
-        printf("%s\n", inet_ntop(AF_INET, &addr->sin_addr, ipbuf, 16));
+        printf("%s ==> %s\n", argv[1], inet_ntop(AF_INET, &addr->sin_addr, ipbuf, 16));
     }
     freeaddrinfo(res);
     //exit(0);

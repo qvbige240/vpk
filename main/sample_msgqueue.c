@@ -89,7 +89,7 @@ int test_msg_post(const char* name)
 	return_val_if_fail(mqueue != NULL, -1);
 
 	LOG_D("send queue start");
-    msg.data = "msg data: hello message queue";
+    msg.data = "{\"event\": \"6002\", \"msg\":null}";
 	while (1)
 	{
 		ret = vpk_mqueue_post(mqueue, &msg);
