@@ -8,12 +8,16 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <getopt.h>
 
 #include "vpk.h"
 
 extern void *vpk_test2(void* arg);
 extern void *vpk_test3(void* arg);
 
+#define HEXSTR_PARSE(ptr)	\
+	((vpk_hex_to_int(*(ptr)) << 12) | (vpk_hex_to_int(*((ptr)+1)) << 8) \
+	| (vpk_hex_to_int(*((ptr)+2)) << 4) | vpk_hex_to_int(*((ptr)+3)))
 
 #ifdef USE_ZLOG
 #include "vpk.h"
@@ -46,6 +50,9 @@ int sample_zlog_init(int procname)
 }
 #endif
 
+int keycode = 0;
+
+/* post: ./msgqueue 1 */
 int main(int argc, char *argv[])
 {
 	int ret = 0;
@@ -58,6 +65,29 @@ int main(int argc, char *argv[])
 #ifdef USE_ZLOG
     sample_zlog_init(0);
 #endif // USE_ZLOG
+
+	int o;
+	static const struct option long_options[] = {
+		{ "help",			no_argument,			NULL, 'h' },
+		{ "version",		no_argument,			NULL, 'V' },
+		{ "sample",			required_argument,		NULL, 'd' },
+		{ "type",			required_argument,		NULL, 't' },
+		{ "keycode",		required_argument,		NULL, 'k' },
+		{ "log",			optional_argument,		NULL, 'l' },
+		{ NULL, 0, NULL, 0 }
+	};
+
+	optind = 1;
+	while ((o = getopt_long(argc, argv, "hk:l", long_options, NULL)) >= 0) {
+		switch(o) {
+			case 'k':
+				keycode = HEXSTR_PARSE(optarg);
+				LOG_D("keycode: %x", keycode);
+				break;
+			default:
+				break;
+		}
+	}
 
     if (argc > 1)
     {
@@ -89,7 +119,10 @@ int test_msg_post(const char* name)
 	return_val_if_fail(mqueue != NULL, -1);
 
 	LOG_D("send queue start");
-    msg.data = "{\"event\": \"6002\", \"msg\":null}";
+    char tmp[256];
+    sprintf(tmp, "{\"event\": \"%x\", \"msg\":null}", keycode);
+    // msg.data = "{\"event\": \"6002\", \"msg\":null}";
+    msg.data = tmp;
 	while (1)
 	{
 		ret = vpk_mqueue_post(mqueue, &msg);
@@ -137,7 +170,7 @@ void *vpk_test3(void* arg)
 	while(1)
 	{
 		LOG_D("test3 thread run.\n");
-		test_msg_post("/tmp/zlog.lock");
+		test_msg_post("/tmp/tima/ipc2");
 		sleep(1);
 	}
 }
@@ -149,7 +182,7 @@ void *vpk_test2(void* arg)
 	while(1)
 	{
 		LOG_D("test2 thread run.");
-		test_msg_recv("/tmp/zlog.lock");
+		test_msg_recv("/tmp/tima/ipc2");
 		sleep(1);
 	}
 }
