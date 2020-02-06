@@ -15,18 +15,18 @@ static int mysystem(char *cmdstring, char *buf, int size);
 static int system_exec(const char *cmdstring, unsigned int timeout);
 
 /* Byte-wise swap two items of size SIZE. */
-#define SWAP(a, b, size)						      \
-	do									      \
-	{									      \
-		size_t __size = (size);						      \
-		char *__a = (a), *__b = (b);					      \
-		do								      \
-		{								      \
-			char __tmp = *__a;						      \
-			*__a++ = *__b;						      \
-			*__b++ = __tmp;						      \
-		} while (--__size > 0);						      \
-	} while (0)
+#define SWAP(a, b, size)             \
+    do                               \
+    {                                \
+        size_t __size = (size);      \
+        char *__a = (a), *__b = (b); \
+        do                           \
+        {                            \
+            char __tmp = *__a;       \
+            *__a++ = *__b;           \
+            *__b++ = __tmp;          \
+        } while (--__size > 0);      \
+    } while (0)
 
 /* 
  * Sort NMEMB elements of BASE, of SIZE bytes each,
@@ -34,18 +34,18 @@ static int system_exec(const char *cmdstring, unsigned int timeout);
  */
 void selection_sort(void *base, size_t nsize, size_t el_size, compare_func_t cmp)
 {
-	char *start_i = NULL, *start_j = NULL;
+    char *start_i = NULL, *start_j = NULL;
 
-	for (start_i = (char *)base; start_i < (char*)base + nsize*el_size; start_i += el_size)
-	{
-		for (start_j = start_i + el_size; start_j < (char*)base + nsize*el_size; start_j += el_size)
-		{
-			if ((*cmp)(start_i, start_j) < 0)
-			{
-				SWAP(start_i, start_j, el_size);
-			}
-		}
-	}
+    for (start_i = (char *)base; start_i < (char *)base + nsize * el_size; start_i += el_size)
+    {
+        for (start_j = start_i + el_size; start_j < (char *)base + nsize * el_size; start_j += el_size)
+        {
+            if ((*cmp)(start_i, start_j) < 0)
+            {
+                SWAP(start_i, start_j, el_size);
+            }
+        }
+    }
 }
 
 /* 
@@ -54,128 +54,131 @@ void selection_sort(void *base, size_t nsize, size_t el_size, compare_func_t cmp
  */
 void *vpk_bsearch(const void *key, const void *base, size_t nmemb, size_t size, compare_func_t cmp)
 {
-	size_t l, u, idx;
-	const void *p;
-	int comparison;
+    size_t l, u, idx;
+    const void *p;
+    int comparison;
 
-	l = 0;
-	u = nmemb;
-	while (l < u)
-	{
-		idx = (l + u) / 2;
-		p = (void *) (((const char *) base) + (idx * size));
-		comparison = (*cmp) (key, p);
-		if (comparison < 0)
-			u = idx;
-		else if (comparison > 0)
-			l = idx + 1;
-		else
-			return (void *) p;
-	}
+    l = 0;
+    u = nmemb;
+    while (l < u)
+    {
+        idx = (l + u) / 2;
+        p = (void *)(((const char *)base) + (idx * size));
+        comparison = (*cmp)(key, p);
+        if (comparison < 0)
+            u = idx;
+        else if (comparison > 0)
+            l = idx + 1;
+        else
+            return (void *)p;
+    }
 
-	return NULL;
+    return NULL;
 }
 
 VPKAPI size_t vpk_numproc(void)
 {
 #if defined(_SC_NPROCESSORS_ONLN)
-	return (size_t)sysconf(_SC_NPROCESSORS_ONLN);
+    return (size_t)sysconf(_SC_NPROCESSORS_ONLN);
 #elif defined(CTL_HW) && defined(HW_AVAILCPU)
-	int name[] = {CTL_HW, HW_AVAILCPU};
-	int ncpu;
-	size_t ncpu_sz = sizeof(ncpu);
-	if (sysctl(name, sizeof(name) / sizeof(name[0]), &ncpu, &ncpu_sz, NULL, 0) != 0 || sizeof(ncpu) != ncpu_sz) {
-		fprintf(stderr, "[ERROR] failed to obtain number of CPU cores, assuming as one\n");
-		ncpu = 1;
-	}
-	return ncpu;
+    int name[] = {CTL_HW, HW_AVAILCPU};
+    int ncpu;
+    size_t ncpu_sz = sizeof(ncpu);
+    if (sysctl(name, sizeof(name) / sizeof(name[0]), &ncpu, &ncpu_sz, NULL, 0) != 0 || sizeof(ncpu) != ncpu_sz)
+    {
+        fprintf(stderr, "[ERROR] failed to obtain number of CPU cores, assuming as one\n");
+        ncpu = 1;
+    }
+    return ncpu;
 #else
-	return 1;
+    return 1;
 #endif
 }
 
 VPKAPI int vpk_system_ex(const char *cmd, unsigned int timout)
 {
-	return system_exec(cmd, timout);
+    return system_exec(cmd, timout);
 }
 
-VPKAPI int vpk_system_exval(char* cmd, char* buf, int size)
+VPKAPI int vpk_system_exval(char *cmd, char *buf, int size)
 {
-	return mysystem(cmd, buf, size);
+    return mysystem(cmd, buf, size);
 }
 
-
-//systemº¯ÊýÀ©Õ¹£¬¼ÓÈë³¬Ê±Öµ(0±íÊ¾ÓÀ¾ÃµÈ´ý)
-//³¬Ê±Ê±·µ»Ø-2£¬ÆäËûÇé¿ö·µ»Ø²»±ä¡£
-static int system_exec(const char *cmdstring, unsigned int timeout)   /* with appropriate signal handling */
+//systemï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½ï¿½ë³¬Ê±Öµ(0ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ÃµÈ´ï¿½)
+//ï¿½ï¿½Ê±Ê±ï¿½ï¿½ï¿½ï¿½-2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø²ï¿½ï¿½ä¡£
+static int system_exec(const char *cmdstring, unsigned int timeout) /* with appropriate signal handling */
 {
-	pid_t               pid;
-	int                 status;
-	struct sigaction    ignore, saveintr, savequit;
-	sigset_t            chldmask, savemask;
+    pid_t pid;
+    int status;
+    struct sigaction ignore, saveintr, savequit;
+    sigset_t chldmask, savemask;
 
-	//¾«¶È»»³ÉÊ®·ÖÖ®Ò»Ãë
-	timeout *= 10;
-	if (timeout == 0)
-		timeout = 0xFFFFFFFF;
+    //ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½Ê®ï¿½ï¿½Ö®Ò»ï¿½ï¿½
+    timeout *= 10;
+    if (timeout == 0)
+        timeout = 0xFFFFFFFF;
 
-	if (cmdstring == NULL)
-		return(1);      /* always a command processor with UNIX */
+    if (cmdstring == NULL)
+        return (1); /* always a command processor with UNIX */
 
-	ignore.sa_handler = SIG_IGN;    /* ignore SIGINT and SIGQUIT */
-	sigemptyset(&ignore.sa_mask);
-	ignore.sa_flags = 0;
-	if (sigaction(SIGINT, &ignore, &saveintr) < 0)
-		return(-1);
-	if (sigaction(SIGQUIT, &ignore, &savequit) < 0)
-		return(-1);
-	sigemptyset(&chldmask);         /* now block SIGCHLD */
-	sigaddset(&chldmask, SIGCHLD);
-	if (sigprocmask(SIG_BLOCK, &chldmask, &savemask) < 0)
-		return(-1);
+    ignore.sa_handler = SIG_IGN; /* ignore SIGINT and SIGQUIT */
+    sigemptyset(&ignore.sa_mask);
+    ignore.sa_flags = 0;
+    if (sigaction(SIGINT, &ignore, &saveintr) < 0)
+        return (-1);
+    if (sigaction(SIGQUIT, &ignore, &savequit) < 0)
+        return (-1);
+    sigemptyset(&chldmask); /* now block SIGCHLD */
+    sigaddset(&chldmask, SIGCHLD);
+    if (sigprocmask(SIG_BLOCK, &chldmask, &savemask) < 0)
+        return (-1);
 
-	if ((pid = fork()) < 0) {
-		return -1;    /* probably out of processes */
-	} else if (pid == 0) {          /* child */
-		/* restore previous signal actions & reset signal mask */
-		sigaction(SIGINT, &saveintr, NULL);
-		sigaction(SIGQUIT, &savequit, NULL);
-		sigprocmask(SIG_SETMASK, &savemask, NULL);
+    if ((pid = fork()) < 0)
+    {
+        return -1; /* probably out of processes */
+    }
+    else if (pid == 0)
+    { /* child */
+        /* restore previous signal actions & reset signal mask */
+        sigaction(SIGINT, &saveintr, NULL);
+        sigaction(SIGQUIT, &savequit, NULL);
+        sigprocmask(SIG_SETMASK, &savemask, NULL);
 
-		execl("/bin/sh", "sh", "-c", cmdstring, (char *)0);
-		_exit(127);     /* exec error */
-	}
+        execl("/bin/sh", "sh", "-c", cmdstring, (char *)0);
+        _exit(127); /* exec error */
+    }
 
-	/* parent */
-	int ret = 0;
-	while (timeout-- > 0 &&
-		(ret = waitpid(pid, &status, WNOHANG)) == 0)
-		usleep(100*1000);
+    /* parent */
+    int ret = 0;
+    while (timeout-- > 0 &&
+           (ret = waitpid(pid, &status, WNOHANG)) == 0)
+        usleep(100 * 1000);
 
-	/* restore previous signal actions & reset signal mask */
-	if (sigaction(SIGINT, &saveintr, NULL) < 0)
-		return(-1);
-	if (sigaction(SIGQUIT, &savequit, NULL) < 0)
-		return(-1);
-	if (sigprocmask(SIG_SETMASK, &savemask, NULL) < 0)
-		return(-1);
+    /* restore previous signal actions & reset signal mask */
+    if (sigaction(SIGINT, &saveintr, NULL) < 0)
+        return (-1);
+    if (sigaction(SIGQUIT, &savequit, NULL) < 0)
+        return (-1);
+    if (sigprocmask(SIG_SETMASK, &savemask, NULL) < 0)
+        return (-1);
 
-	if (ret < 0)
-		return -1;
+    if (ret < 0)
+        return -1;
 
-	if (ret > 0)
-		return status;
+    if (ret > 0)
+        return status;
 
-	kill(pid, SIGKILL);
-	waitpid(pid, &status, 0);
-	return -2;
+    kill(pid, SIGKILL);
+    waitpid(pid, &status, 0);
+    return -2;
 }
 
 /**
-*@brief          ÃüÁîÖ´ÐÐ½á¹ûº¯Êý
+*@brief          ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *@param[in]      
 *@param[out]     
-*@return         >0 :ÃüÁîÖ´ÐÐ½á¹û×Ö½ÚÊý ; -1: Failed
+*@return         >0 :ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½ ; -1: Failed
 *@remark         
 *@author         qing.zou
 *@version        V2.1.1
@@ -184,51 +187,57 @@ static int system_exec(const char *cmdstring, unsigned int timeout)   /* with ap
 */
 static int mysystem(char *cmdstring, char *buf, int size)
 {
-	char cmd_string[200] = {0};
-	char tmpfile[100] = {0};
-	char tmp_buf[100] = {0};
-	int fd;
-	int tmp_fd;
-	int nbytes;
+    char cmd_string[200] = {0};
+    char tmpfile[100] = {0};
+    char tmp_buf[100] = {0};
+    int fd;
+    int tmp_fd;
+    int nbytes;
 
-	if((cmdstring == NULL) ||
-		(strlen(cmdstring) > (sizeof(tmpfile) + 8)) ||
-		((strlen(cmdstring) + strlen(tmpfile) + 5) > sizeof(cmd_string))){
-			printf("cmd is too long or NULL!\n");
-			return -1;
-	}
-	sscanf(cmdstring, "%[a-Z]", tmp_buf);
-	sprintf(tmpfile, "/tmp/%s-XXXXXX", tmp_buf);
+    if ((cmdstring == NULL) ||
+        (strlen(cmdstring) > (sizeof(tmpfile) + 8)) ||
+        ((strlen(cmdstring) + strlen(tmpfile) + 5) > sizeof(cmd_string)))
+    {
+        printf("cmd is too long or NULL!\n");
+        return -1;
+    }
+    sscanf(cmdstring, "%[a-Z]", tmp_buf);
+    sprintf(tmpfile, "/tmp/%s-XXXXXX", tmp_buf);
 
-	tmp_fd = mkstemp(tmpfile);
-	if(tmp_fd < 0){
-		printf("mkstemp failed\n");
-		return -1;
-	}
-	close(tmp_fd);
+    tmp_fd = mkstemp(tmpfile);
+    if (tmp_fd < 0)
+    {
+        printf("mkstemp failed\n");
+        return -1;
+    }
+    close(tmp_fd);
 
-	sprintf(cmd_string, "%s > %s", cmdstring, tmpfile);
+    sprintf(cmd_string, "%s > %s", cmdstring, tmpfile);
 
-	//if(system(cmd_string) < 0){
-	if(system_exec(cmd_string, 20) < 0){
-		printf("run \"%s\" failed!\n", cmd_string);
-		nbytes = -1;
-	}
-	else{
-		fd = open(tmpfile, O_RDONLY);
-		if(fd < 0){
-			printf("open %s failed!\n", tmpfile);
-			nbytes = -1;
-		}
-		else{
-			nbytes = read(fd, buf, size);
-			close(fd);
-		}
-	}
-	memset(cmd_string, 0, sizeof(cmd_string));
-	sprintf(cmd_string, "rm -rf /tmp/%s-*", tmp_buf);
-	//system(cmd_string);
-	system_exec(cmd_string, 20);
+    //if(system(cmd_string) < 0){
+    if (system_exec(cmd_string, 20) < 0)
+    {
+        printf("run \"%s\" failed!\n", cmd_string);
+        nbytes = -1;
+    }
+    else
+    {
+        fd = open(tmpfile, O_RDONLY);
+        if (fd < 0)
+        {
+            printf("open %s failed!\n", tmpfile);
+            nbytes = -1;
+        }
+        else
+        {
+            nbytes = read(fd, buf, size);
+            close(fd);
+        }
+    }
+    memset(cmd_string, 0, sizeof(cmd_string));
+    sprintf(cmd_string, "rm -rf /tmp/%s-*", tmp_buf);
+    //system(cmd_string);
+    system_exec(cmd_string, 20);
 
-	return nbytes;
+    return nbytes;
 }
