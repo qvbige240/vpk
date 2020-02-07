@@ -145,7 +145,7 @@ struct vpk_evbase_t
 	struct timeval			timer_tv;
 	vpk_minheap_t			timeheap;
 
-#if defined(VPK_HAVE_CLOCK_GETTIME) && defined(CLOCK_MONOTONIC)
+//#if defined(VPK_HAVE_CLOCK_GETTIME) && defined(CLOCK_MONOTONIC)
 	/** 
 	 * Difference between internal time (maybe from clock_gettime) and
 	 * gettimeofday. 
@@ -153,7 +153,7 @@ struct vpk_evbase_t
 	struct timeval			tv_clock_diff;
 	/** Second in which we last updated tv_clock_diff, in monotonic time. **/
 	time_t					last_updated_clock_diff;
-#endif
+//#endif
 
 	unsigned long			th_owner_id;
 	void					*th_base_lock;

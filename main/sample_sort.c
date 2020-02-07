@@ -33,7 +33,7 @@ static int test_sort()
     int array_num[] = {5, 9, 2, 4, 15, 28, 6, 3, 40, 7, 5, 1, 8};
 
     nsize = _countof(array_num);
-    printf("before sort: \n");
+    printf("\n\nselection sort\nbefore sort: \n");
     for (i = 0; i < nsize; i++)
         printf("%2d ", array_num[i]);
 
@@ -48,7 +48,34 @@ static int test_sort()
 
     for (i = 0; i < nsize; i++)
         printf("%2d ", array_num[i]);
-    printf("\n");
+    printf("\n\n");
+
+    return 0;
+}
+
+static int test_merge_sort()
+{
+    int nsize = 0, i = 0;
+    int array_num[] = {5, 9, 2, 4, 15, 28, 6, 3, 40, 7, 5, 1, 8};
+
+    nsize = _countof(array_num);
+    void *tmp = calloc(1, nsize * sizeof(int));
+    printf("\n\nmerge sort\nbefore sort: \n");
+    for (i = 0; i < nsize; i++)
+        printf("%2d ", array_num[i]);
+
+    printf("\nafter desc sort: \n");
+    merge_sort(array_num, 0, nsize - 1, sizeof(int), tmp, compare_desc);
+
+    for (i = 0; i < nsize; i++)
+        printf("%2d ", array_num[i]);
+
+    printf("\nafter asc sort: \n");
+    merge_sort(array_num, 0, nsize - 1, sizeof(int), tmp, compare_asc);
+
+    for (i = 0; i < nsize; i++)
+        printf("%2d ", array_num[i]);
+    printf("\n\n");
 
     return 0;
 }
@@ -105,6 +132,8 @@ int sort_main(int argc, char *argv[])
     gettimeofday(&prev, 0);
 
     test_sort();
+
+    test_merge_sort();
 
     gettimeofday(&next, 0);
     vpk_timersub(&next, &prev, &result);

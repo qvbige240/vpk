@@ -36,6 +36,20 @@ static INLINE void vpk_ssort(void *base, size_t nsize, size_t el_size, compare_f
 }
 
 /**
+ * Sort NMEMB elements of BASE, of SIZE bytes each,
+ * using COMPARE to perform the comparisons.
+ *
+ * @param base      The Target object to sort.
+ * @param left      The start index of pointer object.
+ * @param right     The end index of pointer object.
+ * @param el_size   The data size of object element.
+ * @param tmp       The memory for cache tmp object element.
+ * @param cmp       The comparison functions.
+ *
+ */
+VPKAPI void vpk_merge_sort(void *base, size_t left, size_t right, size_t el_size, void *tmp, compare_func_t cmp);
+
+/**
  * Do a binary search for KEY in BASE, which consists of NMEMB elements
  * of SIZE bytes each, using COMPAR to perform the comparisons.  
  */
