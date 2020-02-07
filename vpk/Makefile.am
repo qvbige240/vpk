@@ -187,6 +187,7 @@ src/vpk_session.h \
 src/vpk_sock_if.c \
 src/vpk_sock_resolv.c \
 src/vpk_sock.c \
+src/vpk_sort.c \
 src/vpk_system.c \
 src/vpk_system.h \
 src/vpk_tqueue.c \
