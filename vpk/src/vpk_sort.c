@@ -33,7 +33,7 @@ void selection_sort(void *base, size_t nsize, size_t el_size, compare_func_t cmp
     {
         for (start_j = start_i + el_size; start_j < (char *)base + nsize * el_size; start_j += el_size)
         {
-            if ((*cmp)(start_i, start_j) < 0)
+            if ((*cmp)(start_i, start_j) > 0)
             {
                 SWAP(start_i, start_j, el_size);
             }
@@ -83,16 +83,57 @@ static void merge_data(void *base, size_t left, size_t mid, size_t right,
     memcpy((char *)base + left * el_size, tmp, index * el_size);
 }
 
-void merge_sort(void *base, size_t left, size_t right, size_t el_size, void *tmp, compare_func_t cmp)
+void vpk_merge_sort(void *base, size_t left, size_t right, size_t el_size, void *tmp, compare_func_t cmp)
 {
     if (left >= right)
         return;
 
     int mid = left + ((right - left) >> 1);
-    merge_sort(base, left, mid, el_size, tmp, cmp);
-    merge_sort(base, mid + 1, right, el_size, tmp, cmp);
+    vpk_merge_sort(base, left, mid, el_size, tmp, cmp);
+    vpk_merge_sort(base, mid + 1, right, el_size, tmp, cmp);
 
     merge_data(base, left, mid, right, el_size, tmp, cmp);
+}
+
+static int partition_data(void *base, size_t left, size_t right, size_t el_size, compare_func_t cmp)
+{
+    char temp[el_size];
+
+    memcpy(temp, base + left * el_size, el_size);
+
+    while (left < right)
+    {
+        while (left < right && ((*cmp)((char *)base + right * el_size, temp) > 0))
+            right--;
+        memcpy((char *)base + left * el_size, (char *)base + right * el_size, el_size);
+
+        while (left < right && ((*cmp)((char *)base + left * el_size, temp) <= 0))
+            left++;
+        memcpy((char *)base + right * el_size, (char *)base + left * el_size, el_size);
+    }
+
+    memcpy((char *)base + left * el_size, temp, el_size);
+
+    return left;
+}
+
+void vpk_quick_sort(void *base, size_t left, size_t right, size_t el_size, compare_func_t cmp)
+{
+    if (left < right)
+    {
+        int pos = partition_data(base, left, right, el_size, cmp);
+        //printf("pos: %d\n", pos);
+        if ((int)left < pos - 1)
+        {
+            //printf("%d ~ %d\n", left, pos - 1);
+            vpk_quick_sort(base, left, pos - 1, el_size, cmp);
+        }
+        if ((int)right > pos + 1)
+        {
+            //printf("%d ~ %d\n", pos + 1, right);
+            vpk_quick_sort(base, pos + 1, right, el_size, cmp);
+        }
+    }
 }
 
 /* 

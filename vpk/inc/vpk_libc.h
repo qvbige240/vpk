@@ -49,6 +49,8 @@ static INLINE void vpk_ssort(void *base, size_t nsize, size_t el_size, compare_f
  */
 VPKAPI void vpk_merge_sort(void *base, size_t left, size_t right, size_t el_size, void *tmp, compare_func_t cmp);
 
+VPKAPI void vpk_quick_sort(void *base, size_t left, size_t right, size_t el_size, compare_func_t cmp);
+
 /**
  * Do a binary search for KEY in BASE, which consists of NMEMB elements
  * of SIZE bytes each, using COMPAR to perform the comparisons.  
