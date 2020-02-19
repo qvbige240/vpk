@@ -558,7 +558,7 @@ static void test_getaddrinfo(int argc, char *argv[])
 
     for (cur = res; cur != NULL; cur = cur->ai_next)
     {
-        if (!cur->ai_addrlen <= sizeof(struct sockaddr))
+        if (!(cur->ai_addrlen <= sizeof(struct sockaddr)))
             continue;
         addr = (struct sockaddr_in *)cur->ai_addr;
         printf("%s ==> %s\n", argv[1], inet_ntop(AF_INET, &addr->sin_addr, ipbuf, 16));
