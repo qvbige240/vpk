@@ -23,6 +23,8 @@ ttl_SOURCES = sample_ttl.c
 darray_SOURCES = sample_darray.c
 jump_SOURCES = sample_jmp.c
 msgqueue_SOURCES = sample_msgqueue.c
+noinst_PROGRAMS += mcast
+mcast_SOURCES = sample_multcast.c
 
 #sql_LDADD = $(SQLITE3_LIBS) $(LDADD)
 if HAVE_SQLITE3

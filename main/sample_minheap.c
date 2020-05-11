@@ -176,7 +176,8 @@ int heap_test(void)
 	int size = vpk_heap_size(&timeheap);
 	printf("[%d]index: \n", size);
 	for (i = 0; i < size; i++)
-		printf(" %2d", timeheap.p[i]->heap_idx);
+		printf(" %ld[%d]", ((test_element_t*)timeheap.p[i])->ctime, ((test_element_t*)timeheap.p[i])->heap_idx);
+		//printf(" %2d", timeheap.p[i]->heap_idx);
 	printf("\n");
 
 	printf("[%d]value: \n", size);
