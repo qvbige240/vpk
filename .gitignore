@@ -18,6 +18,7 @@ main/menu_setting_pc.json
 main/test.sqlite
 main/sql
 vpk_sample.log*
+test
 
 premake
 
