@@ -266,6 +266,7 @@ void test_null(void)
     //char buffer[64] = {0};
     char *str = NULL;
     int ret = -1;
+    // if (strlen(str))
     if (str && strlen(str))
         ret = strlen(str);
     //memcpy(buffer, NULL, 0);

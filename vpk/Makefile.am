@@ -26,6 +26,7 @@ inc/vpk_nvtuctrlc.h \
 inc/vpk_queues.h \
 inc/vpk_serialc.h \
 inc/vpk_sock.h \
+inc/vpk_threading.h \
 inc/vpk_typedef.h \
 inc/vpk_util.h \
 inc/vpk_workqueue.h

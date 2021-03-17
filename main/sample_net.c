@@ -567,6 +567,16 @@ static void test_getaddrinfo(int argc, char *argv[])
     //exit(0);
 }
 
+int test_network_detect(void)
+{
+    vpk_sockaddr addr;
+
+    int status = vpk_default_ipinterface(AF_INET, &addr);
+    printf("network is %s\n", status == 0 ? "available" : "unreachable");
+
+    return status == 0 ? 1 : 0;
+}
+
 static int main_net(int argc, char *argv[])
 {
     test_getaddrinfo(argc, argv);
@@ -585,6 +595,10 @@ static int main_net(int argc, char *argv[])
     enum_ip_interface();
     printf("\n");
     get_default_ipinterface();
+    printf("\n");
+
+    printf("\n");
+    test_network_detect();
     printf("\n");
 
     return 0;

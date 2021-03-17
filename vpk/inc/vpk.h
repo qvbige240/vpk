@@ -30,6 +30,7 @@
 #include "vpk_darray.h"
 #include "vpk_darray_list.h"
 #include "vpk_barrier.h"
+#include "vpk_threading.h"
 
 TIMA_BEGIN_DELS
 
