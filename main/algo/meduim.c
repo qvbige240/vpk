@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifndef min
+#define min(a, b) (a < b ? a : b)
+#endif
+
 /** add_two_numbers leet 2 **/
 struct ListNode
 {
@@ -89,7 +93,7 @@ static void add_two_list_num_leet_2()
     printf("\n");
 }
 
-/** add_two_numbers leet 2 **/
+/** length_of_longest_substring leet 3 **/
 /*static int length_of_longest_substring(char *s)
 {
     struct cache_char
@@ -223,7 +227,6 @@ static int length_of_longest_substring(char *s)
 
     return max;
 }
-
 static void length_of_longest_substring_leet_3()
 {
     char *s = "abcabcbb";
@@ -235,8 +238,168 @@ static void length_of_longest_substring_leet_3()
     printf("leet 3: %s length_of_longest_substring is %d\n", s, len);
 }
 
+/** leet 5 **/
+// 动态规划
+/*static char *longest_palindrome(char *s)
+{
+    char *max = NULL;
+    int i = 0, l = 0, max_len = 0;
+    int len = strlen(s);
+    // char dp[len][len] = {0};
+    // char **dp = calloc(1, len * sizeof(char *));
+    char **dp = calloc(1, len * sizeof(char *) + len * len * sizeof(char));
+    for (i = 0; i < len; i++)
+    {
+        // dp[i] = calloc(1, len * sizeof(char));
+        dp[i] = (char *)dp + len * sizeof(char *) + len * sizeof(char) * i;
+    }
+
+    // p(x,y) -> p(x+1, y-1) && s[x] == s[y]
+
+    for (l = 0; l < len; l++)
+    {
+        for (i = 0; i + l < len; i++)
+        {
+            int j = i + l;
+            if (l == 0)
+                dp[i][j] = 1;
+            else if (l == 1)
+                dp[i][j] = (s[i] == s[j]);
+            else
+                dp[i][j] = (s[i] == s[j] && dp[i + 1][j - 1]);
+
+            if (dp[i][j] && l + 1 > max_len)
+            {
+                max_len = l + 1;
+                max = s + i;
+            }
+        }
+    }
+
+    char *longest = calloc(1, max_len + 1);
+    strncpy(longest, max, max_len);
+    free(dp);
+
+    return longest;
+}*/
+// 中心扩散
+/*static int expand_around_center(char *s, int left, int right)
+{
+    int len = strlen(s);
+    while (left >= 0 && right < len && s[left] == s[right])
+    {
+        left--;
+        right++;
+    }
+    return right - left - 1;
+}
+static char *longest_palindrome(char *s)
+{
+    char *max = NULL;
+    int i = 0, j = 0, max_len = 0;
+    int len = strlen(s);
+
+    for (i = 0; i < len; i++)
+    {
+        int c1 = expand_around_center(s, i, i);
+        int c2 = expand_around_center(s, i, i + 1);
+        int c = c1 > c2 ? c1 : c2;
+        if (c > max_len)
+        {
+            max_len = c;
+            max = s + i - (max_len - 1) / 2;
+        }
+    }
+
+    char *longest = calloc(1, max_len + 1);
+    strncpy(longest, max, max_len);
+
+    return longest;
+}*/
+// manacher
+/* ____|____i________|________i____|____
+ *        -----             -----
+ *     L    i'       C        i    R
+ *
+ *   ---------------   -------------??
+ *     L    i'       C        i    R
+ *
+ *   i mirror, i' = 2*C - i
+ */
+static char *longest_palindrome(char *s)
+{
+    int C = -1, R = -1;
+    int i = 0, max_len = 0;
+    int len = strlen(s) * 2 + 1;
+    char *str = calloc(1, len);
+    int *array = calloc(1, len * sizeof(int)); // palindrome radius(R) array
+
+    char *p = s;
+
+    for (i = 0; i < len; i++)
+    {
+        str[i] = (i & 1) == 0 ? '#' : *p++;
+    }
+    // printf("%s -> %s\n", s, str);
+
+    for (i = 0; i < len; i++)
+    {
+        array[i] = R > i ? min(R - i, array[2 * C - 1]) : 1;
+
+        while (i - array[i] >= 0 && i + array[i] < len)
+        {
+            if (str[i + array[i]] == str[i - array[i]])
+                array[i]++;
+            else
+                break;
+        }
+
+        if (i + array[i] > R)
+        {
+            R = array[i];
+            C = i;
+        }
+
+        if (array[i] > max_len)
+        {
+            /**
+             * palindrome radius: array[i]
+             * palindrome diameter(fill '#'): array[i] * 2 - 1
+             * palindrome len(origin): array[i] - 1
+             */
+            max_len = array[i];
+            p = str + i - (array[i] - 1);
+        }
+    }
+
+    char *longest = calloc(1, max_len);
+    char *dst = longest;
+    for (i = 0; i < max_len * 2 - 1; i++)
+    {
+        if (p[i] != '#')
+            *dst++ = p[i];
+    }
+    // printf("palindrome diameter %d, %s\n", max_len * 2 - 1, p);
+
+    free(str);
+    free(array);
+
+    return longest;
+}
+static void longest_palindrome_leet_5()
+{
+    // char *s = "babad";
+    // char *s = "abbc";
+    char *s = "aacdefcaac";
+    // char *s = "a";
+    char *p = longest_palindrome(s);
+    printf("leet 5: %s longest_palindrome is %s\n", s, p);
+    free(p);
+}
+
 int main(int argc, char *argv[])
 {
+    longest_palindrome_leet_5();
     length_of_longest_substring_leet_3();
     add_two_list_num_leet_2();
     // two_sum_leet_1();
