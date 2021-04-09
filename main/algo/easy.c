@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 /** maximum 6 9 number: num = 9669 -> 9969 **/
 static int max_69number(int num)
@@ -64,7 +65,7 @@ static int *two_sum(int *nums, int size, int target, int *rsize)
 
     return answer;
 }
-static void two_sum_leet_1()
+static void leet_1_two_sum()
 {
     int num[] = {2, 7, 11, 15};
     int rsize = 2;
@@ -143,7 +144,7 @@ static int reverse(int x)
 
     return reverse;
 }
-static void reverse_leet_7()
+static void leet_7_reverse()
 {
     int x = -2147483412;
     int val = reverse(x);
@@ -151,10 +152,68 @@ static void reverse_leet_7()
     printf("leet 7: %d reverse %d\n", x, val);
 }
 
+/** leet 9 **/
+/*static bool is_palindrome(int x)
+{
+#define max_int (0x80000000 - 1)
+    int max_remain = max_int % 10;
+    int max_times = max_int / 10;
+    int palindrome = 0, remain, n;
+
+    if (x < 0)
+        return false;
+
+    n = x;
+
+    while (n > 0)
+    {
+        remain = n % 10;
+        n = n / 10;
+
+        if (palindrome > max_times || (palindrome == max_times && remain > max_remain))
+            return false;
+
+        palindrome = palindrome * 10 + remain;
+    }
+
+    if (palindrome != x)
+        return false;
+
+    return true;
+}*/
+static bool is_palindrome(int x)
+{
+    int n = 0;
+
+    if (x < 0 || (x % 10 == 0 && x != 0))
+        return false;
+
+    while (x > n)
+    {
+        n = n * 10 + x % 10;
+        x = x / 10;
+    }
+
+    return x == n || x == n / 10;
+}
+static void leet_9_is_palindrome()
+{
+    int x = 121;
+    // int x = -10;
+    // int x = 2147483647;
+    bool b = is_palindrome(x);
+    printf("leet 9: %d is_palindrome %s\n", x, b ? "true" : "false");
+}
+
+// /** leet 8 **/
+// static int my_atoi(char *s)
+// static void leet_8_my_atoi()
+
 int main(int argc, char *argv[])
 {
-    reverse_leet_7();
-    two_sum_leet_1();
+    leet_9_is_palindrome();
+    leet_7_reverse();
+    leet_1_two_sum();
     max_69num_leet();
     return 0;
 }

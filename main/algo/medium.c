@@ -74,7 +74,7 @@ static struct ListNode *add_two_numbers(struct ListNode *l1, struct ListNode *l2
 
     return head;
 }
-static void add_two_list_num_leet_2()
+static void leet_2_add_two_list_num()
 {
     int a[] = {2, 4, 3};
     int b[] = {5, 6, 4};
@@ -227,7 +227,7 @@ static int length_of_longest_substring(char *s)
 
     return max;
 }
-static void length_of_longest_substring_leet_3()
+static void leet_3_length_of_longest_substring()
 {
     char *s = "abcabcbb";
     // char *s = "dvdf";
@@ -386,22 +386,237 @@ static char *longest_palindrome(char *s)
 
     return longest;
 }
-static void longest_palindrome_leet_5()
+static void leet_5_longest_palindrome()
 {
     // char *s = "babad";
     // char *s = "abbc";
     char *s = "aacdefcaac";
-    // char *s = "a";
+    // char *s = "a"; //"#a#"
     char *p = longest_palindrome(s);
     printf("leet 5: %s longest_palindrome is %s\n", s, p);
     free(p);
 }
 
+/** leet 6 **/
+static char *z_convert(char *s, int numRows)
+{
+    int i = 0, j = 0;
+    int len = strlen(s);
+    int rows = numRows;
+    int cycle = 2 * rows - 2;
+
+    if (rows == 1)
+        return s;
+
+    char *output = calloc(1, len + 1);
+    char *p = output;
+
+    for (i = 0; i < rows; i++)
+    {
+        for (j = 0; j + i < len; j += cycle)
+        {
+            *p++ = s[j + i];
+            if (i != 0 && i != rows - 1 && j + cycle - i < len)
+            {
+                *p++ = s[j + cycle - i];
+            }
+        }
+    }
+    return output;
+}
+static void leet_6_z_convert()
+{
+    char *s = "PAYPALISHIRING";
+    int rows = 4;
+    char *p = z_convert(s, rows);
+    printf("leet 6: %s z_convert %d rows is %s\n", s, rows, p);
+}
+
+/** leet 8 **/
+static int my_atoi(char *s)
+{
+    int out = 0, flag = 0, remain;
+    int min = 0x80000000;
+    int max = 0x80000000 - 1;
+    int max_remain = max % 10;
+    int max_val = max / 10;
+
+    char *p = s;
+    // while (!((*p >= '0' && *p <= '9') || *p == '+' || *p == '-'))
+    while (*p == ' ' || *p == '\0')
+        if (*p++ == '\0')
+            return 0;
+
+    if (*p == '-' || *p == '+')
+    {
+        if (*p++ == '-')
+            flag = 1;
+    }
+
+    while ((*p >= '0' && *p <= '9') && *p != '\0')
+    {
+        remain = *p++ - '0';
+
+        if (out > max_val || (out == max_val && remain > max_remain))
+        {
+            if (flag)
+                return min;
+            else
+                return max;
+        }
+
+        out = out * 10 + remain;
+    }
+
+    if (flag)
+        out = -out;
+
+    return out;
+}
+static void leet_8_my_atoi()
+{
+    // char *s = "   -42";
+    // char *s = "   +4193 with words";
+    // char *s = "   -4193 with words";
+    // char *s = "words and 987";
+    char *s = "-91283472332";
+    int n = my_atoi(s);
+    printf("leet 8: string %s my_atoi is %d\n", s, n);
+}
+
+/** leet 11 **/
+static int max_area(int *height, int heightSize)
+{
+    int size = heightSize;
+    int head = 0;
+    int tail = size - 1;
+    int area = 0, max_area = 0;
+
+    while (tail > head)
+    {
+        if (height[head] > height[tail])
+        {
+            area = height[tail] * (tail - head);
+            tail--;
+        }
+        else
+        {
+            area = height[head] * (tail - head);
+            head++;
+        }
+
+        max_area = area > max_area ? area : max_area;
+    }
+
+    return max_area;
+}
+static void leet_11_max_area()
+{
+    // int a[] = {1, 8, 6, 2, 5, 4, 8, 3, 7};
+    // int a[] = {4, 3, 2, 1, 4};
+    // int a[] = {1, 1};
+    int a[] = {1, 2, 1};
+    int size = sizeof(a) / sizeof(a[0]);
+    int max = max_area(a, size);
+    printf("leet 11: array ");
+
+    int i = 0;
+    for (i = 0; i < size; i++)
+    {
+        printf(" %d,", a[i]);
+    }
+    printf("  max_area is %d\n", max);
+}
+
+/** leet 12 **/
+static char *int_to_roman(int num)
+{
+    int nums[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    char *symbol[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+    int i = 0;
+    int size = sizeof(nums) / sizeof(nums[0]);
+    char *roman = calloc(1, 16);
+
+    for (i = 0; i < size; i++)
+    {
+        while (num >= nums[i])
+        {
+            strcat(roman, symbol[i]);
+            num -= nums[i];
+        }
+    }
+
+    return roman;
+}
+static void leet_12_int_to_roman()
+{
+    int n = 3204;
+    char *roman = int_to_roman(n);
+    printf("leet 12: %d to roman is %s\n", n, roman);
+    free(roman);
+}
+
+/** leet 13 **/
+static int get_value(char c)
+{
+    switch (c)
+    {
+    case 'I':
+        return 1;
+    case 'V':
+        return 5;
+    case 'X':
+        return 10;
+    case 'L':
+        return 50;
+    case 'C':
+        return 100;
+    case 'D':
+        return 500;
+    case 'M':
+        return 1000;
+    default:
+        return 0;
+    }
+}
+static int roman_to_int(char *s)
+{
+    int i = 0, num = 0, prev_num = 0, n = 0;
+    int len = strlen(s);
+
+    for (i = 0; i < len; i++)
+    {
+        num = get_value(*s++);
+        if (num > prev_num)
+            num -= 2 * prev_num;
+
+        prev_num = num;
+        n += num;
+    }
+
+    return n;
+}
+static void leet_13_roman_to_int()
+{
+    char *roman = "MMMCCIV";
+    int n = roman_to_int(roman);
+    printf("leet 13: %s to number is %d\n", roman, n);
+}
+
+// /** leet 8 **/
+// static int my_atoi(char *s)
+// static void leet_8_my_atoi()
+
 int main(int argc, char *argv[])
 {
-    longest_palindrome_leet_5();
-    length_of_longest_substring_leet_3();
-    add_two_list_num_leet_2();
+    leet_13_roman_to_int();
+    leet_12_int_to_roman();
+    leet_11_max_area();
+    leet_8_my_atoi();
+    leet_6_z_convert();
+    leet_5_longest_palindrome();
+    leet_3_length_of_longest_substring();
+    leet_2_add_two_list_num();
     // two_sum_leet_1();
     return 0;
 }
