@@ -56,8 +56,10 @@ static int *two_sum(int *nums, int size, int target, int *rsize)
             if ((nums[i] + nums[j]) == target)
             {
                 printf(" %d, %d\n", i, j);
-                *(answer + 0) = i;
-                *(answer + 1) = j;
+                // *(answer + 0) = i;
+                // *(answer + 1) = j;
+                answer[0] = i;
+                answer[1] = j;
                 break;
             }
         }
@@ -205,12 +207,268 @@ static void leet_9_is_palindrome()
     printf("leet 9: %d is_palindrome %s\n", x, b ? "true" : "false");
 }
 
+/** leet 14 **/
+/*static char *longest_common_prefix(char **strs, int strsSize)
+{
+    int size = strsSize;
+    char *prefix = calloc(1, 200);
+
+    if (size == 0)
+        return prefix;
+
+    if (size == 1)
+    {
+        strcpy(prefix, strs[0]);
+        return prefix;
+    }
+
+    int i = 0;
+    char *p = prefix;
+    while (strs[0][i] && strs[1][i] && strs[0][i] == strs[1][i])
+    {
+        *p++ = strs[0][i];
+        i++;
+    }
+
+    for (i = 2; i < size; i++)
+    {
+        char *src = strs[i];
+        p = prefix;
+        if (prefix == NULL)
+            return NULL;
+        while (*p && *src && *p == *src)
+        {
+            p++;
+            src++;
+        }
+        *p = '\0';
+    }
+
+    return prefix;
+}*/
+static char *longest_common_prefix(char **strs, int strsSize)
+{
+    int size = strsSize;
+    char *prefix = calloc(1, 200);
+    if (size == 0)
+        return prefix;
+
+    strcpy(prefix, strs[0]);
+
+    if (size == 1)
+        return prefix;
+
+    int i = 0, index = 0;
+    char *p = prefix;
+    while (*p != '\0')
+    {
+        for (i = 1; i < size; i++)
+        {
+            char *src = strs[i];
+            if (*p != src[index])
+            {
+                *p = '\0';
+                return prefix;
+            }
+        }
+        p++;
+        index++;
+    }
+
+    return prefix;
+}
+static void leet_14_longest_common_prefix()
+{
+    char *str[] = {"flower", "flow", "flight"};
+    // const char *str[] = {"dog","racecar","car"};
+    // const char *str[] = {};
+    int size = 3;
+    char *p = longest_common_prefix((char **)str, size);
+    printf("leet 14: %d longest_common_prefix is  %s\n", size, p);
+    // free(p);
+}
+
+/** leet 20 **/
+static char bracket_pair(char c)
+{
+    if (c == ')') return '(';
+    if (c == ']') return '[';
+    if (c == '}') return '{';
+    return 0;
+}
+static bool is_valid(char *s)
+{
+    int len = strlen(s);
+    int a[len + 1];
+    if (len % 2 == 1)
+        return false;
+
+    int top = 0;
+    while (*s)
+    {
+        char c = bracket_pair(*s);
+        if (c != 0)
+        {
+            if (top == 0 || a[top - 1] != c)
+                return false;
+            top--;
+        }
+        else
+        {
+            a[top++] = *s;
+        }
+        s++;
+    }
+
+    return top == 0;
+}
+static void leet_20_is_valid()
+{
+    char *s = "(]";
+    bool b = is_valid(s);
+    printf("leet 20: %s is_valid %s\n", s, b ? "true" : "false");
+}
+
+/** leet 26 **/
+// static int array_remove_duplicates(int *nums, int numsSize)
+// {
+//     int i = 1;
+//     int len = 0;
+//     int size = numsSize;
+
+//     if (size == 0 || size == 1)
+//         return size;
+
+//     for (i = 1; i < size; i++)
+//     {
+//         if (nums[i] == nums[i - 1])
+//         {
+//             len++;
+//             continue;
+//         }
+
+//         if (len)
+//         {
+//             memmove(nums + i - len, nums + i, (size-i) * sizeof(int));
+//             i = i - len;
+//             size -= len;
+//             len = 0;
+//         }
+//     }
+
+//     if (len)
+//         i = i - len;
+
+//     return i;
+// }
+static int array_remove_duplicates(int *nums, int numsSize)
+{
+    int size = numsSize;
+
+    if (size == 0 || size == 1)
+        return size;
+    int i = 0, j;
+    for (j = 1; j < size; j++)
+    {
+        if (nums[j] != nums[i])
+        {
+            i++;
+            nums[i] = nums[j];
+        }
+    }
+    return i + 1;
+}
+static void leet_26_array_remove_duplicates()
+{
+    // int array[] = {1, 1, 2};
+    int array[] = {0,0,1,1,1,2,2,3,3,4};
+    // int array[] = {0,0,1,1,3};
+    int size = sizeof(array) / sizeof(array[0]);
+    printf("leet 26: array_remove_duplicates %d {", size);
+    int i = 0;
+    for (i = 0; i < size; i++)
+    {
+        printf("%d%s", array[i], i == size - 1 ? "} " : ", ");
+    }
+    int len = array_remove_duplicates(array, size);
+    printf("to length %d {", len);
+    for (i = 0; i < len; i++)
+    {
+        printf("%d%s", array[i], i == len - 1 ? "} \n" : ", ");
+    }
+}
+
+/** leet 27 **/
+// static int array_remove_element(int *nums, int numsSize, int val)
+// {
+//     if (numsSize == 0)
+//         return 0;
+
+//     int i = 0, j;
+//     for (j = 0; j < numsSize; j++)
+//     {
+//         if (nums[j] != val)
+//         {
+//             nums[i++] = nums[j];
+//         }
+//     }
+//     return i;
+// }
+static int array_remove_element(int *nums, int numsSize, int val)
+{
+    int size = numsSize;
+    if (size == 0)
+        return 0;
+
+    int i = 0;
+    for (i = 0; i < size; i++)
+    {
+        if (nums[i] == val)
+        {
+            while (nums[size - 1] == val)
+            {
+                if (i == size - 1)
+                    return i;
+                size--;
+            }
+
+            nums[i] = nums[--size];
+        }
+    }
+    return i;
+}
+static void leet_27_array_remove_element()
+{
+    int value = 0;
+    // int array[] = {1, 1, 2};
+    // int array[] = {0,0,1,1,1,2,2,3,3,4};
+    // int array[] = {0,1,2,2,3,0,4,2};
+    int array[] = {1,2,2,3,0,0,0};
+    int size = sizeof(array) / sizeof(array[0]);
+    printf("leet 27: array_remove_element %d {", size);
+    int i = 0;
+    for (i = 0; i < size; i++)
+    {
+        printf("%d%s", array[i], i == size - 1 ? "} " : ", ");
+    }
+    int len = array_remove_element(array, size, value);
+    printf("remove value %d to length(%d) {", value, len);
+    for (i = 0; i < len; i++)
+    {
+        printf("%d%s", array[i], i == len - 1 ? "} \n" : ", ");
+    }
+}
+
 // /** leet 8 **/
 // static int my_atoi(char *s)
 // static void leet_8_my_atoi()
 
 int main(int argc, char *argv[])
 {
+    leet_27_array_remove_element();
+    leet_26_array_remove_duplicates();
+    leet_20_is_valid();
+    leet_14_longest_common_prefix();
     leet_9_is_palindrome();
     leet_7_reverse();
     leet_1_two_sum();
