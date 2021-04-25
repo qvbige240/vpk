@@ -117,7 +117,7 @@ static void leet_1_two_sum()
 // }
 
 /** leet 7 **/
-static int reverse(int x)
+static int reverse_num(int x)
 {
     int reverse = 0, remain, n;
     int min = 0x80000000; // 1 << 31
@@ -146,10 +146,10 @@ static int reverse(int x)
 
     return reverse;
 }
-static void leet_7_reverse()
+static void leet_7_reverse_num()
 {
     int x = -2147483412;
-    int val = reverse(x);
+    int val = reverse_num(x);
 
     printf("leet 7: %d reverse %d\n", x, val);
 }
@@ -459,18 +459,185 @@ static void leet_27_array_remove_element()
     }
 }
 
+/** leet 35 **/
+static int search_insert(int *nums, int numsSize, int target)
+{
+    int l = 0, r = numsSize - 1;
+    int mid = 0, result = numsSize;
+    while (l <= r)
+    {
+        mid = (l + r) / 2;
+        if (target == nums[mid])
+            return mid;
+        if (target < nums[mid])
+        {
+            r = mid - 1;
+            result = mid;
+        }
+        else
+        {
+            l = mid + 1;
+        }
+    }
+    return result;
+}
+static void leet_35_search_insert()
+{
+    int i = 0;
+    int target = 7;
+    int a[] = {1, 3, 4, 6};
+    // int a[] = {4, 5, 6, 7, 0, 1, 2};
+    int size = sizeof(a) / sizeof(a[0]);
+    printf("leet 35: array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+
+    int index = search_insert(a, size, target);
+    printf("search_insert \'%d\', index is %d\n", target, index);
+}
+
+/** leet 38 **/
+struct local_buffer
+{
+    int total[2];
+    int used[2];
+    char *buffer[2];
+};
+static int buffer_append(struct local_buffer *b, int index, char c)
+{
+    int total = b->total[index];
+    int used = b->used[index];
+    if (total <= used)
+    {
+        total = total ? total + (total >> 1) : 128;
+        b->buffer[index] = realloc(b->buffer[index], total);
+        b->total[index] = total - 1;
+    }
+    char *p = b->buffer[index];
+    p[used++] = c;
+    p[used] = '\0';
+    b->used[index] = used;
+    return 0;
+}
+static char *count_and_say(int n)
+{
+    int i = 0, flag = 0;
+
+    struct local_buffer b = {0};
+    buffer_append(&b, 0, '1');
+    // buffer_append(&b, 0, '\0');
+    if (n == 1)
+        return b.buffer[0];
+
+    for (i = 1; i < n; i++)
+    {
+        char *p = b.buffer[flag];
+        char c = *p;
+        int cnt = 0;
+        while (*p)
+        {
+            if (c == *p)
+            {
+                cnt++;
+            }
+            else
+            {
+                buffer_append(&b, (flag + 1) % 2, '0' + cnt);
+                buffer_append(&b, (flag + 1) % 2, c);
+                c = *p;
+                cnt = 1;
+            }
+
+            p++;
+        }
+        if (cnt)
+        {
+            buffer_append(&b, (flag + 1) % 2, '0' + cnt);
+            buffer_append(&b, (flag + 1) % 2, c);
+        }
+        // buffer_append(&b, (flag + 1) % 2, '\0');
+        b.used[flag] = 0;
+        flag = (flag + 1) % 2;
+        // printf("\n%d  \"%s\"", i, b.buffer[flag]);
+    }
+    free(b.buffer[(flag + 1) % 2]);
+    return b.buffer[flag];
+}
+static void leet_38_count_and_say()
+{
+    int n = 10;
+    char *p = count_and_say(n);
+    printf("leet 38: n = %d, \"%s\"\n", n, p);
+}
+
+/** leet 66 **/
+static void swap(int *a, int *b)
+{
+    *a ^= *b;
+    *b ^= *a;
+    *a ^= *b;
+}
+static void reverse(int *p, int left, int right)
+{
+    while (left < right)
+    {
+        swap(p + left, p + right);
+        left++;
+        right--;
+    }
+}
+static int *array_plus(int *digits, int digitsSize, int *returnSize)
+{
+    int i = 0;
+    int size = digitsSize;
+    int *result = calloc(1, (size + 1) * sizeof(int));
+    result[0] = (digits[size - 1] + 1) % 10;
+    result[1] = (digits[size - 1] + 1) / 10;
+    for (i = 1; i < size; i++)
+    {
+        result[i + 1] = (digits[size - i - 1] + result[i]) / 10;
+        result[i] = (digits[size - i - 1] + result[i]) % 10;
+    }
+    if (result[size] != 0)
+        *returnSize = size + 1;
+    else
+        *returnSize = size;
+
+    reverse(result, 0, (*returnSize-1));
+    return result;
+}
+static void leet_66_array_plus()
+{
+    int i = 0;
+    // int a[] = {1, 2, 3};
+    int a[] = {9, 9, 9};
+    int size = sizeof(a) / sizeof(a[0]);
+    printf("leet 66: input array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+    int return_size = 0;
+    int *result = array_plus(a, size, &return_size);
+    printf(" array_plus_one len(%d) = {", return_size);
+    for (i = 0; i < return_size; i++)
+        printf("%d%s", result[i], i == return_size - 1 ? "}\n" : ", ");
+    free(result);
+}
+
 // /** leet 8 **/
 // static int my_atoi(char *s)
 // static void leet_8_my_atoi()
 
 int main(int argc, char *argv[])
 {
+    leet_66_array_plus();
+    leet_38_count_and_say();
+    leet_35_search_insert();
     leet_27_array_remove_element();
     leet_26_array_remove_duplicates();
     leet_20_is_valid();
     leet_14_longest_common_prefix();
     leet_9_is_palindrome();
-    leet_7_reverse();
+    leet_7_reverse_num();
     leet_1_two_sum();
     max_69num_leet();
     return 0;

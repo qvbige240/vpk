@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <math.h>
 
 #ifndef min
@@ -736,9 +737,7 @@ static void leet_15_three_sum()
     printf("leet 15: three_sum {");
     int i = 0, j = 0;
     for (i = 0; i < size; i++)
-    {
         printf("%d%s", num[i], i == size-1 ? "}" : ", ");
-    }
     printf(" have %d array: ", result_num);
     for (i = 0; i < result_num; i++)
     {
@@ -1360,13 +1359,13 @@ static void dfs_generate_parenthesis(char *cache, int open, int close, int n, ch
         // cache[close] = '\0';
     }
 }
-// static int factorial_little(int n)
-// {
-//     int sum = 1;
-//     for (int i = 1; i <= n; i++)
-//         sum = sum * i;
-//     return sum;
-// }
+static int factorial_little(int n)
+{
+    int sum = 1;
+    for (int i = 1; i <= n; i++)
+        sum = sum * i;
+    return sum;
+}
 int catalan_num(int n)
 {
 #define MAX_CATALAN_NUM 20
@@ -1485,30 +1484,387 @@ static void leet_29_divide()
     printf("leet 29: %d divide %d answer %d\n", n, divisor, val);
 }
 
-// /** leet 8 **/
-// static int my_atoi(char *s)
-// static void leet_8_my_atoi()
+/** leet 31 **/
+// static void swap(int *a, int *b)
+// {
+//     int tmp = *a;
+//     *a = *b;
+//     *b = tmp;
+// }
+static void swap(int *a, int *b)
+{
+    *a ^= *b;
+    *b ^= *a;
+    *a ^= *b;
+}
+static void reverse(int *p, int left, int right)
+{
+    while (left < right)
+    {
+        swap(p + left, p + right);
+        left++;
+        right--;
+    }
+}
+static void next_permutation(int *nums, int numsSize)
+{
+    int size = numsSize;
+    int i = size - 2;
+    while (i >= 0 && nums[i] >= nums[i + 1])
+        i--;
+
+    if (i >= 0)
+    {
+        int j = size - 1;
+        while (j > i && nums[i] >= nums[j])
+            j--;
+        swap(nums + i, nums + j);
+    }
+
+    reverse(nums, i + 1, size - 1);
+}
+static void leet_31_next_permutation()
+{
+    int i = 0;
+    // int a[] = {3, 1, 2};
+    int a[] = {4, 5, 2, 3, 6, 1};
+    // int a[] = {4};
+    int size = sizeof(a) / sizeof(a[0]);
+    printf("leet 31: array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+    next_permutation(a, size);
+    printf(" next_permutation is {");
+    for (int i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} \n" : ", ");
+}
+
+/** leet 33 **/
+static int rotate_search(int *nums, int numsSize, int target)
+{
+    if (numsSize == 0)
+        return -1;
+    if (numsSize == 1)
+    {
+        if (nums[0] != target)
+            return -1;
+    }
+
+    if (target == nums[0])
+        return 0;
+    if (target == nums[numsSize - 1])
+        return numsSize - 1;
+
+    int l = 0, r = numsSize - 1;
+    int mid = 0;
+
+    while (l <= r)
+    {
+        mid = (l + r) / 2;
+        if (target == nums[mid])
+            return mid;
+        if (nums[l] <= nums[mid])
+        {
+            if (nums[l] <= target && target < nums[mid])
+                r = mid - 1;
+            else
+                l = mid + 1;
+        }
+        else
+        {
+            if (nums[mid] < target && target <= nums[r])
+                l = mid + 1;
+            else
+                r = mid - 1;
+        }
+    }
+
+    return -1;
+}
+static void leet_33_rotate_search()
+{
+    int i = 0, target = 1;
+    int a[] = {5, 1, 2, 3, 4};
+    // int a[] = {4, 5, 6, 7, 0, 1, 2};
+    int size = sizeof(a) / sizeof(a[0]);
+    printf("leet 33: rotate_array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+    int index = rotate_search(a, size, target);
+    printf("search \'%d\', index is %d\n", target, index);
+}
+
+/** leet 34 **/
+static int binary_search(int *nums, int size, int target, bool lower)
+{
+    int left = 0, right = size - 1;
+    int mid = 0;
+    int result = size;
+
+    while (left <= right)
+    {
+        mid = (left + right) / 2;
+
+        if (target < nums[mid] || (lower && target <= nums[mid]))
+        {
+            right = mid - 1;
+            result = mid;
+        }
+        else
+        {
+            left = mid + 1;
+        }
+    }
+    return result;
+}
+static int *search_range(int *nums, int numsSize, int target, int *returnSize)
+{
+    int left = binary_search(nums, numsSize, target, true);
+    int right = binary_search(nums, numsSize, target, false) - 1;
+    int *result = malloc(sizeof(int) * 2);
+    result[0] = -1;
+    result[1] = -1;
+    if (left <= right && right < numsSize && nums[left] == target && nums[right] == target)
+    {
+        result[0] = left;
+        result[1] = right;
+    }
+    *returnSize = 2;
+    return result;
+}
+static void leet_34_search_range()
+{
+    int i = 0, rsize = 0, target = 1;
+    int a[] = {0, 1, 1, 2, 3, 4};
+    int size = sizeof(a) / sizeof(a[0]);
+    printf("leet 34: array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+    int *index = search_range(a, size, target, &rsize);
+    printf("search_range target \'%d\', index is <%d, %d>\n", target, index[0], index[1]);
+}
+
+/** leet 43 **/
+static char *string_multiply(char *num1, char *num2)
+{
+    int i = 0, bit = 0, len = 0;
+    char result[256] = {0};
+    int len1 = strlen(num1);
+    int len2 = strlen(num2);
+
+    char *p1 = num1 + len1 - 1;
+    char *p2 = num2 + len2 - 1;
+
+    while (len2--)
+    {
+        int n = *p2 - '0';
+        i = bit;
+        len = len1;
+        p1 = num1 + len - 1;
+        while (len--)
+        {
+            int m = (*p1 - '0') * n;
+            result[i + 1] += (result[i] + m) / 10;
+            result[i] = (result[i] + m) % 10;
+            p1--;
+            i++;
+        }
+        bit++;
+        p2--;
+    }
+
+    while (result[i] == 0 && i > 0)
+        i--;
+
+    char *ans = calloc(1, i + 2);
+    p1 = ans;
+
+    while (i + 1)
+    {
+        *p1++ = result[i--] + '0';
+    }
+    return ans;
+}
+static void leet_43_string_multiply()
+{
+    // char *num1 = "0";
+    // char *num2 = "0";
+    char *num2 = "099";
+    char *num1 = "0123";
+    // char *num2 = "1";
+
+    char *result = string_multiply(num1, num2);
+    printf("leet 43: %s * %s = %s\n", num1, num2, result);
+    if (result)
+        free(result);
+}
+
+/** leet 46 **/
+static int **all_permute(int *nums, int numsSize, int *returnSize, int **returnColumnSizes)
+{
+    int n = numsSize;
+    int size = factorial_little(n);
+    int **result = calloc(1, size * sizeof(int *));
+    int *col_size = calloc(1, size * sizeof(int));
+    int i = 0;
+    for (i = 0; i < size; i++)
+    {
+        result[i] = calloc(1, n * sizeof(int));
+        memcpy(result[i], nums, n * sizeof(int));
+        next_permutation(nums, n);
+        col_size[i] = n;
+    }
+
+    *returnSize = size;
+    *returnColumnSizes = col_size;
+
+    return result;
+}
+static void leet_46_all_permute()
+{
+    int i = 0;
+    int a[] = {1, 2, 3};
+    // int a[] = {4, 5, 2, 3, 6, 1};
+    // int a[] = {4};
+    int size = sizeof(a) / sizeof(a[0]);
+    int return_size = 0;
+
+    int *return_colsize = NULL;
+    printf("leet 46: input array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+    int **result = all_permute(a, size, &return_size, &return_colsize);
+    printf("have %d all_permute: { ", return_size);
+    for (i = 0; i < return_size; i++)
+    {
+        printf("[");
+        for (int j = 0; j < return_colsize[i]; j++)
+            printf("%d%s", result[i][j], j == return_colsize[i] - 1 ? "]" : ",");
+
+        printf("%s", i == return_size - 1 ? " }\n" : ", ");
+        if (result[i]) free(result[i]);
+    }
+    if (return_colsize) free(return_colsize);
+    if (result) free(result);
+}
+
+/** leet 47 **/
+static int **permute_unique(int *nums, int numsSize, int *returnSize, int **returnColumnSizes)
+{
+    int n = numsSize;
+    int size = factorial_little(n);
+    int **result = calloc(1, size * sizeof(int *));
+    int *col_size = calloc(1, size * sizeof(int));
+    int i = 0;
+    for (i = 0; i < size; i++)
+    {
+        result[i] = calloc(1, n * sizeof(int));
+        memcpy(result[i], nums, n * sizeof(int));
+        col_size[i] = n;
+
+        next_permutation(nums, n);
+        if (!memcmp(result[0], nums, n * sizeof(int)))
+            break;
+    }
+
+    *returnSize = (i != size) ? (i+1) : i;
+    *returnColumnSizes = col_size;
+
+    return result;
+}
+static void leet_47_permute_unique()
+{
+    int i = 0;
+    int a[] = {1, 2, 1};
+    int size = sizeof(a) / sizeof(a[0]);
+    int return_size = 0;
+    int *return_colsize = NULL;
+    printf("leet 47: input array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+    int **result = permute_unique(a, size, &return_size, &return_colsize);
+    printf("have %d all_permute: { ", return_size);
+    for (i = 0; i < return_size; i++)
+    {
+        printf("[");
+        for (int j = 0; j < return_colsize[i]; j++)
+            printf("%d%s", result[i][j], j == return_colsize[i] - 1 ? "]" : ",");
+
+        printf("%s", i == return_size - 1 ? " }\n" : ", ");
+        if (result[i]) free(result[i]);
+    }
+    if (return_colsize) free(return_colsize);
+    if (result) free(result);
+}
+
+/** leet 50 **/
+static double pow_multi(double x, int n)
+{
+    if (n == 0)
+        return 1.0;
+
+    double y = pow_multi(x, n / 2);
+    return n % 2 ? y * y * x : y * y;
+}
+// static double pow_multi(double x, int n)
+// {
+//     double y = 1.0;
+//     while (n > 0)
+//     {
+//         if ((n & 0x01) == 1)
+//             y = y * x;
+//         n = n >> 1;
+//         x = x * x;
+//     }
+//     return y;
+// }
+static double my_pow(double x, int n)
+{
+    long long N = n;
+    return N >= 0 ? pow_multi(x, N) : 1.0 / pow_multi(x, -N);
+}
+static void leet_50_my_pow()
+{
+    double x = 2.0;
+    int n = 0;
+    double y = my_pow(x, n);
+    printf("leet 50: my_pow %lf^%d = %lf\n", x, n, y);
+}
+
+// /** leet 31 **/
+// static void next_permutation(int *nums, int numsSize) {
+// static void leet_31_next_permutation()
 
 int main(int argc, char *argv[])
 {
-    leet_29_divide();
-    // leet 28  kmp
+    leet_50_my_pow();
+    // leet 48, algo_medium.cpp         // rotate
+    leet_47_permute_unique();           // dfs(backtrack) or next_permutation
+    leet_46_all_permute();              // dfs(backtrack) or next_permutation
+    leet_43_string_multiply();
+    // leet 40, algo_medium.cpp         // dfs(backtrack)
+    // leet 39, algo_medium.cpp         // dfs(backtrack)
+    leet_34_search_range();
+    leet_33_rotate_search();
+    leet_31_next_permutation();
+    leet_29_divide();                   // divide
+    // leet 28, kmp.c                   // kmp, strstr
     leet_25_list_reverse_k_group();
     leet_24_list_swap_pairs();
     leet_23_merge_k_lists();
-    leet_22_generate_parenthesis();
+    leet_22_generate_parenthesis();     // dfs(backtrack), catalan number
     leet_21_merge_two_lists();
     leet_19_remove_nth_fromend();
     leet_18_four_sum();
-    leet_17_letter_combinations();
+    leet_17_letter_combinations();      // dfs(backtrack)
     leet_16_three_sum_closest();
     leet_15_three_sum();
     leet_13_roman_to_int();
     leet_12_int_to_roman();
-    leet_11_max_area();
+    leet_11_max_area();                 // double pointer
     leet_8_my_atoi();
     leet_6_z_convert();
-    leet_5_longest_palindrome();
+    leet_5_longest_palindrome();        // manacher
     leet_3_length_of_longest_substring();
     leet_2_add_two_list_num();
     // two_sum_leet_1();
