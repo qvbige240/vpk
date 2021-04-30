@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <numeric>
 #include <unordered_map>
+#include <cstring>
 
 using namespace std;
 
@@ -298,6 +299,7 @@ public:
     {
         unordered_map<string, vector<string>> mp;
         string key;
+        int counts[26] = {0};
         for (string &str : strs)
         {
             memset(counts, 0, sizeof(int) * 26);
@@ -353,6 +355,194 @@ public:
     //     }
     //     return result;
     // }
+
+    /** leet 53 **/
+    struct SumValue
+    {
+        int l_sum, r_sum, m_sum, i_sum;
+    };
+
+    SumValue push_up(SumValue l, SumValue r)
+    {
+        int i_sum = l.i_sum + r.i_sum;
+        int l_sum = max(l.l_sum, l.i_sum + r.l_sum);
+        int r_sum = max(r.r_sum, l.r_sum + r.i_sum);
+        int m_sum = max(max(l.m_sum, r.m_sum), l.r_sum + r.l_sum);
+        return (SumValue){l_sum, r_sum, m_sum, i_sum};
+    }
+
+    SumValue get(vector<int> &a, int l, int r)
+    {
+        if (l == r)
+            return (SumValue){a[l], a[l], a[l], a[l]};
+
+        int m = (l + r) / 2;
+        SumValue left = get(a, l, m);
+        SumValue right = get(a, m + 1, r);
+        return push_up(left, right);
+    }
+    int max_subarray(vector<int> &nums)
+    {
+        return get(nums, 0, nums.size()-1).m_sum;
+    }
+
+    /** leet 54 **/
+    vector<int> spiral_order(vector<vector<int>> &matrix)
+    {
+        //        top
+        // left         right
+        //      bottom
+        int m = matrix.size();
+        int n = matrix[0].size();
+        if (m == 0 || n == 0) return {};
+        if (m == 1) return matrix[0];
+        vector<int> result;
+        int left = 0, right = n - 1, top = 0, bottom = m - 1;
+        while (left <= right && top <= bottom)
+        {
+            for (int col = left; col <= right; col++)
+                result.push_back(matrix[top][col]);
+
+            for (int row = top + 1; row <= bottom; row++)
+                result.push_back(matrix[row][right]);
+
+            if (left < right && top < bottom)
+            {
+                for (int col = right - 1; col > left; col--)
+                    result.push_back(matrix[bottom][col]);
+                for (int row = bottom; row > top; row--)
+                    result.push_back(matrix[row][left]);
+            }
+
+            left++;
+            top++;
+            right--;
+            bottom--;
+        }
+        return result;
+    }
+    /** leet 56 **/
+    vector<vector<int>> merge_array_interval(vector<vector<int>> &intervals)
+    {
+        // printf(" size = %ld %ld\n", intervals.size(), intervals[0].size());
+        if (intervals.size() == 0 || (intervals.size() == 1 && intervals[0].size() == 0))
+            return {};
+        vector<vector<int>> result;
+        sort(intervals.begin(), intervals.end());
+        for (int i = 0; i < intervals.size(); i++)
+        {
+            int l = intervals[i][0];
+            int r = intervals[i][1];
+            if (!result.size() || result.back()[1] < l)
+                result.push_back(intervals[i]);
+            else
+                result.back()[1] = max(result.back()[1], r);
+        }
+
+        return result;
+    }
+    /** leet 57 **/
+    // vector<vector<int>> insert_array_interval(vector<vector<int>> &intervals)
+    vector<vector<int>> insert_array_interval(vector<vector<int>> &intervals, vector<int> &newInterval)
+    {
+        vector<vector<int>> result;
+        if (intervals.size() == 0) {
+            result.push_back(newInterval);
+            return result;
+        }
+
+        bool inserted = false;
+        int left = newInterval[0];
+        int right = newInterval[1];
+        for (int i = 0; i < intervals.size(); i++)
+        {
+            int l = intervals[i][0];
+            int r = intervals[i][1];
+            if (r < left)
+            {
+                result.push_back(intervals[i]);
+            }
+            else if (right < l)
+            {
+                if (!inserted)
+                {
+                    result.push_back({left, right});
+                    inserted = true;
+                }
+                result.push_back(intervals[i]);
+            }
+            else
+            {
+                left = min(l, left);
+                right = max(r, right);
+            }
+        }
+        if (!inserted)
+            result.push_back({left, right});
+
+        return result;
+    }
+    /** leet 59 **/
+    vector<vector<int>> generat_n_matrix(int n)
+    {
+        //        top
+        // left         right
+        //      bottom
+        if (n == 0) return {};
+        if (n == 1) return {{1}};
+        vector<vector<int>> matrix(n, vector<int>(n));
+        int left = 0, right = n - 1, top = 0, bottom = n - 1;
+        int num = 1;
+        while (left <= right && top <= bottom)
+        {
+            for (int col = left; col <= right; col++)
+                matrix[top][col] = num++;
+
+            for (int row = top + 1; row <= bottom; row++)
+                matrix[row][right] = num++;
+
+            if (left < right && top < bottom)
+            {
+                for (int col = right - 1; col > left; col--)
+                    matrix[bottom][col] = num++;
+                for (int row = bottom; row > top; row--)
+                    matrix[row][left] = num++;
+            }
+
+            left++;
+            top++;
+            right--;
+            bottom--;
+        }
+        return matrix;
+    }
+
+    /** leet 60 de-cantor expansion **/
+    string get_permutation(int n, int k)
+    {
+        vector<int> nums(n, 0);            // initialized each num to 0, total n
+        iota(nums.begin(), nums.end(), 1); // 1,2,3...
+
+        int factorial[10] = {1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880};
+        // vector<int> factorial(n);
+        // factorial[0] = 1;
+        // for (int i = 1; i < n; i++)
+        //     factorial[i] = factorial[i - 1] * i;
+
+        k--;
+        string result;
+        int index = 0;
+        for (int i = n - 1; i >= 0; i--)
+        {
+            index = k / factorial[i];
+            // printf("%d", nums[index]);
+            result += (nums[index] + '0');
+            nums.erase(nums.begin() + index); // erase vector element
+            k = k % factorial[i];
+        }
+
+        return result;
+    }
 };
 
 /** leet 6 **/
@@ -392,7 +582,6 @@ static void leet_6_z_convert()
 
     cout << "leet 6: " << s << " z_convert " << rows << " rows is " << p << endl;
 }
-
 static void leet_17_letter_combinations()
 {
     Solution foo;
@@ -416,7 +605,6 @@ static void leet_22_generate_parenthesis()
         cout << "\""<< str.c_str() << "\", ";
     cout << "] " << endl;
 }
-
 static void leet_39_combination_sum()
 {
     Solution foo;
@@ -439,8 +627,7 @@ static void leet_39_combination_sum()
     }
     cout << "] " << endl;
 }
-
-static void leet_40_combination_sum()
+static void leet_40_combination_sum2()
 {
     Solution foo;
     // int target = 7;
@@ -465,7 +652,6 @@ static void leet_40_combination_sum()
     }
     cout << "] " << endl;
 }
-
 static void leet_47_permute_unique()
 {
     Solution foo;
@@ -484,7 +670,6 @@ static void leet_47_permute_unique()
     }
     cout << "] " << endl;
 }
-
 static void leet_48_matrix_rotate()
 {
     Solution foo;
@@ -508,7 +693,6 @@ static void leet_48_matrix_rotate()
     }
     cout << "] " << endl;
 }
-
 static void leet_49_group_anagrams()
 {
     Solution foo;
@@ -527,7 +711,6 @@ static void leet_49_group_anagrams()
     }
     cout << "] " << endl;
 }
-
 static int test_accumulate()
 {
     struct Grade
@@ -542,13 +725,126 @@ static int test_accumulate()
 
     return 0;
 }
+static void leet_53_max_subarray()
+{
+    Solution foo;
+    // vector<int> nums = {-2,1,-3,4,-1,2,1,-5,4};
+    vector<int> nums = {-2};
+    int result = foo.max_subarray(nums);
+    cout << "leet 53: {";
+    for (int i : nums)
+        cout << i << ",";
+    cout << "} max_subarray value is " << result << endl;
+}
+static void leet_54_spiral_order()
+{
+    Solution foo;
+    vector<vector<int>> matrix = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
+    // vector<vector<int>> matrix = {{1}, {2}, {3}, {4}};
+    // vector<vector<int>> matrix = {{}};
+    vector<int> result = foo.spiral_order(matrix);
+    cout << "leet 54: { ";
+    for (vector<int> a : matrix)
+    {
+        cout << "[";
+        for (int i : a)
+            cout << i << ",";
+        cout << "] ";
+    }
+    cout << "} spiral_order is {";
+    for (int i : result)
+        cout << i << ",";
+    cout << "}" << endl;
+}
+static void leet_56_merge_array_interval()
+{
+    Solution foo;
+    vector<vector<int>> interval = {{0, 4}, {5, 8}, {8, 12}};
+    // vector<vector<int>> interval = {{}};
+    vector<vector<int>> result = foo.merge_array_interval(interval);
+    cout << "leet 56: { ";
+    for (vector<int> a : interval)
+    {
+        cout << "{";
+        for (int i : a)
+            cout << i << ",";
+        cout << "} ";
+    }
+    cout << "} merge_array_interval is {";
+
+    for (vector<int> a : result)
+    {
+        cout << "{";
+        for (int i : a)
+            cout << i << ",";
+        cout << "} ";
+    }
+    cout << "}" << endl;
+}
+static void leet_57_insert_array_interval()
+{
+    Solution foo;
+    vector<int> insert = {2, 5};
+    vector<vector<int>> interval = {{0, 4}, {5, 7}, {8, 12}};
+    // vector<vector<int>> interval = {{}};
+    vector<vector<int>> result = foo.insert_array_interval(interval, insert);
+    cout << "leet 57: { ";
+    for (vector<int> a : interval)
+    {
+        cout << "{";
+        for (int i : a)
+            cout << i << ",";
+        cout << "} ";
+    }
+    cout << "} insert_array_interval {" << insert[0] << "," << insert[1] << "} is {";
+    for (vector<int> a : result)
+    {
+        cout << "{";
+        for (int i : a)
+            cout << i << ",";
+        cout << "} ";
+    }
+    cout << "}" << endl;
+}
+static void leet_59_generat_n_matrix()
+{
+    Solution foo;
+    int n = 5;
+    vector<vector<int>> matrix = foo.generat_n_matrix(n);
+    cout << "leet 59: generat_n_matrix " << n << "  { ";
+    for (vector<int> a : matrix)
+    {
+        cout << "[";
+        for (int i : a)
+            cout << i << ",";
+        cout << "] ";
+    }
+    cout << "} " << endl;
+}
+static void leet_60_get_permutation()
+{
+    Solution foo;
+    // int n = 4, k = 9;
+    int n = 9, k = 1000;
+    // int n = 3, k = 5;
+    string result = foo.get_permutation(n, k);
+    cout << "leet 60: get_permutation n = " << n << ", k = ";
+    cout << k << " permutation is \"" << result.c_str() << "\"" << endl;
+}
+
 // g++ -g -O0 -o test *.cpp -lpthread
 int main(int argc, char *argv[])
 {
+    leet_60_get_permutation();          // de-cantor expansion
+    leet_59_generat_n_matrix();         // same as 54
+    leet_57_insert_array_interval();
+    leet_56_merge_array_interval();
+    leet_54_spiral_order();             // same as 59
+    leet_53_max_subarray();
     leet_49_group_anagrams();
     leet_48_matrix_rotate();
     leet_47_permute_unique();
-    leet_40_combination_sum();
+    leet_40_combination_sum2();
     leet_39_combination_sum();
     leet_22_generate_parenthesis();
     leet_17_letter_combinations();

@@ -5,21 +5,17 @@
 
 // #include "util_uint128.h"
 
-int factorial_operator(int big[], int len, int multiple)
+void factorial_operator(int big[], int len, int multiple)
 {
     int i = 0;
     for (i = 0; i < len; i++)
-    {
         big[i] = big[i] * multiple;
-    }
 
     for (i = 0; i < len - 1; i++)
     {
         big[i + 1] += big[i] / 10;
         big[i] = big[i] % 10;
     }
-
-    return 0;
 }
 
 void factorial_big(int n)
@@ -27,8 +23,7 @@ void factorial_big(int n)
     int big_data[1000] = {0};
     // int num = 50;
     big_data[0] = 1;
-
-    int i = 0;
+    int i;
     for (i = 1; i <= n; i++)
     {
         factorial_operator(big_data, 1000, i);
@@ -44,6 +39,7 @@ void factorial_big(int n)
             break;
         }
     }
+    printf("factorial_big %d! = ", n);
     for (i = k; i >= 0; i--)
     {
         printf("%d", big_data[i]);
@@ -57,6 +53,16 @@ int factorial_little(int n)
     for (int i = 1; i <= n; i++)
         sum = sum * i;
     return sum;
+}
+void factorial_little_printf(int n)
+{
+    printf("factorial_little: ");
+    for (int i = 1; i <= n; i++)
+        printf("%d!=%d ", i, factorial_little(i));
+    printf("\n");
+    for (int i = 1; i <= n; i++)
+        printf("%d, ", factorial_little(i));
+    printf("\n");
 }
 
 #define MAX_CATALAN_NUM 26
@@ -78,10 +84,12 @@ int catalan_num(int n)
 int catalan_num_printf(int n)
 {
     int i = 0;
+    printf("catalan number: ");
     for (i = 1; i <= n; i++)
     {
         printf("[%d]%d%s", i, catalan_num(i), i == n ? "\n" : ", ");
     }
+    printf("catalan number: ");
     for (i = 1; i <= n; i++)
     {
         printf("%d%s", catalan_num(i), i == n ? "\n" : ", ");
@@ -96,13 +104,14 @@ int main()
     scanf("%d", &n);
     int size = 5;
     int **array = calloc(1, size * sizeof(int*));
-    array[0] = {2, 3, 6};
-    array[1] = {5, 6, 9};
-    // int *p = {0, 1, 3};
-    printf("sizeof %d %d %d\n", sizeof(array), sizeof(array[0]), sizeof(array[0][0]));
+    // array[0][] = {2, 3, 6};
+    // array[1][] = {5, 6, 9};
+    int p[] = {90, 1, 3};
+    array[0] = p;
+    printf("sizeof(array[0])=%ld %ld %d\n", sizeof(array[0]), sizeof(array[0][0]), array[0][0]);
 
     factorial_big(n);
-    printf("factorial_little: %d\n", factorial_little(n));
+    factorial_little_printf(n);
     // printf("catalan_num: %d\n", catalan_num(n));
     catalan_num_printf(n);
 }

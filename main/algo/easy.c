@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 /** maximum 6 9 number: num = 9669 -> 9969 **/
 static int max_69number(int num)
@@ -570,6 +571,85 @@ static void leet_38_count_and_say()
     printf("leet 38: n = %d, \"%s\"\n", n, p);
 }
 
+/** leet 53 **/
+// static int max_subarray(int *nums, int numsSize)
+// {
+//     if (numsSize == 1) return nums[0];
+//     int i = 0;
+//     int n = numsSize;
+//     int max_sum = nums[0];
+//     int sub[n];
+//     sub[0] = nums[0];
+//     for (i = 1; i < n; i++)
+//     {
+//         if (sub[i - 1] < nums[i] && sub[i-1] < 0)
+//             sub[i] = nums[i];
+//         else
+//             sub[i] = sub[i - 1] + nums[i];
+//         max_sum = fmax(sub[i], max_sum);
+//     }
+//     return max_sum;
+// }
+static int max_subarray(int *nums, int numsSize)
+{
+    if (numsSize == 1) return nums[0];
+    int i = 0;
+    int max_sum = nums[0];
+    int prev = nums[0];
+    for (i = 1; i < numsSize; i++)
+    {
+        if (prev < nums[i] && prev < 0)
+            prev = nums[i];
+        else
+            prev = prev + nums[i];
+
+        max_sum = fmax(prev, max_sum);
+    }
+
+    return max_sum;
+}
+static void leet_53_max_subarray()
+{
+    int i = 0;
+    // int a[] = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+    int a[] = {1, 2};
+    int size = sizeof(a) / sizeof(a[0]);
+    int result = max_subarray(a, size);
+    printf("leet 53: array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+
+    printf("max_subarray is %d\n", result);
+}
+
+/** leet 58 **/
+static int length_of_lastword(char *s)
+{
+    if (!s)
+        return 0;
+    int result = 0;
+    char *p = s + strlen(s) - 1;
+    while (p != s - 1)
+    {
+        char c = *p--;
+        if (!isalpha(c))
+        {
+            if (result) break;
+        }
+        else
+        {
+            result++;
+        }
+    }
+    return result;
+}
+static void leet_58_length_of_lastword()
+{
+    char *s = "a";
+    int result = length_of_lastword(s);
+    printf("leet 58: string \"%s\" length_of_lastword = %d\n", s, result);
+}
+
 /** leet 66 **/
 static void swap(int *a, int *b)
 {
@@ -630,6 +710,8 @@ static void leet_66_array_plus()
 int main(int argc, char *argv[])
 {
     leet_66_array_plus();
+    leet_58_length_of_lastword();
+    leet_53_max_subarray();
     leet_38_count_and_say();
     leet_35_search_insert();
     leet_27_array_remove_element();

@@ -8,6 +8,9 @@
 #ifndef min
 #define min(a, b) (a < b ? a : b)
 #endif
+#ifndef max
+#define max(a, b) (a > b ? a : b)
+#endif
 
 /** add_two_numbers leet 2 **/
 struct ListNode
@@ -1527,7 +1530,8 @@ static void leet_31_next_permutation()
 {
     int i = 0;
     // int a[] = {3, 1, 2};
-    int a[] = {4, 5, 2, 3, 6, 1};
+    // int a[] = {4, 5, 2, 3, 6, 1};
+    int a[] = {4, 5, 1, 6, 3, 2};
     // int a[] = {4};
     int size = sizeof(a) / sizeof(a[0]);
     printf("leet 31: array {");
@@ -1831,13 +1835,290 @@ static void leet_50_my_pow()
     printf("leet 50: my_pow %lf^%d = %lf\n", x, n, y);
 }
 
+/** leet 51 **/
+static char **generate_chessboard(int *queens, int n)
+{
+    char **board = calloc(1, sizeof(char *) * n);
+    for (int i = 0; i < n; i++)
+    {
+        board[i] = calloc(1, sizeof(char) * (n + 1));
+        for (int j = 0; j < n; j++)
+            board[i][j] = '.';
+        board[i][queens[i]] = 'Q';
+    }
+    return board;
+}
+static void dfs_n_queen(char ***solutions, int n, int *queens, int row, int *return_size,
+                        int columns, int diagonals1, int diagonals2)
+{
+    if (row == n)
+    {
+        char **board = generate_chessboard(queens, n);
+        solutions[(*return_size)++] = board;
+        return;
+    }
+
+    int available = ((1 << n) - 1) & (~(columns | diagonals1 | diagonals2));
+    while (available != 0)
+    {
+        // int available_bit = available & (~available + 1);   // available: first bit 1
+        int available_bit = available & (-available); // available: first bit 1
+        available = available & (available - 1);      // next available bit
+        // int bit = 0, val = available_bit;
+        // while ((val & 0x01) == 0)
+        // {
+        //     bit++;
+        //     val = val >> 1;
+        // }
+        int bit = __builtin_ctz(available_bit);
+        queens[row] = bit; // 'Q' position
+        int c = columns | available_bit;
+        int d1 = (diagonals1 | available_bit) << 1;
+        int d2 = (diagonals2 | available_bit) >> 1;
+        dfs_n_queen(solutions, n, queens, row + 1, return_size, c, d1, d2);
+        // dfs_n_queen(solutions, n, queens, row + 1, return_size, columns | available_bit, (diagonals1 | available_bit) << 1, (diagonals2 | available_bit) >> 1);
+        queens[row] = -1; // clear 'Q' position
+    }
+}
+static char ***solve_n_queens(int n, int *returnSize, int **returnColumnSizes)
+{
+    char ***solutions = calloc(1, sizeof(char **) * 501);
+    *returnSize = 0;
+    int queens[n];
+    memset(queens, -1, sizeof(queens));
+    dfs_n_queen(solutions, n, queens, 0, returnSize, 0, 0, 0);
+    *returnColumnSizes = malloc(sizeof(int *) * (*returnSize));
+    for (int i = 0; i < (*returnSize); i++)
+        (*returnColumnSizes)[i] = n;
+    return solutions;
+}
+static void leet_51_solve_n_queens()
+{
+    int i = 0;
+    int n = 4;
+    int return_size = 0;
+    int *return_colsize = NULL;
+    char ***solutions = solve_n_queens(n, &return_size, &return_colsize);
+    printf("leet 51: solve_n_queens %d queens have %d solutions: { ", n, return_size);
+    for (i = 0; i < return_size; i++)
+    {
+        printf("[");
+        for (int j = 0; j < return_colsize[i]; j++)
+        {
+            printf("\"%s\"%s", solutions[i][j], j == return_colsize[i] - 1 ? "]" : ", ");
+            free(solutions[i][j]);
+        }
+        printf("%s", i == return_size - 1 ? "" : ", ");
+        if (solutions[i]) free(solutions[i]);
+    }
+    if (solutions) free(solutions);
+    printf("}\n");
+}
+
+/** leet 52 **/
+static int dfs_cnt_n_queen(int n, int row, int columns, int diagonals1, int diagonals2)
+{
+    if (row == n)
+        return 1;
+
+    int count = 0;
+
+    int available = ((1 << n) - 1) & (~(columns | diagonals1 | diagonals2));
+    while (available != 0)
+    {
+        // int available_bit = available & (~available + 1);   // available: first bit 1
+        int available_bit = available & (-available); // available: first bit 1
+        available = available & (available - 1);      // next available bit
+        int c = columns | available_bit;
+        int d1 = (diagonals1 | available_bit) << 1;
+        int d2 = (diagonals2 | available_bit) >> 1;
+        count += dfs_cnt_n_queen(n, row + 1, c, d1, d2);
+    }
+    return count;
+}
+static int total_n_queens(int n)
+{
+    return dfs_cnt_n_queen(n, 0, 0, 0, 0);
+}
+static void leet_52_total_n_queens()
+{
+    int n = 9;
+    int size = total_n_queens(n);
+    printf("leet 52: total_n_queens %d queens have %d solutions\n", n, size);
+}
+
+/** leet 42 **/
+// static int total_trap(int *height, int heightSize)
+// {
+//     if (heightSize == 0) return 0;
+//     int i = 0;
+//     int n = heightSize;
+//     int left[n], right[n];
+//     left[0] = height[0];
+//     right[n - 1] = height[n - 1];
+//     for (i = 1; i < n; i++)
+//     {
+//         left[i] = max(left[i - 1], height[i]);
+//         right[n - 1 - i] = max(height[n - i - 1], right[n - i]);
+//     }
+//     int sum = 0;
+//     for (i = 0; i < n; i++)
+//         sum += min(left[i], right[i]) - height[i];
+//     return sum;
+// }
+static int total_trap(int *height, int heightSize)
+{
+    if (heightSize == 0)
+        return 0;
+    int sum = 0;
+    int n = heightSize;
+    int left_max = 0, right_max = 0;
+    int *left = height, *right = height + n - 1;
+    while (left < right)
+    {
+        left_max = max(left_max, *left);
+        right_max = max(right_max, *right);
+        if (*left <= *right)
+        {
+            sum += (min(left_max, right_max) - *left);
+            left++;
+        }
+        else
+        {
+            sum += (min(left_max, right_max) - *right);
+            right--;
+        }
+    }
+    return sum;
+}
+static void leet_42_total_trap()
+{
+    int i = 0;
+    int a[] = {0,1,0,2,1,0,1,3,2,1,2,1};
+    int size = sizeof(a) / sizeof(a[0]);
+    int result = total_trap(a, size);
+    printf("leet 42: array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", a[i], i == size - 1 ? "} " : ", ");
+
+    printf("total_trap is %d\n", result);
+}
+
+/** leet 61 **/
+static struct ListNode *list_rotate_right(struct ListNode *head, int k)
+{
+    if (head == NULL || head->next == NULL || k == 0)
+        return head;
+
+    int count = 1;
+    struct ListNode *first = head;
+    while (first->next)
+    {
+        count++;
+        first = first->next;
+    }
+
+    k = k % count;
+    if (k == 0 || count == 1)
+        return head;
+
+    first = head;
+    while (k--) first = first->next;
+
+    struct ListNode *second = head;
+    while (first->next)
+    {
+        first = first->next;
+        second = second->next;
+    }
+
+    first->next = head;
+    head = second->next;
+    second->next = NULL;
+
+    return head;
+}
+static void leet_61_list_rotate_right()
+{
+    int k = 4;
+    int a[] = {1, 2, 3, 4, 5};
+    struct ListNode *node1 = list_node_create(a, sizeof(a) / sizeof(a[0]));
+    struct ListNode *node = node1;
+    printf("leet 61: list_rotate_right {");
+    while (node)
+    {
+        printf("%d%s", node->val, node->next ? ", " : "}");
+        node = node->next;
+    }
+    node = list_rotate_right(node1, k);
+    printf(" rotate %d times to  {", k);
+    while (node)
+    {
+        printf("%d%s", node->val, node->next ? ", " : "}\n");
+        node = node->next;
+    }
+}
+
+/** leet 62 **/
+// static int unique_paths(int m, int n)
+// {
+//     int i, j;
+//     int f[m][n];
+//     for (i = 0; i < m; i++)
+//         f[i][0] = 1;
+//     for (j = 0; j < n; j++)
+//         f[0][j] = 1;
+//     for (i = 1; i < m; i++)
+//     {
+//         for (j = 1; j < n; j++)
+//             f[i][j] = f[i - 1][j] + f[i][j - 1];
+//     }
+//     return f[m - 1][n - 1];
+// }
+static int unique_paths(int m, int n)
+{
+    int dp[n];
+    for (int i = 0; i < n; i++)
+        dp[i] = 1;
+
+    for (int i = 1; i < m; i++)
+    {
+        for (int j = 1; j < n; j++)
+            dp[j] += dp[j - 1];
+    }
+    return dp[n - 1];
+}
+// static int unique_paths(int m, int n)
+// {
+//     int x, y;
+//     long long result = 1;
+
+//     for (y = 1, x = n; y < m; y++, x++)
+//         result = result * x / y;
+
+//     return result;
+// }
+static void leet_62_unique_paths()
+{
+    int m = 3, n = 7;
+    int result = unique_paths(m, n);
+    printf("leet 62: unique_paths m x n(%d x %d) = %d\n", m, n, result);
+}
+
 // /** leet 31 **/
 // static void next_permutation(int *nums, int numsSize) {
 // static void leet_31_next_permutation()
 
 int main(int argc, char *argv[])
 {
+    leet_62_unique_paths();             // dp
+    leet_61_list_rotate_right();        // double pointer
+    // leet 53, algo_medium.cpp/easy.c  // divide, segment tree
+    leet_42_total_trap();               // dp
+    leet_52_total_n_queens();           // dfs(backtrack)
+    leet_51_solve_n_queens();           // dfs(backtrack)
     leet_50_my_pow();
+    // leet 49, algo_medium.cpp
     // leet 48, algo_medium.cpp         // rotate
     leet_47_permute_unique();           // dfs(backtrack) or next_permutation
     leet_46_all_permute();              // dfs(backtrack) or next_permutation
@@ -1864,7 +2145,7 @@ int main(int argc, char *argv[])
     leet_11_max_area();                 // double pointer
     leet_8_my_atoi();
     leet_6_z_convert();
-    leet_5_longest_palindrome();        // manacher
+    leet_5_longest_palindrome();        // manacher, dp
     leet_3_length_of_longest_substring();
     leet_2_add_two_list_num();
     // two_sum_leet_1();
