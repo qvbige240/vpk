@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <ctype.h>
 
 /** maximum 6 9 number: num = 9669 -> 9969 **/
 static int max_69number(int num)
@@ -703,13 +704,267 @@ static void leet_66_array_plus()
     free(result);
 }
 
+/** leet 67 **/
+static void swap_char(char *a, char *b)
+{
+    char tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+static void reverse_string(char *p, int left, int right)
+{
+    while (left < right)
+    {
+        swap_char(p + left, p + right);
+        left++;
+        right--;
+    }
+}
+// static char *add_binary(char *a, char *b)
+// {
+//     int len1 = strlen(a);
+//     int len2 = strlen(b);
+
+//     char *p1 = a + len1 - 1;
+//     char *p2 = b + len2 - 1;
+
+//     int len = len1 > len2 ? len1 : len2;
+//     char *result = calloc(1, len + 2);
+//     char *src, *end, *p = result;
+//     memset(result, '0', len - 1);
+
+//     while (p1 != a - 1 && p2 != b - 1)
+//     {
+//         int val = *p1 - '0' + *p2 - '0';
+//         *(p + 1) = (val + *p - '0') / 2 + '0';
+//         *p = (val + *p - '0') % 2 + '0';
+//         p++;
+//         p1--;
+//         p2--;
+//     }
+
+//     if (p1 == a - 1)
+//     {
+//         src = p2;
+//         end = b - 1;
+//     }
+//     else
+//     {
+//         src = p1;
+//         end = a - 1;
+//     }
+
+//     while (src != end)
+//     {
+//         int val = *src - '0';
+//         *(p + 1) = (val + *p - '0') / 2 + '0';
+//         *p = (val + *p - '0') % 2 + '0';
+//         p++;
+//         src--;
+//     }
+
+//     if (*p == '0')
+//     {
+//         *p = '\0';
+//         p--;
+//     }
+
+//     reverse_string(result, 0, p - result);
+//     return result;
+// }
+static char *add_binary(char *a, char *b)
+{
+    int len1 = strlen(a);
+    int len2 = strlen(b);
+
+    char *p1 = a + len1 - 1;
+    char *p2 = b + len2 - 1;
+
+    int len = len1 > len2 ? len1 : len2;
+    char *result = calloc(1, len + 2);
+    char *p = result;
+
+    int carry = 0;
+
+    while (p1 != a - 1 && p2 != b - 1)
+    {
+        carry += *p1 - '0' + *p2 - '0';
+        *p = carry % 2 + '0';
+        carry = carry / 2;
+        p++;
+        p1--;
+        p2--;
+    }
+
+    while (p1 != a - 1)
+    {
+        carry += *p1 - '0';
+        *p = carry % 2 + '0';
+        carry = carry / 2;
+        p++;
+        p1--;
+    }
+
+    while (p2 != b - 1)
+    {
+        carry += *p2 - '0';
+        *p = carry % 2 + '0';
+        carry = carry / 2;
+        p++;
+        p2--;
+    }
+
+    if (carry)
+        *p = '1';
+
+    reverse_string(result, 0, p - result);
+    return result;
+}
+static int binary_print(int a)
+{
+    if (a > 0)
+    {
+        binary_print(a >> 1);
+        printf("%d", a % 2);
+    }
+}
+static int num_add_binary(int a, int b)
+{
+    int x = a, y = b, answer, carry;
+    while (y)
+    {
+        answer = x ^ y;
+        carry = (x & y) << 1;
+        x = answer;
+        y = carry;
+    }
+    return x;
+}
+static void leet_67_add_binary()
+{
+    char *a = "1101";
+    char *b = "1101";
+    char *c = add_binary(a, b);
+    printf("leet 67: add_binary \"%s\"+\"%s\"=\"%s\"\n", a, b, c);
+    free(c);
+    int a1 = 130;
+    int b1 = 25;
+    int c1 = num_add_binary(a1, b1);
+    printf("leet 67: num_add_binary without(+-*/) %d+%d=%d, ", a1, b1, c1);
+    binary_print(a1);
+    printf("+");
+    binary_print(b1);
+    printf("=");
+    binary_print(c1);
+    printf("\n");
+}
+/** leet 69 **/
+static int my_sqrt(int x)
+{
+    int l = 0, r = x;
+    int result = 1;
+    int mid = 0;
+    while (l <= r)
+    {
+        mid = (l + r) / 2;
+        if ((long long)mid * mid <= x)
+        {
+            result = mid;
+            l = mid + 1;
+        }
+        else
+        {
+            r = mid - 1;
+        }
+    }
+    return result;
+}
+static void leet_69_my_sqrt()
+{
+    int x = 8;
+    int result = my_sqrt(x);
+    printf("leet 69: %d sqrt is (int)%d\n", x, result);
+}
+
+/** leet 70 **/
+// static int climb_stairs(int n)
+// {
+//     int a[3];
+
+//     a[0] = 1;
+//     a[1] = 1;
+//     for (int i = 2; i <= n; i++)
+//     {
+//         // a[2] = a[1] + a[0];
+//         a[i % 3] = a[(i - 1) % 3] + a[(i - 2) % 3];
+//     }
+//     return a[n % 3];
+// }
+static int climb_stairs(int n)
+{
+    int a = 1, b = 1;
+    for (int i = 1; i < n; i++)
+    {
+        b = a + b;
+        a = b - a;
+    }
+    return b;
+}
+static void leet_70_climb_stairs()
+{
+    int n = 10;
+    int result = climb_stairs(n);
+    printf("leet 70: climb_stairs %d stairs have %d methods\n", n, result);
+}
+
+/** leet 88 **/
+static void array_merge(int *nums1, int nums1Size, int m, int *nums2, int nums2Size, int n)
+{
+    int i = m - 1, j = n - 1, index = m + n - 1;
+    while (i >= 0 && j >= 0)
+    {
+        if (nums1[i] > nums2[j])
+            nums1[index--] = nums1[i--];
+        else
+            nums1[index--] = nums2[j--];
+    }
+
+    while (j >= 0)
+        nums1[index--] = nums2[j--];
+}
+static void leet_88_array_merge()
+{
+    int m1[] = {1, 2, 3, 0, 0, 0};
+    int n1[] = {4, 5, 6};
+    int m = 3;
+    int n = 3;
+    int i = 0;
+    int size = sizeof(m1) / sizeof(m1[0]);
+    printf("leet 88: input array {");
+    for (i = 0; i < size; i++)
+        printf("%d%s", m1[i], i == size - 1 ? "} merge {" : ", ");
+    size = sizeof(n1) / sizeof(n1[0]);
+    for (i = 0; i < sizeof(n1) / sizeof(n1[0]); i++)
+        printf("%d%s", n1[i], i == size - 1 ? "} " : ", ");
+    array_merge(m1, 0, m, n1, 0, n);
+    printf(" ==>  {");
+    size = sizeof(m1) / sizeof(m1[0]);
+    for (i = 0; i < size; i++)
+        printf("%d%s", m1[i], i == size - 1 ? "}\n" : ", ");
+}
+
 // /** leet 8 **/
 // static int my_atoi(char *s)
 // static void leet_8_my_atoi()
 
 int main(int argc, char *argv[])
 {
-    leet_66_array_plus();
+    // leet 136,                        // a ^ b ^ a = b ^ a ^ a = b ^ (a ^ a) = b
+    leet_88_array_merge();
+    leet_70_climb_stairs();             // dp, f(n) = f(n-1) + f(n-2)
+    leet_69_my_sqrt();                  // 
+    leet_67_add_binary();               // binary, string +-*/
+    leet_66_array_plus();               // binary, string +-*/
     leet_58_length_of_lastword();
     leet_53_max_subarray();
     leet_38_count_and_say();
@@ -719,7 +974,7 @@ int main(int argc, char *argv[])
     leet_20_is_valid();
     leet_14_longest_common_prefix();
     leet_9_is_palindrome();
-    leet_7_reverse_num();
+    leet_7_reverse_num();               // int overflow
     leet_1_two_sum();
     max_69num_leet();
     return 0;

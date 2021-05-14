@@ -2084,7 +2084,8 @@ static int unique_paths(int m, int n)
     for (int i = 1; i < m; i++)
     {
         for (int j = 1; j < n; j++)
-            dp[j] += dp[j - 1];
+            dp[j] = dp[j] + dp[j - 1];
+            // dp[j] += dp[j - 1];
     }
     return dp[n - 1];
 }
@@ -2100,7 +2101,7 @@ static int unique_paths(int m, int n)
 // }
 static void leet_62_unique_paths()
 {
-    int m = 3, n = 7;
+    int m = 3, n = 3;
     int result = unique_paths(m, n);
     printf("leet 62: unique_paths m x n(%d x %d) = %d\n", m, n, result);
 }
@@ -2122,13 +2123,13 @@ int main(int argc, char *argv[])
     // leet 48, algo_medium.cpp         // rotate
     leet_47_permute_unique();           // dfs(backtrack) or next_permutation
     leet_46_all_permute();              // dfs(backtrack) or next_permutation
-    leet_43_string_multiply();
+    leet_43_string_multiply();          // string +-*/
     // leet 40, algo_medium.cpp         // dfs(backtrack)
     // leet 39, algo_medium.cpp         // dfs(backtrack)
-    leet_34_search_range();
-    leet_33_rotate_search();
+    leet_34_search_range();             // binary search
+    leet_33_rotate_search();            // binary search
     leet_31_next_permutation();
-    leet_29_divide();                   // divide
+    leet_29_divide();                   // divide, int overflow
     // leet 28, kmp.c                   // kmp, strstr
     leet_25_list_reverse_k_group();
     leet_24_list_swap_pairs();
@@ -2143,7 +2144,7 @@ int main(int argc, char *argv[])
     leet_13_roman_to_int();
     leet_12_int_to_roman();
     leet_11_max_area();                 // double pointer
-    leet_8_my_atoi();
+    leet_8_my_atoi();                   // int overflow
     leet_6_z_convert();
     leet_5_longest_palindrome();        // manacher, dp
     leet_3_length_of_longest_substring();

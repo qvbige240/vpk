@@ -41,7 +41,19 @@ int test_binary_print()
     return 0;
 }
 
-/** bit add with +/-/* **/
+/** bit add without +-*/ **/
+int add_binary(int a, int b)
+{
+    int x = a, y = b, answer, carry;
+    while (y)
+    {
+        answer = x ^ y;
+        carry = (x & y) << 1;
+        x = answer;
+        y = carry;
+    }
+    return x;
+}
 int bit_add(int a, int b)
 {
     int carry = a & b;
