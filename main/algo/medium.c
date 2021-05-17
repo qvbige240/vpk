@@ -2106,12 +2106,52 @@ static void leet_62_unique_paths()
     printf("leet 62: unique_paths m x n(%d x %d) = %d\n", m, n, result);
 }
 
+/** leet 71 **/
+static char *simplify_path(char *path)
+{
+    int len = strlen(path);
+    char **stack = calloc(1, (len / 2 + 1) * sizeof(char *));
+    char *p = strtok(path, "/");
+    int size = 0;
+    while (p)
+    {
+        if (strcmp(p, "..") == 0)
+        {
+            if (size > 0)
+                size--;
+        }
+        else if (strcmp(p, ".") != 0)
+            stack[size++] = p;
+        p = strtok(NULL, "/");
+    }
+
+    if (size == 0)
+        return "/";
+
+    char *result = calloc(1, len + 1);
+    for (int i = 0; i < size; i++)
+    {
+        strcat(result, "/");
+        strcat(result, stack[i]);
+    }
+    free(stack);
+
+    return result;
+}
+static void leet_71_simplify_path()
+{
+    char s[] = "/a//b////c/d//././/..";
+    printf("leet 71: \'%s\' simplify_path is ", s);
+    char *result = simplify_path(s);
+    printf("\'%s\'\n", result);
+}
 // /** leet 31 **/
 // static void next_permutation(int *nums, int numsSize) {
 // static void leet_31_next_permutation()
 
 int main(int argc, char *argv[])
 {
+    leet_71_simplify_path();
     leet_62_unique_paths();             // dp
     leet_61_list_rotate_right();        // double pointer
     // leet 53, algo_medium.cpp/easy.c  // divide, segment tree

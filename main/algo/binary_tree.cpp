@@ -110,7 +110,7 @@ public:
     {
         if (!root)
             return;
-        /** left node right **/
+        /** left center right **/
         inorder(root->left, result);
         result.push_back(root->val);
         inorder(root->right, result);
@@ -141,10 +141,10 @@ static void leet_94_inorder_traversal1()
     vector<int> inorder = {1, 4, 2, 5, 7, 6, 8};
     TreeNode *root = foo.build_tree(preorder, inorder);
     vector<int> result = foo.inorder_traversal(root);
-    cout << "leet 94: create by preorder and inorder {";
+    cout << "leet 94: create by preorder and inorder { ";
     for (int i : inorder)
         cout << i << " ";
-    cout << "} inorder_traversal is {";
+    cout << "} inorder_traversal is { ";
     for (int i : result)
         cout << i << " ";
     cout << "} " << endl;
@@ -157,10 +157,10 @@ static void leet_94_inorder_traversal2()
     vector<int> postorder = {1, 2, 4, 7, 8, 6, 5};
     TreeNode *root = foo.build_tree_in_post(inorder, postorder);
     vector<int> result = foo.inorder_traversal(root);
-    cout << "leet 94: create by inorder and postorder {";
+    cout << "leet 94: create by inorder and postorder { ";
     for (int i : inorder)
         cout << i << " ";
-    cout << "} inorder_traversal is {";
+    cout << "} inorder_traversal is { ";
     for (int i : result)
         cout << i << " ";
     cout << "} " << endl;
@@ -173,10 +173,10 @@ static void leet_94_inorder_traversal3()
     vector<int> postorder = {1, 2, 4, 7, 8, 6, 5};
     TreeNode *root = foo.build_tree_pre_post(preorder, postorder);
     vector<int> result = foo.inorder_traversal(root);
-    cout << "leet 94: create by preorder and postorder {";
+    cout << "leet 94: create by preorder and postorder { ";
     for (int i : preorder)
         cout << i << " ";
-    cout << "} inorder_traversal is {";
+    cout << "} inorder_traversal is { ";
     for (int i : result)
         cout << i << " ";
     cout << "} " << endl;

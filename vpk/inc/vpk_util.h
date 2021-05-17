@@ -51,6 +51,13 @@ TIMA_BEGIN_DELS
 
 #define vpk_gettimeofday(tv, tz)  gettimeofday((tv), (tz))
 
+static INLINE uint64_t vpk_system_time(void)
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	return (uint64_t)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
+
 #define TO_HEX_CHAR(c)	((c) > 9 ? (c) + 55 : (c) + 48)
 
 #define HEX_PARSE_DIGIT_STR(ptr)	\

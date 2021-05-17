@@ -1,11 +1,13 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 #include <iostream>
 #include <algorithm>
 #include <numeric>
 #include <unordered_map>
 #include <cstring>
+#include <stack>
 
 using namespace std;
 
@@ -896,6 +898,93 @@ public:
         }
         return result;
     }
+
+    /** leet 71 **/
+    // string simplify_path(string path)
+    // {
+    //     vector<string> strs;
+    //     string dir;
+    //     path += '/';
+    //     for (auto c : path)
+    //     {
+    //         if (c == '/')
+    //         {
+    //             if (dir == ".." && !strs.empty())
+    //                 strs.pop_back();
+    //             else if (dir != "." && dir != "" && dir != "..")
+    //                 strs.push_back(dir);
+    //             // dir = "";
+    //             dir.clear();
+    //         }
+    //         else
+    //         {
+    //             dir += c;
+    //         }
+    //     }
+    //     string result;
+    //     for (string s : strs)
+    //         result = result + '/' + s;
+    //     if (result.empty())
+    //         result += '/';
+    //     return result;
+    // }
+    string simplify_path(string path)
+    {
+        vector<string> strs;
+        string dir;
+        stringstream ss(path);
+        while (getline(ss, dir, '/'))
+        {
+            if (dir == ".." && !strs.empty())
+                strs.pop_back();
+            else if (dir != "." && dir != "" && dir != "..")
+                strs.push_back(dir);
+        }
+
+        string result;
+        for (string s : strs)
+            result = result + '/' + s;
+
+        if (result.empty())
+            result += '/';
+
+        return result;
+    }
+    // string simplify_path(string path)
+    // {
+    //     path += "/";
+    //     stack<string> st;
+    //     string dir;
+    //     for (auto c : path)
+    //     {
+    //         // 以 / 为分隔符
+    //         if (c == '/')
+    //         {
+    //             // 切换上一集目录
+    //             if (dir == ".." && !st.empty())
+    //                 st.pop();
+    //             // 上一个 '/' 到 下一个 '/'
+    //             else if (dir != ".." && dir != "." && !dir.empty())
+    //                 st.push(dir);
+    //             dir.clear();
+    //         }
+    //         else
+    //         {
+    //             dir += c;
+    //         }
+    //     }
+    //     // 遍历栈
+    //     string result;
+    //     while (!st.empty())
+    //     {
+    //         string s = st.top();
+    //         st.pop();
+    //         result = "/" + s + result;
+    //     }
+    //     if (result.empty())
+    //         result = "/";
+    //     return result;
+    // }
 };
 
 /** leet 6 **/
@@ -1218,6 +1307,14 @@ static void leet_78_array_subsets()
     }
     cout << "] " << endl;
 }
+static void leet_71_simplify_path()
+{
+    Solution foo;
+    // string s = "/...";
+    string s = "/a//b////c/d//././/..";
+    string result = foo.simplify_path(s);
+    cout << "leet 71: \"" << s.c_str() << "\" simplify_path is \"" << result.c_str() << "\"" << endl;
+}
 static void leet_72_min_distance()
 {
     Solution foo;
@@ -1303,6 +1400,7 @@ int main(int argc, char *argv[])
     leet_152_max_product();                     // dp
     leet_89_gray_code();
     leet_72_min_distance();                     // dp, lcs(longest common subsequence)
+    leet_71_simplify_path();
     leet_78_array_subsets();                    // dfs
     leet_64_min_path_sum();                     // dp, same as 62
     leet_63_unique_paths_with_obstacles();      // dp, same as 62
