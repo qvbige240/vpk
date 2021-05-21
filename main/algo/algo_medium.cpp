@@ -1436,14 +1436,14 @@ static void test_accumulate()
     cout << "test_accumulate: " << sum << endl;
 
     Solution foo;
-    const char *s = "aga,bcc*dd*hello,eee";
+    const char *s = "aga,bcc,*dd*hello,eee";
     vector<string> result = foo.split(s, ",*");
     cout << "test 1: \"" << s << "\" split by \',*\' result " << result.size() << " size [";
     for (string str : result)
         cout << " [" << str.c_str() << "],";
     cout << "] " << endl;
 
-    string str = "aga,bcc*dd*hello,eee";
+    string str = "aga,bcc,*dd*hello,eee";
     vector<string> result1 = foo.split(str, ",*");
     cout << "test 1: \"" << str.c_str() << "\" split by \',*\' result " << result1.size() << " size [";
     for (string str : result1)
