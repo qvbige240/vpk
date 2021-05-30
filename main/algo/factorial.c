@@ -94,7 +94,23 @@ int catalan_num_printf(int n)
     {
         printf("%d%s", catalan_num(i), i == n ? "\n" : ", ");
     }
+    printf("\n");
     return 0;
+}
+
+int check_endian()
+{
+    union check
+    {
+        int i;
+        char ch;
+    } c;
+    c.i = 1;
+    return (c.ch == 1);
+}
+void check_endian_test()
+{
+    check_endian() == 1 ? printf("little-endian\n") : printf("big-endian\n");
 }
 
 int main()
@@ -114,4 +130,5 @@ int main()
     factorial_little_printf(n);
     // printf("catalan_num: %d\n", catalan_num(n));
     catalan_num_printf(n);
+    check_endian_test();
 }

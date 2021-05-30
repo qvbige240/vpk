@@ -187,7 +187,7 @@ public:
         printf("%d,", root->val);
     }
 
-    void level_order_print(TreeNode *root, int n)
+    void print_level_order(TreeNode *root, int n)
     {
         if (!root) return;
 
@@ -217,7 +217,7 @@ public:
         }
     }
 
-    /** leet 1942, offer 37, same as level_order_print **/
+    /** leet 1942, offer 37, same as print_level_order **/
     string serialize(TreeNode *root)
     {
         string result = "[";
@@ -290,6 +290,23 @@ public:
                 result[i]->right = result[pos++];
         }
         return result[0];
+    }
+
+    void tree_destroy(TreeNode *root)
+    {
+        if (!root) return;
+
+        TreeNode *node = nullptr;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (!q.empty())
+        {
+            node = q.front();
+            q.pop();
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+            delete node;
+        }
     }
     /** leet 95 **/
     vector<TreeNode *> generate_trees(int start, int end)
@@ -457,8 +474,283 @@ public:
         return result;
     }
 
+    /** leet 103 **/
+    vector<vector<int>> zigzag_level_order(TreeNode *root)
+    {
+        vector<vector<int>> result;
+        if (!root) return result;
+
+        TreeNode *node = nullptr;
+        queue<TreeNode *> q;
+        q.push(root);
+        bool flag = true;
+        while (!q.empty())
+        {
+            int size = q.size();
+            deque<int> dqueue;
+            while (size--)
+            {
+                node = q.front();
+                q.pop();
+                if (flag)
+                    dqueue.push_back(node->val);
+                else
+                    dqueue.push_front(node->val);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+            result.push_back(vector<int>{dqueue.begin(), dqueue.end()});
+            flag = !flag;
+        }
+        return result;
+    }
+
+    /** leet 110 **/
+    bool is_balanced(TreeNode *root)
+    {
+        if (!root) return true;
+
+        return balance_dfs(root) > -1;
+    }
+    int balance_dfs(TreeNode *root)
+    {
+        if (!root) return 0;
+
+        int left = balance_dfs(root->left);
+        int right = balance_dfs(root->right);
+        if (left == -1 || right == -1 || abs(left - right) > 1)
+            return -1;
+        else
+            return max(left, right) + 1;
+    }
+    /** leet 111 **/
+    int min_depth_get(TreeNode *root)
+    {
+        return dfs_depth(root);
+    }
+    int dfs_depth(TreeNode *root)
+    {
+        if (!root) return 0;
+
+        if (root->left == nullptr && root->right == nullptr)
+            return 1;
+
+        int min_depth = INT_MAX;
+        if (root->left)
+            min_depth = min(dfs_depth(root->left), min_depth);
+
+        if (root->right)
+            min_depth = min(dfs_depth(root->right), min_depth);
+
+        return min_depth + 1;
+    }
+    int min_depth_iterator(TreeNode *root)
+    {
+        if (!root) return 0;
+
+        queue<pair<TreeNode*, int>> q;
+        q.push({root, 1});
+        while (!q.empty())
+        {
+            auto node = q.front();
+            q.pop();
+
+            if (node.first->left == nullptr && node.first->right == nullptr)
+                return node.second;
+            if (node.first->left)
+                q.push({node.first->left, node.second+1});
+            if (node.first->right)
+                q.push({node.first->right, node.second+1});
+        }
+        return 0;
+    }
+    /** leet 112 **/
+    bool has_path_sum(TreeNode *root, int target)
+    {
+        if (!root) return false;
+        return dfs_path_sum1(root, target);
+    }
+    bool dfs_path_sum1(TreeNode *root, int target)
+    {
+        if (!root)
+            return false;
+
+        target -= root->val;
+        if (target == 0)
+        {
+            if (root->left == nullptr && root->right == nullptr)
+                return true;
+        }
+        return dfs_path_sum1(root->left, target) || dfs_path_sum1(root->right, target);
+    }
+    /** leet 113 **/
+    vector<vector<int>> path_sum(TreeNode *root, int targetSum)
+    {
+        vector<vector<int>> result;
+        vector<int> sum;
+        dfs_path_sum(root, targetSum, result, sum);
+        return result;
+    }
+    void dfs_path_sum(TreeNode *root, int target, vector<vector<int>> &result, vector<int> &sum)
+    {
+        if (!root) return;
+
+        target -= root->val;
+        sum.push_back(root->val);
+        if (target == 0)
+        {
+            if (root->left == nullptr && root->right == nullptr)
+            {
+                result.push_back(sum);
+                sum.pop_back();
+                return;
+            }
+        }
+        dfs_path_sum(root->left, target, result, sum);
+        dfs_path_sum(root->right, target, result, sum);
+        sum.pop_back();
+    }
+    /** leet 114 **/
+    // void flatten(TreeNode *root)
+    // {
+    //     if (!root) return;
+
+    //     TreeNode *right = nullptr;
+    //     if (root->right == nullptr)
+    //     {
+    //         root->right = root->left;
+    //         root->left = nullptr;
+    //     }
+
+    //     while (root->right)
+    //     {
+    //         if (root->left)
+    //         {
+    //             right = get_far_right(root->left);
+    //             right->right = root->right;
+    //             root->right = root->left;
+    //             root->left = nullptr;
+    //         }
+
+    //         root = root->right;
+    //         if (root->right == nullptr)
+    //         {
+    //             root->right = root->left;
+    //             root->left = nullptr;
+    //         }
+    //     }
+    // }
+    void flatten(TreeNode *root)
+    {
+        if (!root) return;
+
+        TreeNode *right = nullptr;
+        while (root)
+        {
+            if (root->left)
+            {
+                right = get_far_right(root->left);
+                right->right = root->right;
+                root->right = root->left;
+                root->left = nullptr;
+            }
+
+            root = root->right;
+        }
+    }
+    TreeNode *get_far_right(TreeNode *root)
+    {
+        while (root->right)
+            root = root->right;
+
+        // if (root->left)
+        //     return get_far_right(root->left);
+        // else
+            return root;
+    }
 };
 
+static void leet_114_flatten()
+{
+    Solution foo;
+    int target = 22;
+    // string data = "[1,2,5,3,4,null,6]";
+    string data = "[1,2,6,3,4,null,7,null,null,5]";
+    TreeNode *root = foo.deserialize(data);
+    foo.flatten(root);
+    cout << "leet 114: binary tree " << data << " flatten to list: ";
+    cout << foo.serialize(root) << endl;
+    foo.tree_destroy(root);
+}
+static void leet_113_path_sum()
+{
+    Solution foo;
+    int target = 22;
+    string data = "[5,4,8,11,null,13,4,7,2,null,null,5,1]";
+    TreeNode *root = foo.deserialize(data);
+    vector<vector<int>> result = foo.path_sum(root, target);
+    cout << "leet 113: binary tree " << data << " path_sum = " << target << " is { ";
+    for (vector<int> a : result)
+    {
+        cout << "{";
+        for (int i : a)
+            cout << i << ",";
+        cout << "} ";
+    }
+    cout << "} " << endl;
+    foo.tree_destroy(root);
+}
+static void leet_112_has_path_sum()
+{
+    Solution foo;
+    int target = 5;
+    string data = "[5,4,8,11,null,13,4,7,2,null,null,null,1]";
+    TreeNode *root = foo.deserialize(data);
+    bool result = foo.has_path_sum(root, target);
+    cout << "leet 112: binary tree " << data << " serialize:";
+    cout << foo.serialize(root) << " has_path_sum = " << target << " is " << boolalpha << result << endl;
+    foo.tree_destroy(root);
+}
+static void leet_111_min_depth_get()
+{
+    Solution foo;
+    string data = "[2,null,3,null,4,null,5,null,6]";
+    TreeNode *root = foo.deserialize(data);
+    // int result = foo.min_depth_get(root);
+    int result = foo.min_depth_iterator(root);
+    cout << "leet 111: binary tree " << data << " serialize:";
+    cout << foo.serialize(root) << " min_depth is " << result << endl;
+    foo.tree_destroy(root);
+}
+static void leet_110_is_balanced()
+{
+    Solution foo;
+    // string data = "[3,9,20,null,null,15,7]";
+    string data = "[1,2,2,3,3,null,null,4,4]";
+    TreeNode *root = foo.deserialize(data);
+    bool result = foo.is_balanced(root);
+    cout << "leet 110: binary tree " << data << " serialize:";
+    cout << foo.serialize(root) << " is_balanced is " << boolalpha << result << endl;
+    foo.tree_destroy(root);
+}
+static void leet_103_zigzag_level_order()
+{
+    Solution foo;
+    string data = "[3,9,20,null,null,15,7]";
+    TreeNode *root = foo.deserialize(data);
+    cout << "leet 103: binary tree " << data << " serialize:";
+    cout << foo.serialize(root) << " zigzag_level_order is { ";
+    vector<vector<int>> result = foo.zigzag_level_order(root);
+    for (vector<int> a : result)
+    {
+        cout << "{";
+        for (int i : a)
+            cout << i << ",";
+        cout << "} ";
+    }
+    cout << "} " << endl;
+    foo.tree_destroy(root);
+}
 /** leet 1942, offer 37 **/
 static void leet_1942_serialize_deserialize()
 {
@@ -469,6 +761,7 @@ static void leet_1942_serialize_deserialize()
     TreeNode *root = foo.deserialize(data);
     cout << "leet 1942: string \"" << data << "\" deserialize and serialize is ";
     cout << foo.serialize(root) << endl;
+    foo.tree_destroy(root);
 }
 static void leet_102_level_order()
 {
@@ -478,7 +771,7 @@ static void leet_102_level_order()
     vector<int> inorder = {1, 4, 2, 5, 7, 6, 8};
     TreeNode *root = foo.build_tree(preorder, inorder);
     cout << "leet 102: binary tree size(" << inorder.size() << ") {";
-    foo.level_order_print(root, inorder.size() - 1);
+    foo.print_level_order(root, inorder.size() - 1);
     cout << "} level_order is { ";
 #else
     string data = "[3,9,20,null,null,15,7]";
@@ -495,6 +788,7 @@ static void leet_102_level_order()
         cout << "} ";
     }
     cout << "} " << endl;
+    foo.tree_destroy(root);
 }
 static void leet_98_is_valid_bst()
 {
@@ -506,7 +800,7 @@ static void leet_98_is_valid_bst()
     // foo.print_inorder(root);cout << endl;
     // foo.print_postorder(root);cout << endl;
     // cout << "leet 98: binary tree size(" << inorder.size() << ") {";
-    // foo.level_order_print(root, inorder.size() - 1);
+    // foo.print_level_order(root, inorder.size() - 1);
     // bool result = foo.is_valid_bst(root);
     // cout << "} is \"" << boolalpha << result << "\" binary search tree(bst)" << endl;
 
@@ -517,6 +811,7 @@ static void leet_98_is_valid_bst()
     cout << "leet 98: binary tree " << data << " inorder(";
     foo.print_inorder(root);
     cout << ") is \"" << boolalpha << result << "\" binary search tree(bst)" << endl;
+    foo.tree_destroy(root);
 }
 static void leet_96_num_trees()
 {
@@ -541,7 +836,7 @@ static void leet_95_generate_trees()
     //     //             cout << "null,";
     //     //         else
     //     //             cout << i << ",";
-    //     foo.level_order_print(root, n-1);
+    //     foo.print_level_order(root, n-1);
     //     cout << "} ";
     // }
     for (auto &root : all)
@@ -609,6 +904,12 @@ static void leet_94_inorder_traversal3()
 
 int main(int argc, char *argv[])
 {
+    leet_114_flatten();                         // pre-node: far right
+    leet_113_path_sum();
+    leet_112_has_path_sum();                    // dfs sum
+    leet_111_min_depth_get();
+    leet_110_is_balanced();                     // dfs
+    leet_103_zigzag_level_order();              // queue, deque
     leet_1942_serialize_deserialize();          // string
     leet_102_level_order();
     leet_98_is_valid_bst();                     // dfs(backtrack)
