@@ -7,6 +7,7 @@
 #include <numeric>
 #include <unordered_map>
 #include <cstring>
+#include <climits>
 #include <stack>
 
 using namespace std;
@@ -1010,6 +1011,85 @@ public:
 
         return dp[m][n];
     }
+
+    /** leet 118 **/
+    vector<vector<int>> yanghui_triangle(int n)
+    {
+        vector<vector<int>> result;
+        for (int i = 0; i < n; i++)
+        {
+            vector<int> row(i + 1, 1);
+            if (i > 1)
+                row_val(result, row, i + 1);
+
+            result.push_back(row);
+        }
+        return result;
+    }
+    void row_val(vector<vector<int>> &result, vector<int> &row, int size)
+    {
+        vector<int> prev_row = result.back();
+        for (int i = 1; i < size - 1; i++)
+            row[i] = prev_row[i - 1] + prev_row[i];
+    }
+    /** leet 119 **/
+    vector<int> yanghui_triangle_row(int row_index) {
+        int n = row_index + 1;
+        vector<int> row(n, 1);
+        for (int i = 0; i < n; i++)
+        {
+            // if (i > 1)
+            // {
+            //     int prev = row[0];
+            //     for (int j = 1; j < i; j++)
+            //     {
+            //         int tmp = prev + row[j];
+            //         prev = row[j];
+            //         row[j] = tmp;
+            //     }
+            // }
+            if (i > 1)
+            {
+                for (int j = i-1; j > 0; j--)
+                    row[j] = row[j-1] + row[j];
+            }
+        }
+        return row;
+    }
+    /** leet 120 **/
+    int triangle_min_total(vector<vector<int>> &triangle)
+    {
+        int n = triangle.size();
+        vector<int> row(n, 0);
+        row[0] = triangle[0][0];
+        for (int i = 1; i < n; i++)
+        {
+            row[i] = triangle[i][i] + row[i - 1];
+            for (int j = i - 1; j > 0; j--)
+            {
+                row[j] = min(row[j], row[j - 1]) + triangle[i][j];
+            }
+            row[0] = triangle[i][0] + row[0];
+
+            // for (int k = 0; k < i + 1; k++)
+            //     printf("%d ", row[k]);
+            // printf("\n");
+        }
+
+        sort(row.begin(), row.end());
+        return row[0];
+    }
+    /** leet 120 **/
+    int max_profit(vector<int> &prices)
+    {
+        int min_price = INT_MAX, result = 0;
+        for (int price : prices)
+        {
+            result = max(result, price - min_price);
+            min_price = min(min_price, price);
+        }
+        return result;
+    }
 };
 
 /** leet 6 **/
@@ -1370,6 +1450,64 @@ static void leet_115_num_distinct()
     uint64_t d = foo.num_distinct(s, t);
     cout << "leet 115: subsequence t \"" << t.c_str() << "\" in \"" << s.c_str() << "\" num_distinct is " << d << endl;
 }
+static void leet_118_yanghui_triangle()
+{
+    Solution foo;
+    int n = 5;
+    vector<vector<int>> result = foo.yanghui_triangle(n);
+    cout << "leet 118: yanghui triangle: " << endl;
+    cout << "[ " << endl;
+    int row = result.size();
+    for (int i = 0; i < row; i++)
+    {
+        for (int space = 0; space < row - i; space++)
+            printf(" ");
+        printf("[");
+        for (int j = 0; j < result[i].size(); j++)
+            printf("%d%s", result[i][j], j == result[i].size() - 1 ? "" : ",");
+        printf("]\n");
+    }
+    cout << "] " << endl;
+}
+static void leet_119_yanghui_triangle_row()
+{
+    Solution foo;
+    int index = 3;
+    vector<int> result = foo.yanghui_triangle_row(index);
+    cout << "leet 119: yanghui triangle row(" << index << ") is [";
+    for (int i = 0; i < result.size(); i++)
+        printf("%d%s", result[i], i == result.size() - 1 ? "" : ",");
+    cout << "]" << endl;
+}
+static void leet_120_triangle_min_total()
+{
+    Solution foo;
+    vector<vector<int>> triangle = {{2}, {3, 4}, {6, 5, 7}, {4, 1, 8, 3}};
+    int result = foo.triangle_min_total(triangle);
+    cout << "leet 120: triangle_min_total below triangle min path sum is " << result << endl;
+    cout << "[ " << endl;
+    int row = triangle.size();
+    for (int i = 0; i < row; i++)
+    {
+        for (int space = 0; space < row - i; space++)
+            printf(" ");
+        printf("[");
+        for (int j = 0; j < triangle[i].size(); j++)
+            printf("%d%s", triangle[i][j], j == triangle[i].size() - 1 ? "" : ",");
+        printf("]\n");
+    }
+    cout << "] " << endl;
+}
+static void leet_121_max_profit()
+{
+    Solution foo;
+    vector<int> data = {7, 1, 5, 3, 6, 4};
+    int result = foo.max_profit(data);
+    cout << "leet 121: max_profit array [";
+    for (int i = 0; i < data.size(); i++)
+        printf("%d%s", data[i], i == data.size() - 1 ? "" : ",");
+    cout << "] max profit is " << result << endl;
+}
 static void leet_152_max_product()
 {
     Solution foo;
@@ -1435,6 +1573,10 @@ int main(int argc, char *argv[])
     leet_238_product_except_self();             // dp
     leet_292_can_winnim();                      // 4 times
     leet_152_max_product();                     // dp
+    leet_121_max_profit();
+    leet_120_triangle_min_total();              // triangle min path sum (yanghui triangle)
+    leet_119_yanghui_triangle_row();            // yanghui triangle
+    leet_118_yanghui_triangle();                // yanghui triangle
     leet_115_num_distinct();                    // dp, num of common subsequence
     leet_89_gray_code();
     leet_72_min_distance();                     // dp, lcs(longest common subsequence)

@@ -113,10 +113,52 @@ public:
         return result[0];
     }
 
+    void tree_destroy(Type *root)
+    {
+        if (!root) return;
+
+        Type *node = nullptr;
+        queue<Type *> q;
+        q.push(root);
+        while (!q.empty())
+        {
+            node = q.front();
+            q.pop();
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+            delete node;
+        }
+    }
+
     Type *connect(Type *root)
     {
-        if (!root)
-            return nullptr;
+        if (!root) return nullptr;
+
+        Type *node = nullptr;
+        queue<Type *> q;
+        q.push(root);
+        while (!q.empty())
+        {
+            int size = q.size();
+            for (int i = 0; i < size; i++)
+            {
+                node = q.front();
+                q.pop();
+                if (i < size - 1)
+                    node->next = q.front();
+
+                if (node->left)
+                    q.push(node->left);
+                if (node->right)
+                    q.push(node->right);
+            }
+        }
+        return root;
+    }
+
+    Type *connect_not_perfect_tree(Type *root)
+    {
+        if (!root) return nullptr;
 
         Type *node = nullptr;
         queue<Type *> q;
@@ -133,44 +175,112 @@ public:
                 else
                     node->next = q.front();
 
-                if (node->left)
-                    q.push(node->left);
-                if (node->right)
-                    q.push(node->right);
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
             }
         }
         return root;
     }
+
+    string connect_to_string(Type *root)
+    {
+        string result = "[";
+        if (!root)
+            return "[]";
+
+        string tmp;
+        Type *node = nullptr;
+        queue<Type *> q;
+        q.push(root);
+#if 0
+        while (!q.empty())
+        {
+            int size = q.size();
+            for (int i = 0; i < size; i++)
+            {
+                node = q.front();
+                q.pop();
+                if (node)
+                {
+                    result += tmp + to_string(node->val);
+                    if (node->next == nullptr)
+                        result += ",#";
+                    tmp = ",";
+                }
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+        }
+#else
+        while (!q.empty())
+        {
+            node = q.front();
+            q.pop();
+            if (node)
+            {
+                if (node->left) q.push(node->left);
+
+                while (node)
+                {
+                    result += tmp + to_string(node->val);
+                    tmp = ",";
+                    node = node->next;
+                }
+                result += ",#";
+            }
+        }
+#endif
+        result += "]";
+        return result;
+    }
 };
 
-// template <typename Type>
+static void leet_117_connect()
+{
+    Solution<Node> foo;
+    string data = "[1,2,3,4,5,null,7]";
+    Node *root = foo.deserialize(data);
+    root = foo.connect(root);
+    string str = foo.connect_to_string(root);
+    cout << "leet 117: tree " << data << ", connect_to_string: " << str;
+    cout << " serialize: " << foo.serialize(root) << endl;
+    foo.tree_destroy(root);
+}
+static void leet_116_connect()
+{
+    Solution<Node> foo;
+    string data = "[1,2,3,4,5,6,7]";
+    Node *root = foo.deserialize(data);
+    root = foo.connect(root);
+    string str = foo.connect_to_string(root);
+    cout << "leet 116: perfect binary tree " << data << ", connect_to_string: " << str;
+    cout << " serialize: " << foo.serialize(root) << endl;
+    foo.tree_destroy(root);
+}
+
 static void leet_0_serialize()
 {
     Solution<Node> foo;
-    int target = 22;
-    // string data = "[1,2,5,3,4,null,6]";
     string data = "[1,2,6,3,4,null,7,null,null,5]";
     Node *root = foo.deserialize(data);
-    // foo.flatten(root);
-    cout << "leet 0: tree " << data << ", deserialize and serialize: ";
+    cout << "leet 0 <Node>: tree " << data << ", deserialize and serialize: ";
     cout << foo.serialize(root) << endl;
-    // foo.tree_destroy(root);
+    foo.tree_destroy(root);
 }
 static void leet_0_serialize_treenode()
 {
     Solution<TreeNode> foo;
-    int target = 22;
-    // string data = "[1,2,5,3,4,null,6]";
-    string data = "[1,2,6,3,4,null,7,null,null,5]";
+    string data = "[1,2,5,3,4,null,6]";
     TreeNode *root = foo.deserialize(data);
-    // foo.flatten(root);
-    cout << "leet 0: tree " << data << ", deserialize and serialize: ";
+    cout << "leet 0 <TreeNode>: tree " << data << ", deserialize and serialize: ";
     cout << foo.serialize(root) << endl;
-    // foo.tree_destroy(root);
+    foo.tree_destroy(root);
 }
 
 int main(int argc, char *argv[])
 {
+    leet_117_connect();                     // not perfect binary tree
+    leet_116_connect();                     // perfect binary tree connect to level and end with null
     leet_0_serialize();                     // serialize
     leet_0_serialize_treenode();
     return 0;
